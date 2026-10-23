@@ -33,6 +33,10 @@ Foydalanuvchi parol o'rniga Telegram bot orqali kirishadi: saytda «Telegram orq
 
 Bot long polling bilan ishlaydi (webhook va ochiq domen kerak emas). Bir vaqtda faqat bitta server nusxasi botni tinglashi mumkin. Kod 10 daqiqa amal qiladi, bir marta ishlatiladi, 5 ta noto'g'ri urinishdan keyin bloklanadi.
 
+## Yo'riqnoma
+
+Ishlatish bo'yicha oddiy tilda qo'llanma (sinash, joylashtirish, admin va kundalik ishlar): [YORIQNOMA.md](YORIQNOMA.md).
+
 ## Joylashtirish (Render)
 
 Qadamma-qadam qo'llanma: [DEPLOY.md](DEPLOY.md). `render.yaml` Blueprint ham tayyor.
