@@ -1,0 +1,33 @@
+# Render Blueprint: Dashboard'da New > Blueprint orqali shu repozitoriyni ulang.
+# Bitta xizmat ham saytni (client/dist), ham API'ni tarqatadi.
+services:
+  - type: web
+    name: uwedrepo
+    runtime: node
+    region: frankfurt # O'zbekistonga eng yaqin Yevropa hududi; Atlas klasterini ham shu hududda oching
+    plan: free # Pilot uchun "starter" tavsiya etiladi (free 15 daqiqa harakatsizlikdan keyin uxlaydi)
+    buildCommand: npm install --include=dev --prefix client && npm run build --prefix client && npm install --omit=dev --omit=optional --prefix server
+    startCommand: node server/src/index.js
+    healthCheckPath: /api/health
+    autoDeploy: true
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: NODE_VERSION
+        value: 22
+      # --- Sir qiymatlar: Dashboard'da o'zingiz kiritasiz (repozitoriyga yozilmaydi) ---
+      - key: MONGODB_URI
+        sync: false # MongoDB Atlas ulanish satri, oxiri /uwedrepo bilan
+      - key: ADMIN_EMAIL
+        sync: false
+      - key: ADMIN_PASSWORD
+        sync: false # kamida 10 belgi; "Admin12345" qabul qilinmaydi
+      - key: TELEGRAM_BOT_TOKEN
+        sync: false # @BotFather tokeni (bo'sh qoldirsangiz, sayt email bilan ishlaydi)
+      - key: JWT_SECRET
+        generateValue: true # Render o'zi tasodifiy qiymat yaratadi
+      # --- Qoidalar (keyin admin paneldan o'zgartiriladi) ---
+      - key: COMMISSION_PERCENT
+        value: 10
+      - key: FIRST_LESSON_DISCOUNT
+        value: 20

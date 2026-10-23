@@ -1,0 +1,10 @@
+node_modules
+dist
+.env
+server/.mongo-data
+*.pptx
+presentation/shots
+presentation/chrome-profile
+presentation/render
+.brud
+**/.brud

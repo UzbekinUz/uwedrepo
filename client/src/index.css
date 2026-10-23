@@ -1,0 +1,40 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-slate-50 text-slate-900 antialiased; font-feature-settings: 'tnum' 1; }
+  ::selection { @apply bg-brand-300 text-slate-900; }
+  :focus-visible { @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-slate-50; }
+  h1, h2, h3 { text-wrap: balance; }
+}
+
+@layer components {
+  /* Tugmalar: to'liq yumaloq, tekis rang, soyasiz */
+  .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50; }
+  .btn-primary { @apply btn bg-brand-600 text-white hover:bg-brand-700; }
+  .btn-ghost { @apply btn bg-slate-100 text-slate-800 hover:bg-slate-200; }
+  .btn-danger { @apply btn bg-red-700 text-white hover:bg-red-800; }
+  .btn-sm { @apply px-3.5 py-1.5 text-xs; }
+  /* Yuzalar: chiziq va soyasiz, faqat ton farqi */
+  .card { @apply bg-white; }
+  .card-link { @apply card transition hover:bg-brand-50; }
+  .input { @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-600; }
+  .label { @apply mb-1.5 block text-sm font-medium text-slate-600; }
+  .chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium; }
+  .choice { @apply cursor-pointer rounded-full bg-slate-100 px-4 py-2 text-sm font-medium text-slate-700 transition hover:bg-slate-200; }
+  .choice-on { @apply bg-slate-900 text-white hover:bg-slate-900; }
+  .rise { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
+}
+
+@keyframes rise {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .rise { animation: none; }
+  * { transition-duration: 0.01ms !important; }
+}
