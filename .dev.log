@@ -1,0 +1,20 @@
+
+> dev
+> concurrently -n server,client -c blue,green "npm --prefix server run dev" "npm --prefix client run dev"
+
+[server] 
+[server] > uwedrepo-server@1.0.0 dev
+[server] > node --watch src/index.js
+[server] 
+[client] 
+[client] > uwedrepo-client@1.0.0 dev
+[client] > vite
+[client] 
+[client] 
+[client]   VITE v5.4.21  ready in 745 ms
+[client] 
+[client]   ➜  Local:   http://localhost:5173/
+[client]   ➜  Network: use --host to expose
+[server] [db] ulandi
+[server] [telegram] bot ishga tushmadi: Unauthorized
+[server] [server] http://localhost:5001
