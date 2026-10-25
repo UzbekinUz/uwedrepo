@@ -186,3 +186,34 @@ test("production sayti: SPA yo'llari beriladi, CSP sozlangan, API 404 JSON", asy
   assert.equal(api404.status, 404);
   assert.match(api404.headers.get('content-type'), /json/);
 });
+
+test("fanlarni admin boshqaradi: ko'p qo'shish, takrorni o'tkazib yuborish, yashirish, namunaviy fanlar", async () => {
+  const body = { names: ['  Mikroiqtisodiyot ', 'Makroiqtisodiyot', 'mikroiqtisodiyot', 'Statistika'], faculty: 'xm', years: [2, 3], category: 'core' };
+  const add = await api('POST', '/admin/subjects/bulk', body, fx.t.admin);
+  assert.equal(add.s, 201);
+  assert.equal(add.j.added, 3, "takrorlangan nom (katta-kichik harf farqisiz) bir marta qo'shiladi");
+  const again = await api('POST', '/admin/subjects/bulk', body, fx.t.admin);
+  assert.equal(again.j.added, 0, 'qayta yuborilsa, hammasi o\'tkazib yuboriladi');
+  assert.equal(again.j.skipped.length, 4, "yuborilgan 4 nomning hammasi allaqachon bor");
+
+  assert.equal((await api('POST', '/admin/subjects/bulk', body, fx.t.a)).s, 403, 'talaba fan qo\'sha olmaydi');
+  assert.equal((await api('POST', '/admin/subjects', { name: 'MIKROIQTISODIYOT', faculty: 'xm', years: [1] }, fx.t.admin)).s, 409, 'bitta qo\'shishda ham takror rad etiladi');
+
+  // yashirish: talabaga ko'rinmaydi, adminda qoladi
+  const all = (await api('GET', '/admin/subjects', null, fx.t.admin)).j;
+  const target = all.find((s) => s.name === 'Statistika');
+  assert.ok(target && target.active === true && target.tutors === 0);
+  assert.equal((await api('PATCH', `/admin/subjects/${target._id}/active`, { active: false }, fx.t.admin)).s, 200);
+  const pub = (await api('GET', '/subjects?faculty=xm&year=2')).j.map((s) => s.name);
+  assert.ok(pub.includes('Mikroiqtisodiyot') && !pub.includes('Statistika'), 'yashirin fan ommaviy ro\'yxatda yo\'q');
+  assert.equal((await api('GET', `/subjects/${target._id}`)).s, 404, 'yashirin fan sahifasi ochilmaydi');
+  assert.equal((await api('GET', '/admin/subjects', null, fx.t.admin)).j.find((s) => s.name === 'Statistika').active, false, 'adminda ko\'rinadi');
+  await api('PATCH', `/admin/subjects/${target._id}/active`, { active: true }, fx.t.admin);
+  assert.equal((await api('GET', `/subjects/${target._id}`)).s, 200, 'qaytarilgach yana ochiladi');
+
+  // namunaviy fanlar: faqat yo'qlari qo'shiladi, takror emas
+  const st1 = await api('POST', '/admin/subjects/starter', null, fx.t.admin);
+  const st2 = await api('POST', '/admin/subjects/starter', null, fx.t.admin);
+  assert.equal(st1.s, 201);
+  assert.equal(st2.j.added, 0);
+});

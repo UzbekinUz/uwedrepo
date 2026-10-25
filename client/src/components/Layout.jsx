@@ -37,8 +37,9 @@ export default function Layout() {
       )}
       <header className="sticky top-0 z-30 bg-white">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
-          <Link to="/" className="flex items-center gap-2 text-lg font-extrabold tracking-tight text-slate-900" onClick={close}>
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-brand-600 text-sm text-white">U</span>UWEDRepo
+          <Link to="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-field" onClick={close} aria-label="UWEDRepo">
+            <img src="/logo-icon.png" width="36" height="36" alt="" className="h-9 w-9" />
+            <span>UWED<span className="text-brand-600">Repo</span></span>
           </Link>
           <nav className="hidden items-center gap-1 md:flex">
             {links.map(([to, label]) => <NavLink key={to} to={to} className={cls}>{t(label)}</NavLink>)}
@@ -98,7 +99,7 @@ export default function Layout() {
               <Link to="/survey" className="hover:text-brand-300">{t("So'rovnomada qatnashing")}</Link>
             </nav>
           </div>
-          <div className="select-none pt-14 text-[clamp(3.5rem,17vw,15rem)] font-extrabold leading-[0.85] tracking-[-0.05em] text-brand-600" aria-hidden="true">UWEDRepo</div>
+          <div className="select-none pt-14 text-[clamp(3.5rem,17vw,15rem)] font-extrabold leading-[0.85] tracking-[-0.05em] text-brand-600" aria-hidden="true"><span className="text-slate-300">UWED</span>Repo</div>
         </div>
       </footer>
     </div>

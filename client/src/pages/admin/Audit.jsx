@@ -8,6 +8,7 @@ const LABEL = {
   'booking.mark-paid': "Qo'lda to'langan deb belgiladi", 'booking.complete': "Darsni o'tgan deb belgiladi", 'booking.cancel': 'Bronni bekor qildi',
   'payout.settle': "Repetitorga o'tkazilganini belgiladi", 'review.hide': 'Sharhni yashirdi', 'review.show': 'Sharhni qaytardi', 'review.delete': "Sharhni o'chirdi",
   'subject.create': "Fan qo'shdi", 'subject.update': 'Fanni tahrirladi', 'subject.delete': "Fanni o'chirdi",
+  'subject.bulk': "Bir nechta fan qo'shdi", 'subject.starter': "Namunaviy fanlarni qo'shdi", 'subject.hide': 'Fanni yashirdi', 'subject.show': "Fanni qaytardi",
   'exam.create': "Sana qo'shdi", 'exam.update': "Sanani o'zgartirdi", 'exam.delete': "Sanani o'chirdi",
   'material.approved': 'Materialni tasdiqladi', 'material.pending': 'Materialni yashirdi', 'material.delete': "Materialni o'chirdi",
   'settings.update': "Sozlamalarni o'zgartirdi", 'announcement.send': "E'lon yubordi", 'admin.password': 'Parolni almashtirdi',

@@ -157,7 +157,7 @@ Klasteringiz tayyor bo'lsa, quyidagilarni tekshiring:
    - `[telegram] bot ishlayapti: @... (webhook)`
    - `[server] http://localhost:...`
 2. Brauzerda `https://SIZNING-MANZIL/api/health` oching. Javob: `{"ok":true}`.
-3. Bosh sahifani oching: sayt chiqishi va «8 ta fan» ko'rinishi kerak.
+3. Bosh sahifani oching: sayt chiqishi kerak. Hammasi 0 bo'lishi normal: kontentni siz kiritasiz (4-bo'lim).
 
 ### 3.5. Tarif haqida
 
@@ -168,7 +168,7 @@ Klasteringiz tayyor bo'lsa, quyidagilarni tekshiring:
 
 ## 4. Birinchi marta sozlash (admin)
 
-Sayt ochilgach, hammasi bo'sh: faqat 8 ta boshlang'ich fan bor. Admin sifatida quyidagilarni qiling.
+Sayt ochilgach, hammasi bo'sh: fan ham, sana ham, repetitor ham yo'q. Hammasini admin boshqaradi. Quyidagilarni qiling.
 
 ### 4.1. Admin sifatida kirish
 
@@ -193,7 +193,41 @@ Admin panelda oxirgi bo'lim **«Yo'riqnoma»**: har bir bo'limning vazifasi va k
 | 5 | Kontent → Materiallar | Birinchi o'quv materiallarini qo'shing/tasdiqlang |
 | 6 | Tadqiqot | So'rovnoma havolasini tarqating (maqsad: kamida 30 ta javob) |
 
-### 4.4. Sozlamalar
+### 4.4. Fanlarni boshqarish (qo'shish, o'zgartirish, yashirish)
+
+Talaba saytda **faqat siz kiritgan fanlarni** ko'radi. Hammasi **Admin → Kontent → Fanlar** bo'limida.
+
+**Yangi fan qo'shish (bittadan):**
+
+1. **Admin → Kontent → Fanlar** → **«Bitta fan qo'shish»**.
+2. To'ldiring: **Nomi**, **Fakultet** (hamma talabaga chiqsin desangiz «Hamma fakultet»), **Turi** (asosiy yoki qo'shimcha), **Qaysi kurslarda o'qitiladi**. Telegram guruh havolasini va qisqa tavsifni ham kiritishingiz mumkin.
+3. **«Qo'shish»** tugmasini bosing.
+
+**Natija:** fan darhol saytdagi «Fanlar» sahifasida (tegishli fakultet va kurs talabalariga) ko'rinadi.
+
+**Ko'p fanni birdan qo'shish:**
+
+1. **«Bir nechta fan qo'shish»** tabini tanlang.
+2. Maydonga fan nomlarini **har bir qatorga bittadan** yozing.
+3. Fakultet, tur va kurslarni tanlang (hammasi uchun bir xil bo'ladi).
+4. **«N ta fanni qo'shish»** ni bosing. Allaqachon bor nomlar o'zi o'tkazib yuboriladi, ekranda nechtasi qo'shilgani va qaysilari o'tkazilgani yoziladi.
+
+Guruh havolasini keyin har bir fan uchun alohida kiritasiz (**Tahrirlash**).
+
+**Mavjud fanni boshqarish** (ro'yxatdagi tugmalar):
+
+| Tugma | Nima qiladi | Qachon |
+|---|---|---|
+| **Tahrirlash** | Nomi, fakulteti, kursi, guruh havolasini o'zgartiradi | Xato yoki yangi ma'lumot |
+| **Yashirish** | Fanni talabalardan olib qo'yadi. Repetitorlari, sanalari va materiallari **saqlanadi** | Semestr tugadi, fan vaqtincha kerak emas |
+| **Ko'rsatish** | Yashirilgan fanni qaytaradi | Yangi semestr |
+| **O'chirish** | Fanni **va unga bog'liq sanalar bilan materiallarni** butunlay o'chiradi | Fan butunlay kerak emas (qaytarib bo'lmaydi) |
+
+Ro'yxatda har bir fanning **repetitor, nazorat sanasi va material soni** ko'rinadi. **Repetitor soni 0** bo'lsa (sariq raqam), talaba bu fanni tanlasa hech kimni topolmaydi: shu fanga repetitor qidiring.
+
+> Tavsiya: fanni o'chirishdan oldin **«Yashirish»** ni sinab ko'ring. U xavfsizroq.
+
+### 4.5. Sozlamalar
 
 **Admin → Sozlamalar:**
 
@@ -205,7 +239,7 @@ Admin panelda oxirgi bo'lim **«Yo'riqnoma»**: har bir bo'limning vazifasi va k
 
 O'zgarish **darhol** kuchga kiradi (yangi bronlar uchun).
 
-### 4.5. Odamlarni jalb qilishda foydali hiyla
+### 4.6. Odamlarni jalb qilishda foydali hiyla
 
 Havolalarga `?ref=nom` qo'shing:
 

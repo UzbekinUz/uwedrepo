@@ -11,56 +11,138 @@ const toIso = (date) => new Date(`${date}T10:00:00+05:00`).toISOString();
 /* ---------- Fanlar ---------- */
 const emptySubject = (meta) => ({ name: '', faculty: meta.faculties[0].key, years: [1], category: 'core', description: '', telegramGroup: '' });
 
+function YearPicker({ value, onChange }) {
+  const toggle = (y) => onChange(value.includes(y) ? value.filter((x) => x !== y) : [...value, y].sort());
+  return (
+    <div>
+      <span className="label">Qaysi kurslarda o'qitiladi</span>
+      <div className="flex flex-wrap gap-2">
+        {[1, 2, 3, 4].map((y) => (
+          <label key={y} className={`choice ${value.includes(y) ? 'choice-on' : ''}`}>
+            <input type="checkbox" className="sr-only" checked={value.includes(y)} onChange={() => toggle(y)} />{y}-kurs
+          </label>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Subjects() {
   const { meta } = useApp();
   const [n, setN] = useState(0);
-  const { data, loading } = useFetch('/subjects', [n]);
+  const { data, loading } = useFetch('/admin/subjects', [n]);
+  const [mode, setMode] = useState('one'); // 'one' | 'many'
   const [f, setF] = useState(emptySubject(meta));
   const [editId, setEditId] = useState(null);
-  const { run, err, msg } = useAct();
-  const toggleYear = (y) => setF((p) => ({ ...p, years: p.years.includes(y) ? p.years.filter((x) => x !== y) : [...p.years, y].sort() }));
+  const [many, setMany] = useState({ names: '', faculty: meta.faculties[0].key, years: [1], category: 'core' });
+  const [filter, setFilter] = useState({ q: '', faculty: '' });
+  const { run, err, msg, setMsg } = useAct();
   const fname = (k) => (k === 'all' ? 'Hamma fakultet' : meta.faculties.find((x) => x.key === k)?.name || k);
-  const save = (e) => { e.preventDefault(); run(async () => {
-    const body = { ...f, telegramGroup: f.telegramGroup || '', description: f.description || '' };
-    await api(editId ? `/admin/subjects/${editId}` : '/admin/subjects', { method: editId ? 'PUT' : 'POST', body });
-    setF(emptySubject(meta)); setEditId(null); setN((x) => x + 1);
-  }, editId ? 'Saqlandi' : "Fan qo'shildi"); };
+  const reload = () => setN((x) => x + 1);
+
+  const save = (e) => {
+    e.preventDefault();
+    run(async () => {
+      const body = { ...f, telegramGroup: f.telegramGroup || '', description: f.description || '' };
+      await api(editId ? `/admin/subjects/${editId}` : '/admin/subjects', { method: editId ? 'PUT' : 'POST', body });
+      setF(emptySubject(meta)); setEditId(null); reload();
+    }, editId ? 'Saqlandi' : "Fan qo'shildi");
+  };
+
+  const lines = many.names.split('\n').map((x) => x.trim()).filter((x) => x.length >= 2);
+  const saveMany = (e) => {
+    e.preventDefault();
+    run(async () => {
+      const r = await api('/admin/subjects/bulk', { method: 'POST', body: { ...many, names: lines } });
+      setMany({ ...many, names: '' }); reload();
+      setMsg(`${r.added} ta fan qo'shildi${r.skipped.length ? `; ${r.skipped.length} tasi allaqachon bor edi: ${r.skipped.join(', ')}` : ''}`);
+    });
+  };
+
+  const rows = (data || []).filter((s) => (!filter.faculty || s.faculty === filter.faculty) && (!filter.q || s.name.toLowerCase().includes(filter.q.toLowerCase())));
+  const hiddenCount = (data || []).filter((s) => !s.active).length;
 
   return (
     <div className="space-y-6">
-      <Hint title="Fanlar nima uchun kerak">
-        <p>Talaba fakultet va kursini tanlaganda, faqat shu yerda kiritilgan mos fanlarni ko'radi. <b>Fakultet</b> «Hamma fakultet» bo'lsa fan hammaga ko'rinadi (masalan IELTS). <b>Telegram guruh havolasi</b> — fan sahifasidagi «Guruhga qo'shilish» tugmasi.</p>
-        <p>Fanni o'chirsangiz, unga bog'langan <b>nazorat sanalari va materiallar ham o'chadi</b>.</p>
+      <Hint title="Fanlarni siz boshqarasiz">
+        <p>Talaba saytda faqat shu yerda kiritilgan fanlarni ko'radi. Fanni <b>qo'shish</b>, <b>tahrirlash</b>, <b>yashirish</b> yoki <b>o'chirish</b> mumkin. <b>Fakultet</b> «Hamma fakultet» bo'lsa, fan hamma talabaga chiqadi (masalan IELTS). <b>Telegram guruh havolasi</b> fan sahifasidagi «Guruhga qo'shilish» tugmasiga aylanadi.</p>
+        <p><b>Yashirish</b> fanni talabalardan olib qo'yadi, lekin uning repetitorlari, sanalari va materiallari saqlanadi: semestr tugaganda qulay. <b>O'chirish</b> esa fanni va unga bog'liq nazorat sanalari bilan materiallarni butunlay yo'q qiladi.</p>
       </Hint>
-      <form onSubmit={save} className="space-y-4 bg-white p-5">
-        <h3 className="text-lg font-extrabold">{editId ? 'Fanni tahrirlash' : "Yangi fan qo'shish"}</h3>
-        <div className="grid gap-3 sm:grid-cols-2">
-          <FField label="Nomi"><input className="input" required minLength={2} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></FField>
-          <FField label="Fakultet"><Select value={f.faculty} onChange={(v) => setF({ ...f, faculty: v })}>{meta.faculties.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}<option value="all">Hamma fakultet (qo'shimcha fanlar)</option></Select></FField>
-          <FField label="Turi"><Select value={f.category} onChange={(v) => setF({ ...f, category: v })}><option value="core">Asosiy</option><option value="extra">Qo'shimcha</option></Select></FField>
-          <FField label="Telegram guruh havolasi"><input className="input" type="url" placeholder="https://t.me/..." value={f.telegramGroup} onChange={(e) => setF({ ...f, telegramGroup: e.target.value })} /></FField>
+
+      {!loading && data.length === 0 && (
+        <div className="space-y-3 bg-white p-6">
+          <h3 className="text-xl font-extrabold">Hali bitta ham fan yo'q</h3>
+          <p className="text-slate-700">Quyidagi shakldan o'zingiz kiriting yoki hisobotdagi 8 ta namunaviy fanni (Hisoblash 1-2, Ekonomika, Rus tili 1-2, Iqtisodiyotda miqdoriy usullar, IELTS, Dasturlash) bir bosishda qo'shing. Keyin istalganini o'zgartirishingiz yoki o'chirishingiz mumkin.</p>
+          <button className="btn-primary" onClick={() => run(async () => {
+            const r = await api('/admin/subjects/starter', { method: 'POST' });
+            reload(); setMsg(`${r.added} ta fan qo'shildi`);
+          })}>Namuna fanlarni qo'shish (8 ta)</button>
         </div>
-        <FField label="Qisqa tavsif (ixtiyoriy)"><input className="input" maxLength={500} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></FField>
-        <div><span className="label">Qaysi kurslarda o'qitiladi</span><div className="flex flex-wrap gap-2">{[1, 2, 3, 4].map((y) => <label key={y} className={`choice ${f.years.includes(y) ? 'choice-on' : ''}`}><input type="checkbox" className="sr-only" checked={f.years.includes(y)} onChange={() => toggleYear(y)} />{y}-kurs</label>)}</div></div>
-        <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
-        <div className="flex gap-2"><button className="btn-primary" disabled={!f.years.length}>{editId ? 'Saqlash' : "Qo'shish"}</button>{editId && <button type="button" className="btn-ghost" onClick={() => { setEditId(null); setF(emptySubject(meta)); }}>Bekor</button>}</div>
-      </form>
-      {loading ? <Spinner /> : (
-        <Table head={['Fan', 'Fakultet', 'Kurs', 'Guruh', 'Repetitor', '']} empty={!data.length && "Hali fan yo'q."}>
-          {data.map((s) => (
-            <tr key={s._id}>
-              <td className="font-semibold">{s.name} {s.category === 'extra' && <Chip tone="brand">Qo'shimcha</Chip>}</td>
-              <td>{fname(s.faculty)}</td><td>{s.years.join(', ')}</td>
-              <td>{s.telegramGroup ? <a className="text-brand-700 underline" href={s.telegramGroup} target="_blank" rel="noopener noreferrer">bor</a> : <span className="text-amber-700">yo'q</span>}</td>
-              <td>{s.tutorCount === 0 ? <span className="text-amber-700">0</span> : s.tutorCount}</td>
-              <td><div className="flex gap-1.5">
-                <button className="btn-ghost btn-sm" onClick={() => { setEditId(s._id); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
-                <button className="btn-ghost btn-sm text-red-700" onClick={() => confirm(`"${s.name}" o'chiriladi, bilan birga uning nazorat sanalari va materiallari ham. Davom etasizmi?`) && run(async () => { await api(`/admin/subjects/${s._id}`, { method: 'DELETE' }); setN((x) => x + 1); })}>O'chirish</button>
-              </div></td>
-            </tr>
-          ))}
-        </Table>
       )}
+
+      <div className="flex flex-wrap gap-2">
+        <button className={`choice ${mode === 'one' ? 'choice-on' : ''}`} onClick={() => setMode('one')}>{editId ? 'Fanni tahrirlash' : 'Bitta fan qo\'shish'}</button>
+        <button className={`choice ${mode === 'many' ? 'choice-on' : ''}`} disabled={!!editId} onClick={() => setMode('many')}>Bir nechta fan qo'shish</button>
+      </div>
+
+      {mode === 'one' || editId ? (
+        <form onSubmit={save} className="space-y-4 bg-white p-5">
+          <h3 className="text-lg font-extrabold">{editId ? 'Fanni tahrirlash' : "Yangi fan qo'shish"}</h3>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <FField label="Nomi"><input className="input" required minLength={2} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></FField>
+            <FField label="Fakultet"><Select value={f.faculty} onChange={(v) => setF({ ...f, faculty: v })}>{meta.faculties.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}<option value="all">Hamma fakultet (qo'shimcha fanlar)</option></Select></FField>
+            <FField label="Turi"><Select value={f.category} onChange={(v) => setF({ ...f, category: v })}><option value="core">Asosiy</option><option value="extra">Qo'shimcha</option></Select></FField>
+            <FField label="Telegram guruh havolasi"><input className="input" type="url" placeholder="https://t.me/..." value={f.telegramGroup} onChange={(e) => setF({ ...f, telegramGroup: e.target.value })} /></FField>
+          </div>
+          <FField label="Qisqa tavsif (ixtiyoriy)"><input className="input" maxLength={500} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></FField>
+          <YearPicker value={f.years} onChange={(years) => setF({ ...f, years })} />
+          <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
+          <div className="flex gap-2"><button className="btn-primary" disabled={!f.years.length}>{editId ? 'Saqlash' : "Qo'shish"}</button>{editId && <button type="button" className="btn-ghost" onClick={() => { setEditId(null); setF(emptySubject(meta)); }}>Bekor</button>}</div>
+        </form>
+      ) : (
+        <form onSubmit={saveMany} className="space-y-4 bg-white p-5">
+          <h3 className="text-lg font-extrabold">Bir nechta fanni birdan qo'shish</h3>
+          <p className="text-sm text-slate-600">Fakultet, kurs va turi hammasi uchun bir xil bo'ladi. Telegram guruh havolasi va tavsifni keyin har bir fan uchun alohida kiritasiz. Allaqachon bor nomlar o'tkazib yuboriladi.</p>
+          <FField label="Fanlar ro'yxati: har bir qatorga bitta nom">
+            <textarea className="input" rows={7} value={many.names} onChange={(e) => setMany({ ...many, names: e.target.value })} placeholder={'Mikroiqtisodiyot\nMakroiqtisodiyot\nStatistika\nXalqaro huquq asoslari'} />
+          </FField>
+          <div className="grid gap-3 sm:grid-cols-2">
+            <FField label="Fakultet"><Select value={many.faculty} onChange={(v) => setMany({ ...many, faculty: v })}>{meta.faculties.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}<option value="all">Hamma fakultet (qo'shimcha fanlar)</option></Select></FField>
+            <FField label="Turi"><Select value={many.category} onChange={(v) => setMany({ ...many, category: v })}><option value="core">Asosiy</option><option value="extra">Qo'shimcha</option></Select></FField>
+          </div>
+          <YearPicker value={many.years} onChange={(years) => setMany({ ...many, years })} />
+          <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
+          <button className="btn-primary" disabled={!lines.length || !many.years.length}>{lines.length ? `${lines.length} ta fanni qo'shish` : "Qo'shish"}</button>
+        </form>
+      )}
+
+      <div className="space-y-3">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <h3 className="text-xl font-extrabold">Barcha fanlar {data && <span className="text-base font-normal text-slate-600">({data.length}{hiddenCount ? `, shundan ${hiddenCount} tasi yashirin` : ''})</span>}</h3>
+          <Filters>
+            <FField label="Qidirish"><input className="input" value={filter.q} onChange={(e) => setFilter({ ...filter, q: e.target.value })} placeholder="Fan nomi" /></FField>
+            <FField label="Fakultet"><Select value={filter.faculty} onChange={(v) => setFilter({ ...filter, faculty: v })}><option value="">Hammasi</option>{meta.faculties.map((x) => <option key={x.key} value={x.key}>{x.name}</option>)}<option value="all">Hamma fakultet</option></Select></FField>
+          </Filters>
+        </div>
+        {loading ? <Spinner /> : (
+          <Table head={['Fan', 'Fakultet', 'Kurs', 'Guruh', 'Repetitor', 'Sana', 'Material', '']} empty={!rows.length && (data.length ? 'Filtrga mos fan yo\'q.' : "Hali fan yo'q.")}>
+            {rows.map((s) => (
+              <tr key={s._id} className={s.active ? '' : 'opacity-60'}>
+                <td className="font-semibold">{s.name} {s.category === 'extra' && <Chip tone="brand">Qo'shimcha</Chip>} {!s.active && <Chip tone="amber">Yashirin</Chip>}</td>
+                <td>{fname(s.faculty)}</td><td>{s.years.join(', ')}</td>
+                <td>{s.telegramGroup ? <a className="text-brand-700 underline" href={s.telegramGroup} target="_blank" rel="noopener noreferrer">bor</a> : <span className="text-amber-700">yo'q</span>}</td>
+                <td>{s.tutors === 0 ? <span className="text-amber-700">0</span> : s.tutors}</td>
+                <td>{s.exams}</td><td>{s.materials}</td>
+                <td><div className="flex flex-wrap gap-1.5">
+                  <button className="btn-ghost btn-sm" onClick={() => { setMode('one'); setEditId(s._id); setMsg(''); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
+                  <button className="btn-ghost btn-sm" onClick={() => run(async () => { await api(`/admin/subjects/${s._id}/active`, { method: 'PATCH', body: { active: !s.active } }); reload(); })}>{s.active ? 'Yashirish' : "Ko'rsatish"}</button>
+                  <button className="btn-ghost btn-sm text-red-700" onClick={() => confirm(`"${s.name}" butunlay o'chiriladi, shu bilan birga ${s.exams} ta nazorat sanasi va ${s.materials} ta material ham. Qaytarib bo'lmaydi. Ehtimol «Yashirish» yetarlidir. Baribir o'chiraymi?`) && run(async () => { await api(`/admin/subjects/${s._id}`, { method: 'DELETE' }); reload(); })}>O'chirish</button>
+                </div></td>
+              </tr>
+            ))}
+          </Table>
+        )}
+      </div>
     </div>
   );
 }

@@ -35,7 +35,7 @@ r.get(
     const f = { status: 'approved' };
     if (subject) f.subjects = subject;
     else if (faculty || year) {
-      const sf = {};
+      const sf = { active: { $ne: false } };
       if (faculty) sf.faculty = { $in: [faculty, 'all'] };
       if (year) sf.years = Number(year);
       f.subjects = { $in: (await Subject.find(sf).select('_id')).map((s) => s._id) };

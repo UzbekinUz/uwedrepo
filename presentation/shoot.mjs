@@ -96,6 +96,8 @@ const jobs = [
   ['admin-messages', { url: '/admin?tab=messages', token: adminToken, scrollY: 520 }],
   ['admin-settings', { url: '/admin?tab=settings', token: adminToken, scrollY: 380 }],
   ['admin-audit', { url: '/admin?tab=audit', token: adminToken, scrollY: 420 }],
+  ['x-subjects-list', { url: '/admin?tab=content', token: adminToken, scrollY: 380 }],
+  ['x-subjects-bulk', { url: '/admin?tab=content', token: adminToken, after: `[...document.querySelectorAll('button')].find(b => b.textContent.includes('Bir nechta fan'))?.click()`, scrollY: 380 }],
   ['admin-guide', { url: '/admin?tab=guide', token: adminToken, scrollY: 330 }],
 ];
 const only = process.argv[2];

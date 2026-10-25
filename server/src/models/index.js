@@ -29,6 +29,8 @@ const subjectSchema = new Schema(
     category: { type: String, enum: ['core', 'extra'], default: 'core' },
     description: { type: String, default: '' },
     telegramGroup: { type: String, default: '' },
+    // false bo'lsa talabalarga ko'rinmaydi (arxiv), lekin nazorat sanalari va materiallari saqlanadi
+    active: { type: Boolean, default: true },
   },
   { timestamps: true }
 );

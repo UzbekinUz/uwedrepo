@@ -1,0 +1,21 @@
+{
+  "name": "UWEDRepo",
+  "short_name": "UWEDRepo",
+  "description": "UWED talabalari uchun repetitorlar, materiallar va nazorat sanalari",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F3F5F2",
+  "theme_color": "#0A7E7A",
+  "icons": [
+    {
+      "src": "/icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

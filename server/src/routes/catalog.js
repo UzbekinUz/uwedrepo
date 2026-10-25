@@ -29,7 +29,7 @@ r.get('/meta', (_req, res) =>
 
 /** faculty+year bo'yicha filtr: faqat o'ziga tegishli fanlar (qo'shimcha fanlar — 'all' — hammaga) */
 function subjectFilter({ faculty, year, q, category }) {
-  const f = {};
+  const f = { active: { $ne: false } }; // admin yashirgan fanlar talabaga ko'rinmaydi
   if (faculty && FACULTY_KEYS.includes(faculty)) f.faculty = { $in: [faculty, 'all'] };
   if (year) f.years = Number(year);
   if (category) f.category = category;
@@ -55,7 +55,7 @@ r.get(
   '/subjects/:id',
   wrap(async (req, res) => {
     const subject = await Subject.findById(req.params.id).lean();
-    if (!subject) throw new HttpError(404, 'Fan topilmadi');
+    if (!subject || subject.active === false) throw new HttpError(404, 'Fan topilmadi');
     const [tutors, materials, exams] = await Promise.all([
       Tutor.find({ subjects: subject._id, status: 'approved' })
         .populate('user', 'name faculty year')

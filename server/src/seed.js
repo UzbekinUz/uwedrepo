@@ -22,7 +22,7 @@ async function ensureAdmin() {
 // Hisobotdagi haqiqiy fanlar (Xalqaro iqtisodiyot va menejment). Production'da ham shular yoziladi;
 // boshqa fakultet fanlari va rasmiy sanalarni admin paneldan kiriting.
 const S = (name, years, category = 'core', faculty = 'xim', extra = {}) => ({ name, years, category, faculty, ...extra });
-const STARTER_SUBJECTS = () => [
+export const STARTER_SUBJECTS = () => [
   S('Hisoblash 1', [1], 'core', 'xim', { description: 'Matematik hisoblash asoslari' }),
   S('Hisoblash 2', [2]),
   S('Iqtisodiyotda miqdoriy usullar', [2, 3]),
@@ -108,7 +108,9 @@ export async function seedIfEmpty() {
   const allowDemo = !config.isProd || process.env.SEED_DEMO === 'true';
   if (!(await Subject.countDocuments())) {
     if (allowDemo) await seedDemo();
-    else {
+    // Productionda fanlarni admin o'zi kiritadi. Boshlang'ich 8 ta fan faqat SEED_STARTER_SUBJECTS=true bo'lsa yoziladi
+    // (yoki admin paneldagi «Namuna fanlarni qo'shish» tugmasi orqali).
+    else if (process.env.SEED_STARTER_SUBJECTS === 'true') {
       await Subject.insertMany(STARTER_SUBJECTS());
       console.log("[seed] boshlang'ich fanlar yozildi (demo foydalanuvchilarsiz)");
     }

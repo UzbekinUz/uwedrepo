@@ -52,7 +52,7 @@ Repozitoriyni **yopiq (Private)** qiling. `.env` fayllari `.gitignore` da, ular 
 1. Loglarda ko'ring: `[telegram] bot ishlayapti: @... (webhook)` va `[server] http://localhost:...`.
 2. Saytni oching (`https://uwedrepo.onrender.com` yoki Render bergan manzil).
 3. **Kirish → Email bilan kirish**: `ADMIN_EMAIL` va `ADMIN_PASSWORD`. So'ng **Admin panel → Umumiy**: «Pilotga tayyorlik» ro'yxati nima qolganini ko'rsatadi.
-4. Sayt bo'sh boshlanadi: faqat 8 ta boshlang'ich fan bor. Boshqa fakultet fanlari, rasmiy nazorat sanalari, Telegram guruh havolalari va repetitorlarni admin paneldan kiriting.
+4. Sayt to'liq bo'sh boshlanadi: fanlarni admin o'zi kiritadi (**Admin → Kontent → Fanlar**: bitta yoki bir nechtasini birdan qo'shish, yoki «Namuna fanlarni qo'shish» tugmasi). So'ng rasmiy nazorat sanalari, Telegram guruh havolalari va repetitorlarni kiriting.
 5. Telegram orqali kirishni sinab ko'ring (bot Start, kod).
 6. Botni tekshirish (token o'rniga o'zingiznikini qo'ying): `https://api.telegram.org/bot<TOKEN>/getWebhookInfo` manzilida `url` sizning saytingizning `/api/telegram/webhook` manzili bo'lishi kerak.
 

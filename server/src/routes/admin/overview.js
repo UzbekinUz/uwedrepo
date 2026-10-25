@@ -98,7 +98,7 @@ r.get(
       ]),
       Tutor.aggregate([{ $match: { status: 'approved' } }, { $unwind: '$subjects' }, { $group: { _id: '$subjects' } }]).then(async (cov) => {
         const covered = cov.map((c) => c._id);
-        return Subject.find({ _id: { $nin: covered } }).select('name').limit(10).lean();
+        return Subject.find({ _id: { $nin: covered }, active: { $ne: false } }).select('name').limit(10).lean();
       }),
       Booking.aggregate([
         { $match: { status: { $in: ['paid', 'completed'] } } },
