@@ -308,3 +308,19 @@ test("AI izohi: faqat xato javobga, kesh, kunlik limit, nazorat kuni o'chadi", a
   await api('PUT', '/admin/settings', settings(), fx.t.admin);
   assert.equal((await api('GET', '/meta')).j.aiExplain, true);
 });
+
+test("test natijalari: admin kimlar yechganini, o'rtacha natijani va CSV ni ko'radi", async () => {
+  const id = fx.quiz._id;
+  assert.equal((await api('GET', `/admin/quizzes/${id}/attempts`, null, fx.t.a)).s, 403, 'talaba ko\'ra olmaydi');
+  await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0] }, fx.t.b); // B: 2/2
+  const r = await api('GET', `/admin/quizzes/${id}/attempts`, null, fx.t.admin);
+  assert.equal(r.s, 200);
+  assert.equal(r.j.summary.students, 2);
+  assert.ok(r.j.rows.some((x) => x.student.name === 'Talaba B' && x.pct === 100));
+  assert.ok(r.j.rows.some((x) => x.student.name === 'Talaba A' && x.score === 1));
+  assert.equal(r.j.summary.questions.length, 2);
+  assert.ok(r.j.quiz.attempts > r.j.summary.saved, 'kirmasdan yechganlar umumiy sonda');
+  const csv = await api('GET', `/admin/quizzes/${id}/attempts.csv`, null, fx.t.admin);
+  assert.match(csv.ct, /text\/csv/);
+  assert.match(csv.j, /Talaba B/);
+});
