@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { Survey, Visit, Subject, Tutor, Material, Exam } from '../models/index.js';
+import { Survey, Visit, Subject, Tutor, Material, Exam, Quiz } from '../models/index.js';
 import { wrap } from '../middleware/util.js';
 import { FACULTY_KEYS } from '../data/meta.js';
 
@@ -10,13 +10,14 @@ const r = Router();
 r.get(
   '/stats',
   wrap(async (_req, res) => {
-    const [subjects, tutors, materials, exams] = await Promise.all([
-      Subject.countDocuments(),
+    const [subjects, tutors, materials, exams, quizzes] = await Promise.all([
+      Subject.countDocuments({ active: { $ne: false } }),
       Tutor.countDocuments({ status: 'approved' }),
       Material.countDocuments({ status: 'approved' }),
       Exam.countDocuments({ date: { $gte: new Date() } }),
+      Quiz.countDocuments({ status: 'approved' }),
     ]);
-    res.json({ subjects, tutors, materials, exams });
+    res.json({ subjects, tutors, materials, exams, quizzes });
   })
 );
 

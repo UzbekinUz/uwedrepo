@@ -8,7 +8,7 @@ import { Accordion, CountUp, Icon, IconBadge, Item, Reveal, Stagger, StarField }
 import { Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { qs } from '../api.js';
 import { t } from '../lib/i18n.js';
-import { daysLeft, dateLong, EXAM_LABEL } from '../lib/format.js';
+import { daysLeft, dateLong, EXAM_LABEL, money } from '../lib/format.js';
 
 const wrap = 'mx-auto max-w-6xl px-4 sm:px-6';
 const h2 = 'text-[clamp(1.75rem,4.2vw,3.25rem)] font-extrabold leading-[1.04] tracking-[-0.03em]';
@@ -67,16 +67,91 @@ const faq = (meta) => [
   [t('Nazorat sanalari qayerdan olinadi?'), t("Sanalarni admin kiritadi. Hozircha demo sanalar turibdi; rasmiy jadval e'lon qilingach yangilanadi. Muhim sanani doim dekanat jadvali bilan solishtiring.")],
 ];
 
-/** Tanlangan kursning eng yaqin nazoratigacha kunlar (raqam sanab chiqadi) */
-function NextExam({ exam }) {
-  if (!exam) return <p className="text-xl font-semibold text-slate-300">{t('Hozircha nazorat sanalari kiritilmagan.')}</p>;
+/** Ismning birinchi harfi (emoji va maxsus shrift harflari ham buzilmasin) */
+const initial = (name = '') => Array.from(name.trim())[0] || '?';
+
+/** Hero kartasi: nozik shaffof fon, yengil soya */
+const glass = 'rounded-2xl bg-white/[0.06] p-5 ring-1 ring-white/10 backdrop-blur-sm sm:p-6';
+
+/** Eng yaqin nazorat: kunlar sanab chiqadi */
+function ExamCard({ exam }) {
   const left = Math.max(daysLeft(exam.date), 0);
   return (
-    <Link to={`/subjects/${exam.subject?._id}`} className="group block">
-      <CountUp to={left} duration={1.8} className="block text-[clamp(9rem,26vw,19rem)] font-extrabold leading-[0.8] tracking-[-0.06em] text-brand-300" />
-      <div className="mt-3 text-2xl font-bold text-white">{t('kun')} — {exam.subject?.name}</div>
-      <div className="mt-1 text-base text-slate-300">{EXAM_LABEL[exam.type]} · {dateLong(exam.date)}</div>
-      <div className="mt-4 text-base font-semibold text-brand-300 transition group-hover:translate-x-1">{t('Tayyorlanish →')}</div>
+    <Link to={`/subjects/${exam.subject?._id}`} className={`${glass} group flex items-center gap-5 transition hover:bg-white/[0.1]`}>
+      <CountUp to={left} duration={1.6} className="text-6xl font-extrabold leading-none tracking-[-0.05em] text-brand-300 sm:text-7xl" />
+      <div className="min-w-0">
+        <div className="text-xs font-semibold uppercase tracking-wider text-brand-300">{t('kun qoldi')}</div>
+        <div className="mt-1 truncate text-lg font-bold text-white">{exam.subject?.name}</div>
+        <div className="text-sm text-slate-300">{EXAM_LABEL[exam.type]} · {dateLong(exam.date)}</div>
+      </div>
+    </Link>
+  );
+}
+
+/** Mashq testi kartasi (nazorat sanasi bo'lmasa ham hero bo'sh qolmasin) */
+function QuizCard({ quiz }) {
+  return (
+    <Link to={`/quizzes/${quiz._id}`} className={`${glass} group block transition hover:bg-white/[0.1]`}>
+      <div className="flex items-center justify-between gap-3">
+        <span className="inline-flex items-center gap-2 rounded-full bg-brand-300/15 px-3 py-1 text-xs font-semibold text-brand-300"><Icon name="check" size={14} />{t('Mashq testi')}</span>
+        <span className="text-sm text-slate-300">{t('{n} ta savol', { n: quiz.count })}</span>
+      </div>
+      <div className="mt-3 line-clamp-2 text-lg font-bold leading-snug text-white">{quiz.title}</div>
+      <div className="mt-1 text-sm text-slate-300">{quiz.subject?.name}</div>
+      <div className="mt-4 flex items-center justify-between">
+        <span className="text-sm text-slate-400">{quiz.attempts ? t('{n} marta yechilgan', { n: quiz.attempts }) : t('Birinchi bo\'lib yeching')}</span>
+        <span className="font-semibold text-brand-300 transition group-hover:translate-x-1">{t('Yechish →')}</span>
+      </div>
+    </Link>
+  );
+}
+
+/** Tavsiya etilgan repetitor (hero uchun ixcham) */
+function TutorMini({ tutor }) {
+  return (
+    <Link to={`/tutors/${tutor._id}`} className="group block rounded-2xl bg-white p-5 text-slate-900 shadow-2xl shadow-black/30 transition hover:-translate-y-0.5 sm:p-6">
+      <div className="flex items-center gap-3">
+        <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">{initial(tutor.user?.name)}</div>
+        <div className="min-w-0 flex-1">
+          <div className="truncate font-bold">{tutor.user?.name}</div>
+          <div className="text-sm text-slate-600">{tutor.ratingCount ? `★ ${tutor.ratingAvg.toFixed(1)} (${tutor.ratingCount})` : t('Yangi repetitor')}</div>
+        </div>
+        {tutor.featured && <span className="chip bg-brand-100 text-brand-700">{t('Tavsiya')}</span>}
+      </div>
+      <p className="mt-3 line-clamp-2 text-sm text-slate-700">{tutor.headline}</p>
+      <div className="mt-4 flex items-end justify-between gap-3">
+        <div className="flex flex-wrap gap-1.5">{tutor.subjects?.slice(0, 2).map((s) => <span key={s._id} className="chip bg-slate-100 text-slate-700">{s.name}</span>)}</div>
+        <div className="shrink-0 text-right"><div className="font-extrabold text-brand-700">{money(tutor.pricePerHour)}</div><div className="text-xs text-slate-500">{t('soatiga')}</div></div>
+      </div>
+    </Link>
+  );
+}
+
+/** Hero o'ng tomoni: haqiqiy ma'lumotdan kartalar. Ma'lumot yo'q bo'lsa karta chiqmaydi. */
+function HeroCards({ exam, quiz, tutor, stats }) {
+  const nums = stats && [[stats.tutors, 'repetitor'], [stats.subjects, 'fan'], [stats.quizzes, 'test']].filter(([n]) => n);
+  return (
+    <div className="relative space-y-4 lg:pl-6">
+      {exam ? <ExamCard exam={exam} /> : quiz && <QuizCard quiz={quiz} />}
+      {tutor && <div className="lg:-ml-10 lg:mr-6"><TutorMini tutor={tutor} /></div>}
+      {nums?.length > 0 && (
+        <div className="flex flex-wrap gap-2">
+          {nums.map(([n, l]) => <span key={l} className="rounded-full bg-white/[0.06] px-4 py-2 text-sm text-slate-200 ring-1 ring-white/10"><b className="text-white">{n}</b> {t(l)}</span>)}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** Repetitorlar avatarlari: ishonch belgisi */
+function TutorFaces({ tutors, total }) {
+  if (!tutors?.length) return null;
+  return (
+    <Link to="/tutors" className="mt-8 inline-flex items-center gap-3 text-sm text-slate-300 hover:text-white">
+      <span className="flex -space-x-2">
+        {tutors.slice(0, 5).map((x) => <span key={x._id} className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-sm font-bold text-white ring-2 ring-field">{initial(x.user?.name)}</span>)}
+      </span>
+      <span>{t('{n} ta tekshirilgan repetitor', { n: total || tutors.length })}</span>
     </Link>
   );
 }
@@ -87,6 +162,7 @@ export default function Home() {
   const exams = useFetch(`/exams${filter}`);
   const tutors = useFetch(`/tutors${filter}`);
   const stats = useFetch('/stats');
+  const quizzes = useFetch('/quizzes');
   const [who, setWho] = useState('student');
   const steps = who === 'student' ? stepsStudent(meta) : stepsTutor(meta);
 
@@ -94,24 +170,37 @@ export default function Home() {
     <>
       {/* 1. Hero */}
       <section className="relative overflow-hidden bg-field text-white">
-        <StarField />
-        <div className={`${wrap} relative grid gap-12 py-16 sm:py-24 lg:grid-cols-[1.5fr_1fr] lg:items-end`}>
+        {/* Fon: ikki yumshoq firuza nur va nozik nuqtali to'r */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_15%,rgba(94,224,210,0.18),transparent_55%),radial-gradient(ellipse_at_0%_100%,rgba(18,145,139,0.25),transparent_50%)]" />
+        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(circle,#fff_1px,transparent_1px)] [background-size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+        <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-16`}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
-            <h1 className="text-[clamp(2rem,5.2vw,3.75rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">{t('UWED talabalari uchun repetitorlar')}</h1>
+            <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3.5 py-1.5 text-sm font-medium text-brand-100 ring-1 ring-white/10">
+              <span className="h-2 w-2 animate-pulse rounded-full bg-brand-300" />{t('Pilot · talabalar uchun bepul')}
+            </span>
+            <h1 className="mt-5 text-[clamp(2.25rem,5.6vw,4.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
+              {t('UWED talabalari uchun')}<br /><span className="text-brand-300">{t('repetitorlar va testlar')}</span>
+            </h1>
             <p className="mt-6 max-w-xl text-lg text-slate-300">{t("Repetitorlar, materiallar, nazoratlar kalendari va fan guruhlari. Kursingizga moslashtirilgan, narxlari ochiq, sharhlari haqiqiy.")}</p>
             <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-base text-white">
               {[t('Ro\'yxatdan o\'tish bepul'), t('Parol kerak emas'), t("Birinchi darsga chegirma")].map((x) => (
                 <li key={x} className="flex items-center gap-2"><Icon name="check" size={20} className="text-brand-300" />{x}</li>
               ))}
             </ul>
-            <div className="mt-8 max-w-xl text-slate-900"><PrefPicker /></div>
+            <div className="mt-8 max-w-xl rounded-2xl bg-white/[0.06] p-4 ring-1 ring-white/10">
+              <div className="mb-2 text-sm font-medium text-slate-300">{t('Fakultet va kursingizni tanlang:')}</div>
+              <div className="text-slate-900"><PrefPicker /></div>
+            </div>
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/tutors" className="btn bg-brand-300 px-7 py-3 text-base text-slate-900 hover:bg-white">{t('Repetitor topish')}</Link>
               <Link to="/subjects" className="btn bg-white/10 px-7 py-3 text-base text-white hover:bg-white/20">{t("Fanlarimni ko'rish")}</Link>
             </div>
+            <TutorFaces tutors={tutors.data} total={stats.data?.tutors} />
           </motion.div>
-          <motion.div className="lg:text-right" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
-            {exams.loading ? <Spinner /> : <NextExam exam={exams.data?.[0]} />}
+          <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, delay: 0.15, ease: [0.22, 1, 0.36, 1] }}>
+            {exams.loading || tutors.loading ? <Spinner /> : (
+              <HeroCards exam={exams.data?.[0]} quiz={quizzes.data?.[0]} tutor={tutors.data?.[0]} stats={stats.data} />
+            )}
           </motion.div>
         </div>
       </section>
@@ -119,7 +208,7 @@ export default function Home() {
       {/* 2. Haqiqiy raqamlar */}
       <section className="bg-brand-700 text-white">
         <Stagger className={`${wrap} grid grid-cols-2 gap-8 py-10 sm:py-12 lg:grid-cols-4`}>
-          {[['subjects', 'Fanlar'], ['tutors', 'Repetitorlar'], ['materials', 'Materiallar'], ['exams', 'Nazoratlar']].map(([k, label]) => (
+          {[['subjects', 'Fanlar'], ['tutors', 'Repetitorlar'], ['materials', 'Materiallar'], ['quizzes', 'Mashq testlari']].map(([k, label]) => (
             <Item key={k}>
               <CountUp to={stats.data?.[k] || 0} className="block text-5xl font-extrabold tracking-[-0.04em] sm:text-6xl" />
               <div className="mt-1 text-base text-brand-100">{t(label)}</div>
@@ -150,15 +239,41 @@ export default function Home() {
 
       {/* 4. Yaqin nazoratlar */}
       <section className={`${wrap} mt-24 sm:mt-32`}>
-        <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
-          <h2 className={h2}>{t('Yaqinlashayotgan nazoratlar')}</h2>
-          <Link to="/calendar" className="text-base font-semibold text-brand-700 hover:underline">{t('Barchasi →')}</Link>
-        </div>
-        {exams.loading ? <Spinner /> : (
-          <Stagger className="grid gap-3 md:grid-cols-2">
-            {exams.data?.slice(0, 4).map((e) => <Item key={e._id}><ExamRow e={e} /></Item>)}
-            {!exams.data?.length && <div className="card p-8 text-base text-slate-600 md:col-span-2">{t('Hozircha nazorat sanalari kiritilmagan.')}</div>}
-          </Stagger>
+        {/* Sana bo'lmasa bo'sh blok o'rniga mashq testlari ko'rsatiladi */}
+        {exams.data?.length || !quizzes.data?.length ? (
+          <>
+            <div className="mb-8 flex flex-wrap items-end justify-between gap-3">
+              <h2 className={h2}>{t('Yaqinlashayotgan nazoratlar')}</h2>
+              <Link to="/calendar" className="text-base font-semibold text-brand-700 hover:underline">{t('Barchasi →')}</Link>
+            </div>
+            {exams.loading ? <Spinner /> : (
+              <Stagger className="grid gap-3 md:grid-cols-2">
+                {exams.data?.slice(0, 4).map((e) => <Item key={e._id}><ExamRow e={e} /></Item>)}
+                {!exams.data?.length && <div className="card p-8 text-base text-slate-600 md:col-span-2">{t('Hozircha nazorat sanalari kiritilmagan.')}</div>}
+              </Stagger>
+            )}
+          </>
+        ) : (
+          <>
+            <div className="mb-8">
+              <h2 className={h2}>{t('Nazoratga tayyorlaning')}</h2>
+              <p className="mt-3 max-w-2xl text-lg text-slate-600">{t("Mashq testini yeching: natija darhol chiqadi, xato qilgan savollaringiz izohi bilan ko'rinadi.")}</p>
+            </div>
+            <Stagger className="grid gap-3 md:grid-cols-2">
+              {quizzes.data.slice(0, 4).map((q) => (
+                <Item key={q._id}>
+                  <Link to={`/quizzes/${q._id}`} className="card-link group flex h-full items-center gap-5 p-6">
+                    <IconBadge name="check" />
+                    <div className="min-w-0 flex-1">
+                      <div className="text-sm font-semibold text-brand-700">{q.subject?.name} · {t('{n} ta savol', { n: q.count })}</div>
+                      <div className="mt-1 text-lg font-bold leading-snug text-slate-900">{q.title}</div>
+                    </div>
+                    <span className="shrink-0 font-semibold text-brand-700 transition group-hover:translate-x-1">{t('Yechish →')}</span>
+                  </Link>
+                </Item>
+              ))}
+            </Stagger>
+          </>
         )}
       </section>
 

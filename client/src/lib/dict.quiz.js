@@ -30,6 +30,19 @@ export const quiz = {
   "Bu fandan hali repetitor yo'q.": ['По этому предмету пока нет репетиторов.', 'No tutors for this subject yet.'],
   "{s} repetitorlarini ko'rish": ['Репетиторы: {s}', 'See {s} tutors'],
 
+  // Bosh sahifa (hero)
+  'Pilot · talabalar uchun bepul': ['Пилот · бесплатно для студентов', 'Pilot · free for students'],
+  'repetitorlar va testlar': ['репетиторы и тесты', 'tutors and practice tests'],
+  'kun qoldi': ['дней осталось', 'days left'],
+  'Mashq testi': ['Тренировочный тест', 'Practice test'],
+  "Birinchi bo'lib yeching": ['Решите первым', 'Be the first to take it'],
+  'Yangi repetitor': ['Новый репетитор', 'New tutor'],
+  '{n} ta tekshirilgan repetitor': ['Проверенных репетиторов: {n}', '{n} verified tutors'],
+  fan: ['предм.', 'subjects'],
+  test: ['тест(ов)', 'tests'],
+  'Nazoratga tayyorlaning': ['Готовьтесь к контрольным', 'Prepare for your exams'],
+  "Mashq testini yeching: natija darhol chiqadi, xato qilgan savollaringiz izohi bilan ko'rinadi.": ['Решите тренировочный тест: результат сразу, ошибки — с пояснениями.', 'Take a practice test: instant results, with explanations for your mistakes.'],
+
   // Repetitor: bo'sh vaqtlar
   'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
   "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],
