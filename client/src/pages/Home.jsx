@@ -109,7 +109,7 @@ function QuizCard({ quiz }) {
 /** Tavsiya etilgan repetitor (hero uchun ixcham) */
 function TutorMini({ tutor }) {
   return (
-    <Link to={`/tutors/${tutor._id}`} className="group block rounded-2xl glass p-5 text-slate-900 shadow-2xl shadow-black/30 transition hover:-translate-y-0.5 sm:p-6">
+    <Link to={`/tutors/${tutor._id}`} className="group block rounded-2xl bg-white p-5 text-slate-900 shadow-2xl shadow-black/30 transition hover:-translate-y-0.5 sm:p-6">
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">{initial(tutor.user?.name)}</div>
         <div className="min-w-0 flex-1">
