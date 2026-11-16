@@ -43,6 +43,11 @@ export const quiz = {
   'Nazoratga tayyorlaning': ['Готовьтесь к контрольным', 'Prepare for your exams'],
   "Mashq testini yeching: natija darhol chiqadi, xato qilgan savollaringiz izohi bilan ko'rinadi.": ['Решите тренировочный тест: результат сразу, ошибки — с пояснениями.', 'Take a practice test: instant results, with explanations for your mistakes.'],
 
+  // Repetitorlar katalogi
+  'Mening fanlarim': ['Мои предметы', 'My subjects'],
+  'Bron qilish →': ['Записаться →', 'Book →'],
+  'Narx — 1 soatlik dars uchun · birinchi darsga {n}% chegirma': ['Цена — за 1 час · скидка {n}% на первый урок', 'Price per 1-hour lesson · {n}% off your first lesson'],
+
   // Repetitor: bo'sh vaqtlar
   'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
   "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],
