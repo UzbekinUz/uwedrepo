@@ -24,6 +24,7 @@ export const dict = {
   'Xalqaro munosabatlar': ['Международные отношения', 'International Relations'],
   'Xalqaro iqtisodiyot va menejment': ['Международная экономика и менеджмент', 'International Economics and Management'],
   'Xalqaro huquq': ['Международное право', 'International Law'],
+  Siyosatshunoslik: ['Политология', 'Political Science'],
   Fakultet: ['Факультет', 'Faculty'],
   'Fakultetni tanlang': ['Выберите факультет', 'Select faculty'],
   Kurs: ['Курс', 'Year'],
