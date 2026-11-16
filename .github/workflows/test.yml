@@ -1,0 +1,23 @@
+# Har push va PR'da: server testlari (vaqtinchalik MongoDB bilan) va sayt build'i
+name: Test va build
+on:
+  push:
+    branches: [main, mashq-testlari-ai]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Server paketlari
+        run: npm ci --prefix server
+      - name: Server testlari
+        run: npm --prefix server test
+      - name: Sayt paketlari
+        run: npm ci --prefix client
+      - name: Sayt build
+        run: npm run build --prefix client
