@@ -5,6 +5,7 @@ import bcrypt from 'bcryptjs';
 
 let mem, server, base, M, signToken, aiMock;
 const aiCalls = [];
+const tgCalls = [];
 const api = async (method, path, body, token) => {
   const r = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) }, body: body && JSON.stringify(body) });
   const ct = r.headers.get('content-type') || '';
@@ -12,7 +13,7 @@ const api = async (method, path, body, token) => {
   return { s: r.status, j: ct.includes('json') ? await r.json() : Buffer.from(await r.arrayBuffer()).toString('utf8'), ct };
 };
 const fx = {};
-const settings = (over = {}) => ({ commission: 10, firstLessonDiscount: 20, cancelHours: 24, registrationOpen: true, banner: { text: '', kind: 'info', active: false }, aiEnabled: true, aiDailyLimit: 10, ...over });
+const settings = (over = {}) => ({ commission: 10, firstLessonDiscount: 20, cancelHours: 24, registrationOpen: true, banner: { text: '', kind: 'info', active: false }, aiEnabled: true, aiDailyLimit: 10, telegramReminders: true, ...over });
 
 before(async () => {
   const { MongoMemoryServer } = await import('mongodb-memory-server');
@@ -26,6 +27,8 @@ before(async () => {
     let b = '';
     req.on('data', (c) => { b += c; });
     req.on('end', () => {
+      res.setHeader('content-type', 'application/json');
+      if (req.url.startsWith('/bot')) { tgCalls.push(JSON.parse(b || '{}')); return res.end(JSON.stringify({ ok: true, result: {} })); }
       aiCalls.push({ key: req.headers['x-api-key'], body: JSON.parse(b) });
       res.setHeader('content-type', 'application/json');
       res.end(JSON.stringify({ content: [{ type: 'text', text: 'Sinov izohi' }] }));
@@ -33,6 +36,7 @@ before(async () => {
   }).listen(0);
   process.env.ANTHROPIC_API_KEY = 'test-key';
   process.env.ANTHROPIC_API_URL = `http://127.0.0.1:${aiMock.address().port}`;
+  process.env.TELEGRAM_API_URL = `http://127.0.0.1:${aiMock.address().port}`; // Telegram ham soxta serverga
   const { connectDb } = await import('../src/db.js');
   await connectDb();
   M = await import('../src/models/index.js');
@@ -323,4 +327,61 @@ test("test natijalari: admin kimlar yechganini, o'rtacha natijani va CSV ni ko'r
   const csv = await api('GET', `/admin/quizzes/${id}/attempts.csv`, null, fx.t.admin);
   assert.match(csv.ct, /text\/csv/);
   assert.match(csv.j, /Talaba B/);
+});
+
+test("admin repetitor anketasini tahrirlaydi (ism ham), talaba qila olmaydi", async () => {
+  const body = { name: 'Toza Ism', headline: 'Ekonometrika darslari', bio: '', experience: '', pricePerHour: 60000, subjects: [String(fx.subject._id)], formats: ['online'], languages: ['uz'], telegram: '@x', availability: [{ day: 2, from: '16:00', to: '19:00' }, { day: 4, from: '16:00', to: '19:00' }] };
+  assert.equal((await api('PUT', `/admin/tutors/${fx.tutor._id}`, body, fx.t.a)).s, 403);
+  const r = await api('PUT', `/admin/tutors/${fx.tutor._id}`, body, fx.t.admin);
+  assert.equal(r.s, 200);
+  assert.equal(r.j.headline, 'Ekonometrika darslari');
+  assert.equal(r.j.status, 'approved', "holat o'zgarmaydi");
+  assert.equal((await M.User.findById(fx.tutorUser._id)).name, 'Toza Ism');
+});
+
+test("talaba o'z natijalarini, muallif esa ismsiz statistikani ko'radi (admin urinishlari hisobga olinmaydi)", async () => {
+  const id = fx.quiz._id;
+  await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 1] }, fx.t.admin); // admin sinovi
+  const mine = await api('GET', '/quizzes/attempts/mine', null, fx.t.a);
+  assert.equal(mine.s, 200);
+  assert.ok(mine.j.length >= 1 && mine.j[0].quiz.title === 'Sinov testi' && mine.j[0].quiz.subject.name);
+  assert.equal((await api('GET', `/quizzes/${id}/stats`, null, fx.t.b)).s, 403, 'begona statistikani ko\'rmaydi');
+  const st = await api('GET', `/quizzes/${id}/stats`, null, fx.t.tutor);
+  assert.equal(st.s, 200);
+  assert.equal(st.j.students, 2, 'faqat talabalar A va B');
+  assert.equal(st.j.rows, undefined, 'ismlar yo\'q');
+  const adm = await api('GET', `/admin/quizzes/${id}/attempts`, null, fx.t.admin);
+  assert.ok(adm.j.summary.adminAttempts >= 1);
+  assert.ok(!adm.j.rows.some((x) => x.student.role === 'admin'));
+});
+
+test("Telegram eslatmalari: ertangi nazorat va yangi test — bir martadan, faqat tegishli kurs talabalariga", async () => {
+  const tg = await import('../src/telegram.js');
+  const { runExamReminders, notifyNewQuiz } = await import('../src/reminders.js');
+  tg.bot.username = 'testbot';
+  try {
+    await M.User.updateOne({ _id: fx.studentA._id }, { faculty: 'xim', year: 1 }); // mos keladi
+    await M.User.updateOne({ _id: fx.studentB._id }, { faculty: 'xm', year: 1 }); // boshqa fakultet
+    const exam = await M.Exam.create({ subject: fx.subject._id, type: 'oraliq', date: new Date(Date.now() + 24 * 3600e3) });
+    tgCalls.length = 0;
+    const r1 = await runExamReminders();
+    assert.equal(r1.length, 1);
+    assert.equal(r1[0].total, 1, 'faqat xim 1-kurs talabasi');
+    assert.equal(tgCalls[0].chat_id, '1001');
+    assert.match(tgCalls[0].text, /oraliq nazorat/);
+    assert.equal((await runExamReminders()).length, 0, 'qayta yuborilmaydi');
+    await exam.deleteOne();
+
+    const q = await api('POST', '/quizzes', { subject: String(fx.subject._id), title: 'Yangi test', questions: [{ text: '1+1?', options: ['1', '2'], correct: 1 }] }, fx.t.admin);
+    await new Promise((ok) => setTimeout(ok, 300));
+    assert.ok(tgCalls.some((c) => /Yangi mashq testi/.test(c.text)), 'admin tuzgan test darhol e\'lon qilinadi');
+    assert.equal(await notifyNewQuiz(q.j._id), null, 'ikkinchi marta yuborilmaydi');
+
+    await api('PUT', '/admin/settings', settings({ telegramReminders: false }), fx.t.admin);
+    await M.Exam.create({ subject: fx.subject._id, type: 'yakuniy', date: new Date(Date.now() + 24 * 3600e3) });
+    assert.equal((await runExamReminders()).length, 0, "sozlamada o'chirilsa yuborilmaydi");
+    await api('PUT', '/admin/settings', settings(), fx.t.admin);
+  } finally {
+    tg.bot.username = '';
+  }
 });

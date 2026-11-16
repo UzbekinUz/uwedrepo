@@ -3,12 +3,26 @@ import { api } from '../../api.js';
 import { Spinner, ErrorBox } from '../../components/ui.jsx';
 import { DAYS_SHORT } from '../../lib/format.js';
 import { Chip, FField, Filters, Section, StatusChip, money, useAct, useFetch } from './kit.jsx';
+import { TutorForm } from '../TutorDashboard.jsx';
 
 function Card({ t, reload }) {
   const { run, err, busy } = useAct();
   const [rejecting, setRejecting] = useState(false);
   const [reason, setReason] = useState('');
+  const [editing, setEditing] = useState(false);
   const patch = (body) => run(async () => { await api(`/admin/tutors/${t._id}`, { method: 'PATCH', body }); setRejecting(false); reload(); });
+  if (editing) {
+    return (
+      <div className="space-y-3 bg-white p-5 lg:col-span-2">
+        <div className="flex items-center justify-between gap-2">
+          <h3 className="text-lg font-extrabold">Anketani tahrirlash: {t.user?.name}</h3>
+          <button className="btn-ghost btn-sm" onClick={() => setEditing(false)}>Bekor</button>
+        </div>
+        <p className="text-sm text-slate-600">Xatolarni tuzating (ism, sarlavha, fanlar, narx). Holat va reyting o'zgarmaydi; repetitorga Telegram orqali xabar boradi.</p>
+        <TutorForm initial={t} withName endpoint={`/admin/tutors/${t._id}`} onSaved={() => { setEditing(false); reload(); }} />
+      </div>
+    );
+  }
   return (
     <div className="space-y-3 bg-white p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
@@ -37,6 +51,7 @@ function Card({ t, reload }) {
       ) : (
         <div className="flex flex-wrap gap-2">
           {t.status !== 'approved' && <button className="btn-primary btn-sm" disabled={busy} onClick={() => patch({ status: 'approved' })}>Tasdiqlash</button>}
+          <button className="btn-ghost btn-sm" onClick={() => setEditing(true)}>Tahrirlash</button>
           {t.status !== 'rejected' && <button className="btn-ghost btn-sm text-red-700" onClick={() => setRejecting(true)}>Rad etish…</button>}
           {t.status === 'approved' && <button className="btn-ghost btn-sm" disabled={busy} onClick={() => patch({ featured: !t.featured })}>{t.featured ? 'Tavsiyadan olish' : 'Tavsiya etish'}</button>}
           {t.status === 'approved' && <button className="btn-ghost btn-sm text-red-700" disabled={busy} onClick={() => confirm('Repetitor katalogdan yashiriladi (anketasi «kutilmoqda» holatiga qaytadi). Davom etasizmi?') && patch({ status: 'pending' })}>Katalogdan yashirish</button>}

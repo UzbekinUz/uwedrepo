@@ -5,6 +5,8 @@ import { STARTER_SUBJECTS } from '../../seed.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
 import { FACULTY_KEYS, EXAM_TYPES } from '../../data/meta.js';
 import { audit, toCsv, sendCsv } from './helpers.js';
+import { quizStats, pct } from '../../quizStats.js';
+import { notifyNewQuiz } from '../../reminders.js';
 
 const r = Router();
 
@@ -105,7 +107,7 @@ r.post('/exams', wrap(async (req, res) => {
   res.status(201).json(e);
 }));
 r.put('/exams/:id', wrap(async (req, res) => {
-  const e = await Exam.findByIdAndUpdate(req.params.id, examSchema.parse(req.body), { new: true });
+  const e = await Exam.findByIdAndUpdate(req.params.id, { ...examSchema.parse(req.body), reminded: false }, { new: true }); // sana o'zgarsa eslatma qayta yuboriladi
   if (!e) throw new HttpError(404, 'Sana topilmadi');
   audit(req, 'exam.update', e._id);
   res.json(e);
@@ -145,21 +147,14 @@ r.get('/quizzes', wrap(async (req, res) => {
 async function quizResults(id) {
   const quiz = await Quiz.findById(id).populate('subject', 'name').lean();
   if (!quiz) throw new HttpError(404, 'Test topilmadi');
-  const attempts = await QuizAttempt.find({ quiz: id }).populate('student', 'name telegram phone faculty year').sort({ createdAt: -1 }).limit(2000).lean();
-  const right = quiz.questions.map(() => 0);
-  for (const a of attempts) quiz.questions.forEach((q, i) => { if (a.answers?.[i] === q.correct) right[i] += 1; });
-  const perStudent = new Map();
-  for (const a of attempts) perStudent.set(String(a.student?._id), (perStudent.get(String(a.student?._id)) || 0) + 1);
-  const pct = (a) => (a.total ? Math.round((a.score / a.total) * 100) : 0);
+  const all = await QuizAttempt.find({ quiz: id }).populate('student', 'name telegram phone faculty year role').sort({ createdAt: -1 }).limit(2000).lean();
+  const attempts = all.filter((a) => a.student?.role !== 'admin'); // adminlarning sinov urinishlari statistikani buzmasin
+  const tries = new Map();
+  for (const a of attempts) tries.set(String(a.student?._id), (tries.get(String(a.student?._id)) || 0) + 1);
   return {
     quiz: { _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts },
-    summary: {
-      saved: attempts.length,
-      students: perStudent.size,
-      avgPct: attempts.length ? Math.round(attempts.reduce((s, a) => s + pct(a), 0) / attempts.length) : null,
-      questions: quiz.questions.map((q, i) => ({ text: q.text, rightPct: attempts.length ? Math.round((right[i] / attempts.length) * 100) : null })),
-    },
-    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, tries: perStudent.get(String(a.student?._id)) })),
+    summary: { ...quizStats(quiz, attempts), adminAttempts: all.length - attempts.length },
+    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, tries: tries.get(String(a.student?._id)) })),
   };
 }
 r.get('/quizzes/:id/attempts', wrap(async (req, res) => res.json(await quizResults(req.params.id))));
@@ -182,6 +177,7 @@ r.patch('/quizzes/:id', wrap(async (req, res) => {
   const q = await Quiz.findByIdAndUpdate(req.params.id, { status }, { new: true });
   if (!q) throw new HttpError(404, 'Test topilmadi');
   audit(req, `quiz.${status}`, q.title);
+  if (status === 'approved') notifyNewQuiz(q._id).catch((e) => console.error('[notify quiz]', e.message));
   res.json(q);
 }));
 r.delete('/quizzes/:id', wrap(async (req, res) => {

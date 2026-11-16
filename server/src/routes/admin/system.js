@@ -26,6 +26,7 @@ r.put(
         banner: z.object({ text: z.string().trim().max(200), kind: z.enum(['info', 'warn']), active: z.boolean() }),
         aiEnabled: z.boolean().optional(),
         aiDailyLimit: z.number().int().min(0).max(100).optional(),
+        telegramReminders: z.boolean().optional(),
       })
       .parse(req.body);
     const before = getSettings();

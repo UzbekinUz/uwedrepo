@@ -41,6 +41,7 @@ const examSchema = new Schema(
     type: { type: String, enum: EXAM_TYPES, required: true },
     date: { type: Date, required: true },
     note: { type: String, default: '' },
+    reminded: { type: Boolean, default: false }, // Telegram eslatmasi yuborilganmi
   },
   { timestamps: true }
 );
@@ -178,6 +179,7 @@ const settingsSchema = new Schema({
   banner: { text: { type: String, maxlength: 200, default: '' }, kind: { type: String, enum: ['info', 'warn'], default: 'info' }, active: { type: Boolean, default: false } },
   aiEnabled: Boolean, // testlardagi "Nega noto'g'ri?" AI izohi
   aiDailyLimit: Number, // bitta talabaga kuniga nechta AI izoh
+  telegramReminders: Boolean, // nazorat eslatmalari va yangi test xabarlari
 });
 
 // Admin harakatlari jurnali
@@ -220,6 +222,7 @@ const quizSchema = new Schema(
     status: { type: String, enum: ['pending', 'approved', 'hidden'], default: 'pending' },
     questions: { type: [questionSchema], validate: (v) => v.length >= 1 && v.length <= 60 },
     attempts: { type: Number, default: 0 },
+    notified: { type: Boolean, default: false }, // talabalarga 'yangi test' xabari yuborilganmi
   },
   { timestamps: true }
 );

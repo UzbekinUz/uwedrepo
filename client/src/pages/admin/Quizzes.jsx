@@ -14,7 +14,7 @@ function Results({ id, onBack }) {
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const { quiz, summary, rows } = data;
-  const anon = Math.max(0, quiz.attempts - summary.saved);
+  const anon = Math.max(0, quiz.attempts - summary.saved - (summary.adminAttempts || 0));
   return (
     <Section title={`Natijalar: ${quiz.title}`}
       actions={<><CsvButton path={`/admin/quizzes/${id}/attempts.csv`} name="test-natijalari.csv" /><button className="btn-ghost btn-sm" onClick={onBack}>← Testlar ro'yxati</button></>}
@@ -23,7 +23,7 @@ function Results({ id, onBack }) {
         <Stat label="Jami yechilgan" value={quiz.attempts} hint={`${quiz.subject?.name || ''} · ${quiz.count} ta savol`} />
         <Stat label="Talabalar" value={summary.students} hint="saytga kirib yechganlar" />
         <Stat label="O'rtacha natija" value={summary.avgPct == null ? '—' : `${summary.avgPct}%`} />
-        <Stat label="Kirmasdan yechganlar" value={anon} />
+        <Stat label="Kirmasdan yechganlar" value={anon} hint={summary.adminAttempts ? `admin sinovlari hisobga olinmadi: ${summary.adminAttempts}` : undefined} />
       </StatGrid>
       <Table head={['Talaba', 'Fakultet, kurs', 'Natija', 'Urinishlar', 'Sana']} empty={!rows.length && "Hali saytga kirgan talabalardan hech kim yechmagan."}>
         {rows.map((x) => (

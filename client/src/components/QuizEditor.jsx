@@ -144,11 +144,33 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
   );
 }
 
+/** Muallifga test statistikasi: ismsiz, faqat umumiy raqamlar */
+function QuizStats({ id }) {
+  const { data, loading, error } = useFetch(`/quizzes/${id}/stats`);
+  if (loading) return <Spinner />;
+  if (error) return <ErrorBox error={error} />;
+  if (!data.saved) return <p className="text-sm text-slate-500">{t("Hali saytga kirgan talabalardan hech kim yechmagan.")}</p>;
+  return (
+    <div className="space-y-2 text-sm">
+      <p>{t('{n} ta talaba', { n: data.students })} · {t("o'rtacha natija")}: <b>{data.avgPct}%</b></p>
+      {data.questions.map((q, i) => (
+        <div key={i} className="flex items-center gap-3">
+          <span className="w-6 shrink-0 font-bold text-slate-500">{i + 1}.</span>
+          <span className="min-w-0 flex-1 truncate" title={q.text}>{q.text}</span>
+          <b className={q.rightPct < 40 ? 'text-red-700' : q.rightPct < 70 ? 'text-amber-700' : 'text-emerald-700'}>{q.rightPct}%</b>
+        </div>
+      ))}
+      <p className="text-xs text-slate-500">{t("Foiz — shu savolga to'g'ri javob berganlar ulushi. Past foizli mavzularni darslaringizda ko'proq tushuntiring.")}</p>
+    </div>
+  );
+}
+
 /** Muallifning testlari ro'yxati + tahrirlash (repetitor paneli uchun) */
 export function MyQuizzes({ subjects, note }) {
   const [n, setN] = useState(0);
   const [edit, setEdit] = useState(null); // null | 'new' | to'liq test
   const [err, setErr] = useState('');
+  const [statsOf, setStatsOf] = useState(null);
   const { data: list, loading, error } = useFetch('/quizzes/mine', [n]);
   const reload = () => setN((x) => x + 1);
   const open = async (id) => { setErr(''); try { setEdit(await api(`/quizzes/${id}/full`)); } catch (e) { setErr(e.message); } };
@@ -168,14 +190,16 @@ export function MyQuizzes({ subjects, note }) {
       {list?.length === 0 && <div className="card p-6 text-sm text-slate-500">{t("Hali test tuzmagansiz.")}</div>}
       {list?.map((q) => (
         <div key={q._id} className="card flex flex-wrap items-center justify-between gap-3 p-4">
-          <div>
+          <div className="w-full sm:w-auto sm:flex-1">
             <div className="font-semibold">{q.title} <span className={`chip ml-1 ${STATUS_TXT[q.status][0]}`}>{t(STATUS_TXT[q.status][1])}</span></div>
             <div className="text-sm text-slate-500">{q.subject?.name} · {t('{n} ta savol', { n: q.questions.length })} · {t('{n} marta yechilgan', { n: q.attempts })}</div>
           </div>
           <div className="flex gap-2">
+            <button className="btn-ghost btn-sm" onClick={() => setStatsOf(statsOf === q._id ? null : q._id)}>{t('Statistika')}</button>
             <button className="btn-ghost btn-sm" onClick={() => open(q._id)}>{t('Tahrirlash')}</button>
             <button className="btn-ghost btn-sm text-red-600" onClick={() => remove(q._id)}>{t("O'chirish")}</button>
           </div>
+          {statsOf === q._id && <div className="w-full border-t border-slate-100 pt-3"><QuizStats id={q._id} /></div>}
         </div>
       ))}
     </div>

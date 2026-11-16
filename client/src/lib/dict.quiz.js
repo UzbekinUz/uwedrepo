@@ -48,6 +48,19 @@ export const quiz = {
   'Bron qilish →': ['Записаться →', 'Book →'],
   'Narx — 1 soatlik dars uchun · birinchi darsga {n}% chegirma': ['Цена — за 1 час · скидка {n}% на первый урок', 'Price per 1-hour lesson · {n}% off your first lesson'],
 
+  // Talaba: test natijalari
+  'Test natijalarim': ['Мои результаты тестов', 'My test results'],
+  Darslar: ['Уроки', 'Lessons'],
+  'Hali test yechmagansiz.': ['Вы ещё не решали тесты.', "You haven't taken any tests yet."],
+  'Fanlardan test tanlang →': ['Выберите тест по предмету →', 'Pick a test by subject →'],
+  urinish: ['попыток', 'attempts'],
+  "o'rtacha natija": ['средний результат', 'average score'],
+  Statistika: ['Статистика', 'Stats'],
+  '{n} ta talaba': ['Студентов: {n}', '{n} students'],
+  'Hali saytga kirgan talabalardan hech kim yechmagan.': ['Пока никто из вошедших студентов не решал.', 'No signed-in students have taken it yet.'],
+  "Foiz — shu savolga to'g'ri javob berganlar ulushi. Past foizli mavzularni darslaringizda ko'proq tushuntiring.": ['Процент — доля ответивших верно. Темы с низким процентом стоит разобрать на уроках подробнее.', 'Percent = share who answered correctly. Spend more lesson time on low-scoring topics.'],
+  "Ism (katalogda ko'rinadi)": ['Имя (видно в каталоге)', 'Name (shown in catalogue)'],
+
   // Repetitor: bo'sh vaqtlar
   'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
   "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],
