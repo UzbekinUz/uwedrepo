@@ -4,18 +4,7 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body {
-    @apply bg-slate-50 text-slate-900 antialiased; font-feature-settings: 'tnum' 1;
-    /* Bosh sahifadagi to'q fonning o'zi, ustidan 50% oq qatlam: yarmicha ochroq */
-    background-color: #0E2627;
-    background-image:
-      linear-gradient(rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.5)),
-      radial-gradient(ellipse at 85% 15%, rgba(94, 224, 210, 0.18), transparent 55%),
-      radial-gradient(ellipse at 0% 100%, rgba(18, 145, 139, 0.25), transparent 50%),
-      radial-gradient(circle, rgba(255, 255, 255, 0.14) 1px, transparent 1px);
-    background-size: auto, auto, auto, 28px 28px;
-    background-attachment: fixed;
-  }
+  body { @apply bg-slate-50 text-slate-900 antialiased; font-feature-settings: 'tnum' 1; }
   ::selection { @apply bg-brand-300 text-slate-900; }
   :focus-visible { @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-slate-50; }
   h1, h2, h3 { text-wrap: balance; }
