@@ -30,6 +30,11 @@ export const quiz = {
   "Bu fandan hali repetitor yo'q.": ['По этому предмету пока нет репетиторов.', 'No tutors for this subject yet.'],
   "{s} repetitorlarini ko'rish": ['Репетиторы: {s}', 'See {s} tutors'],
 
+  // Repetitor: bo'sh vaqtlar
+  'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
+  "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],
+  "Bir xil vaqtdagi kunlarni birga belgilang (masalan, Sesh, Pay, Shan 16:00–19:00). Boshqa kunlarda vaqt boshqacha bo'lsa, yangi qator qo'shing.": ['Отмечайте вместе дни с одинаковым временем (например, Вт, Чт, Сб 16:00–19:00). Если в другие дни время другое, добавьте новую строку.', 'Select days with the same hours together (e.g. Tue, Thu, Sat 16:00–19:00). If other days have different hours, add another row.'],
+
   // Repetitor: test tuzish
   "Fanlaringiz bo'yicha test tuzing: talabalar uni yechadi va natija ostida sizning profilingizni ko'radi. Har bir test (va har bir tahrir) admin tekshirgach chiqadi. Rasmiy imtihon variantlarini emas, o'xshash mashq savollarini joylang.": ['Составляйте тесты по своим предметам: студенты решают их и под результатом видят ваш профиль. Каждый тест (и каждая правка) публикуется после проверки администратором. Размещайте похожие тренировочные вопросы, а не официальные экзаменационные варианты.', 'Create tests for your subjects: students take them and see your profile under their results. Each test (and each edit) goes live after admin review. Post similar practice questions, not official exam papers.'],
   '+ Yangi test': ['+ Новый тест', '+ New test'],
