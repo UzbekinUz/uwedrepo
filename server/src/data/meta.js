@@ -2,6 +2,7 @@ export const FACULTIES = [
   { key: 'xm', name: 'Xalqaro munosabatlar' },
   { key: 'xim', name: 'Xalqaro iqtisodiyot va menejment' },
   { key: 'xh', name: 'Xalqaro huquq' },
+  { key: 'ss', name: 'Siyosatshunoslik' },
 ];
 export const FORMATS = ['online', 'offline'];
 export const LANGUAGES = ['uz', 'ru', 'en'];
