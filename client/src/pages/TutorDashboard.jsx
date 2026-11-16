@@ -3,28 +3,52 @@ import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
 import { Hint } from '../components/Motion.jsx';
 import { ErrorBox, Field, PageTitle, Spinner, Tabs, useFetch } from '../components/ui.jsx';
-import { DAYS, FORMAT_LABEL, LANG_LABEL, STATUS, dateTime, money, tgLink } from '../lib/format.js';
+import { DAYS_SHORT, FORMAT_LABEL, LANG_LABEL, STATUS, dateTime, money, tgLink } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
+import { MyQuizzes } from '../components/QuizEditor.jsx';
+
+const WEEK = [1, 2, 3, 4, 5, 6, 0]; // dushanbadan boshlab
+const newSlot = () => ({ days: [], from: '16:00', to: '19:00' });
+
+/** Bazadagi [{day, from, to}] ni bir xil vaqtli kunlar guruhiga aylantiradi: Sesh, Pay, Shan 16:00–19:00 */
+const groupSlots = (av = []) => {
+  const map = new Map();
+  for (const a of av) {
+    const k = `${a.from}|${a.to}`;
+    if (!map.has(k)) map.set(k, { days: [], from: a.from, to: a.to });
+    if (!map.get(k).days.includes(a.day)) map.get(k).days.push(a.day);
+  }
+  return map.size ? [...map.values()] : [{ ...newSlot(), days: [1] }];
+};
 
 function TutorForm({ initial, onSaved }) {
   const { meta } = useApp();
   const subjects = useFetch('/subjects');
   const [f, setF] = useState(() => ({
     headline: '', bio: '', experience: '', pricePerHour: 60000, telegram: '', formats: ['online'], languages: ['uz'],
-    availability: [{ day: 1, from: '16:00', to: '19:00' }],
     ...initial,
     subjects: initial?.subjects?.map((s) => s._id) || [],
+    slots: groupSlots(initial?.availability),
   }));
   const [err, setErr] = useState('');
   const [ok, setOk] = useState('');
   const toggle = (k, v) => setF((p) => ({ ...p, [k]: p[k].includes(v) ? p[k].filter((x) => x !== v) : [...p[k], v] }));
-  const setAv = (i, patch) => setF((p) => ({ ...p, availability: p.availability.map((a, j) => (j === i ? { ...a, ...patch } : a)) }));
+  const setSlot = (i, patch) => setF((p) => ({ ...p, slots: p.slots.map((a, j) => (j === i ? { ...a, ...patch } : a)) }));
+  const toggleDay = (i, d) => setSlot(i, { days: f.slots[i].days.includes(d) ? f.slots[i].days.filter((x) => x !== d) : [...f.slots[i].days, d] });
+  const slotsOk = f.slots.length > 0 && f.slots.every((s) => s.days.length && parseInt(s.from, 10) < parseInt(s.to, 10));
   const hours = Array.from({ length: 16 }, (_, i) => `${String(i + 7).padStart(2, '0')}:00`);
 
   const submit = async (e) => {
     e.preventDefault(); setErr(''); setOk('');
+    if (!slotsOk) { setErr(t("Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin")); return; }
+    // Har bir tanlangan kun alohida yoziladi (server formati o'zgarmaydi), takrorlar olib tashlanadi
+    const seen = new Set();
+    const availability = f.slots.flatMap((s) => s.days.map((day) => ({ day, from: s.from, to: s.to }))).filter((a) => {
+      const k = `${a.day}|${a.from}|${a.to}`;
+      return seen.has(k) ? false : seen.add(k);
+    });
     try {
-      const body = { headline: f.headline, bio: f.bio, experience: f.experience, pricePerHour: Number(f.pricePerHour), subjects: f.subjects, formats: f.formats, languages: f.languages, telegram: f.telegram, availability: f.availability.map(({ day, from, to }) => ({ day, from, to })) };
+      const body = { headline: f.headline, bio: f.bio, experience: f.experience, pricePerHour: Number(f.pricePerHour), subjects: f.subjects, formats: f.formats, languages: f.languages, telegram: f.telegram, availability };
       await api(initial ? '/tutors/me' : '/tutors', { method: initial ? 'PUT' : 'POST', body });
       setOk(initial ? 'Saqlandi' : "Anketa yuborildi! Admin tasdiqlagach katalogda ko'rinasiz.");
       onSaved?.();
@@ -54,16 +78,26 @@ function TutorForm({ initial, onSaved }) {
       <div>
         <span className="label">{t("Haftalik bo'sh vaqtlar")}</span>
         <div className="space-y-2">
-          {f.availability.map((a, i) => (
-            <div key={i} className="flex flex-wrap items-center gap-2">
-              <select className="input !w-auto" value={a.day} onChange={(e) => setAv(i, { day: Number(e.target.value) })}>{DAYS.map((d, n) => <option key={n} value={n}>{d}</option>)}</select>
-              <select className="input !w-auto" value={a.from} onChange={(e) => setAv(i, { from: e.target.value })}>{hours.map((h) => <option key={h}>{h}</option>)}</select>
-              <span>–</span>
-              <select className="input !w-auto" value={a.to} onChange={(e) => setAv(i, { to: e.target.value })}>{hours.map((h) => <option key={h}>{h}</option>)}</select>
-              <button type="button" className="text-sm text-red-600" onClick={() => setF({ ...f, availability: f.availability.filter((_, j) => j !== i) })}>{t("O'chirish")}</button>
+          {f.slots.map((a, i) => (
+            <div key={i} className="space-y-2 bg-slate-50 p-3">
+              <div className="flex flex-wrap gap-1.5">
+                {WEEK.map((d) => (
+                  <label key={d} className={`choice !px-3 !py-1.5 ${a.days.includes(d) ? 'choice-on' : ''}`}>
+                    <input type="checkbox" className="sr-only" checked={a.days.includes(d)} onChange={() => toggleDay(i, d)} />{DAYS_SHORT[d]}
+                  </label>
+                ))}
+              </div>
+              <div className="flex flex-wrap items-center gap-2">
+                <select className="input !w-auto" value={a.from} onChange={(e) => setSlot(i, { from: e.target.value })}>{hours.map((h) => <option key={h}>{h}</option>)}</select>
+                <span>–</span>
+                <select className="input !w-auto" value={a.to} onChange={(e) => setSlot(i, { to: e.target.value })}>{hours.map((h) => <option key={h}>{h}</option>)}</select>
+                {f.slots.length > 1 && <button type="button" className="text-sm text-red-600" onClick={() => setF({ ...f, slots: f.slots.filter((_, j) => j !== i) })}>{t("O'chirish")}</button>}
+              </div>
+              {!a.days.length && <p className="text-xs text-amber-700">{t('Kamida bitta kunni tanlang')}</p>}
             </div>
           ))}
-          <button type="button" className="btn-ghost btn-sm" onClick={() => setF({ ...f, availability: [...f.availability, { day: 1, from: '16:00', to: '19:00' }] })}>{t("+ Vaqt qo'shish")}</button>
+          <p className="text-sm text-slate-600">{t("Bir xil vaqtdagi kunlarni birga belgilang (masalan, Sesh, Pay, Shan 16:00–19:00). Boshqa kunlarda vaqt boshqacha bo'lsa, yangi qator qo'shing.")}</p>
+          <button type="button" className="btn-ghost btn-sm" onClick={() => setF({ ...f, slots: [...f.slots, newSlot()] })}>{t("+ Vaqt qo'shish")}</button>
         </div>
       </div>
       <ErrorBox error={err} />
@@ -134,8 +168,13 @@ export default function TutorDashboard() {
     <>
       <PageTitle title={t('Repetitor paneli')} sub={`${t('{n} ta dars', { n: tutor.lessonsCount })} · ${t('reyting')} ${tutor.ratingAvg || '—'}`} />
       <div className={`mb-8 rounded-md px-5 py-4 text-base font-medium ${banner[0]}`}>{t(banner[1])}</div>
-      <Tabs tabs={[['bookings', t('Bronlar')], ['profile', t('Anketa')]]} value={tab} onChange={setTab} />
-      {tab === 'bookings' ? <Incoming /> : <TutorForm initial={tutor} onSaved={() => setN(n + 1)} />}
+      <Tabs tabs={[['bookings', t('Bronlar')], ['profile', t('Anketa')], ...(tutor.status === 'approved' ? [['tests', t('Testlar')]] : [])]} value={tab} onChange={setTab} />
+      {tab === 'bookings' && <Incoming />}
+      {tab === 'profile' && <TutorForm initial={tutor} onSaved={() => setN(n + 1)} />}
+      {tab === 'tests' && (
+        <MyQuizzes subjects={tutor.subjects || []}
+          note={<Hint title={t('Mashq testlari')}>{t("Fanlaringiz bo'yicha test tuzing: talabalar uni yechadi va natija ostida sizning profilingizni ko'radi. Har bir test (va har bir tahrir) admin tekshirgach chiqadi. Rasmiy imtihon variantlarini emas, o'xshash mashq savollarini joylang.")}</Hint>} />
+      )}
     </>
   );
 }

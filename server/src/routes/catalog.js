@@ -1,6 +1,7 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { Subject, Exam, Material, Tutor } from '../models/index.js';
+import { Subject, Exam, Material, Tutor, Quiz } from '../models/index.js';
+import { aiAvailable } from '../ai.js';
 import { requireAuth } from '../middleware/auth.js';
 import { wrap, escapeRegex, HttpError } from '../middleware/util.js';
 import { config } from '../config.js';
@@ -24,6 +25,7 @@ r.get('/meta', (_req, res) =>
     registrationOpen: getSettings().registrationOpen,
     banner: getSettings().banner.active && getSettings().banner.text ? getSettings().banner : null,
     paymentMode: process.env.PAYMENT_PROVIDER || 'mock',
+    aiExplain: aiAvailable(),
   })
 );
 
@@ -56,15 +58,17 @@ r.get(
   wrap(async (req, res) => {
     const subject = await Subject.findById(req.params.id).lean();
     if (!subject || subject.active === false) throw new HttpError(404, 'Fan topilmadi');
-    const [tutors, materials, exams] = await Promise.all([
+    const [tutors, materials, exams, quizzes] = await Promise.all([
       Tutor.find({ subjects: subject._id, status: 'approved' })
         .populate('user', 'name faculty year')
         .sort({ featured: -1, ratingAvg: -1 })
         .lean(),
       Material.find({ subject: subject._id, status: 'approved' }).sort({ createdAt: -1 }).lean(),
       Exam.find({ subject: subject._id }).sort({ date: 1 }).lean(),
+      Quiz.find({ subject: subject._id, status: 'approved' }).select('title description byTutor attempts questions._id').sort({ createdAt: -1 }).lean(),
     ]);
-    res.json({ subject, tutors, materials, exams });
+    const quizList = quizzes.map(({ questions, ...q }) => ({ ...q, count: questions.length }));
+    res.json({ subject, tutors, materials, exams, quizzes: quizList });
   })
 );
 

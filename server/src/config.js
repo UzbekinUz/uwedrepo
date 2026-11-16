@@ -20,6 +20,10 @@ export const config = {
   // @BotFather dan olingan token; bo'sh bo'lsa Telegram orqali kirish o'chiq
   telegramToken: process.env.TELEGRAM_BOT_TOKEN || '',
   telegramApi: process.env.TELEGRAM_API_URL || 'https://api.telegram.org', // sinov uchun almashtiriladi
+  // AI izohlari (Anthropic Claude API). Kalit bo'lmasa "Nega noto'g'ri?" tugmasi ko'rinmaydi, testlar esa ishlayveradi.
+  anthropicKey: process.env.ANTHROPIC_API_KEY || '',
+  anthropicModel: process.env.ANTHROPIC_MODEL || 'claude-haiku-5-5',
+  anthropicApi: process.env.ANTHROPIC_API_URL || 'https://api.anthropic.com', // sinov uchun almashtiriladi
   adminEmail: process.env.ADMIN_EMAIL || 'admin@uwedrepo.uz',
   adminPassword: process.env.ADMIN_PASSWORD || 'Admin12345',
 };

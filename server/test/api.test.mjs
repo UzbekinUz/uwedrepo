@@ -3,7 +3,8 @@ import { test, before, after } from 'node:test';
 import assert from 'node:assert/strict';
 import bcrypt from 'bcryptjs';
 
-let mem, server, base, M, signToken;
+let mem, server, base, M, signToken, aiMock;
+const aiCalls = [];
 const api = async (method, path, body, token) => {
   const r = await fetch(base + path, { method, headers: { 'Content-Type': 'application/json', ...(token && { Authorization: `Bearer ${token}` }) }, body: body && JSON.stringify(body) });
   const ct = r.headers.get('content-type') || '';
@@ -11,7 +12,7 @@ const api = async (method, path, body, token) => {
   return { s: r.status, j: ct.includes('json') ? await r.json() : Buffer.from(await r.arrayBuffer()).toString('utf8'), ct };
 };
 const fx = {};
-const settings = (over = {}) => ({ commission: 10, firstLessonDiscount: 20, cancelHours: 24, registrationOpen: true, banner: { text: '', kind: 'info', active: false }, ...over });
+const settings = (over = {}) => ({ commission: 10, firstLessonDiscount: 20, cancelHours: 24, registrationOpen: true, banner: { text: '', kind: 'info', active: false }, aiEnabled: true, aiDailyLimit: 10, ...over });
 
 before(async () => {
   const { MongoMemoryServer } = await import('mongodb-memory-server');
@@ -19,6 +20,19 @@ before(async () => {
   process.env.MONGODB_URI = mem.getUri('test');
   process.env.NODE_ENV = 'test';
   process.env.TELEGRAM_BOT_TOKEN = 'TEST:TOKEN'; // faqat webhook sarlavhasini tekshirish uchun; bot ishga tushirilmaydi
+  // Soxta Anthropic API: haqiqiy AI'ga so'rov ketmaydi
+  const http = await import('node:http');
+  aiMock = http.createServer((req, res) => {
+    let b = '';
+    req.on('data', (c) => { b += c; });
+    req.on('end', () => {
+      aiCalls.push({ key: req.headers['x-api-key'], body: JSON.parse(b) });
+      res.setHeader('content-type', 'application/json');
+      res.end(JSON.stringify({ content: [{ type: 'text', text: 'Sinov izohi' }] }));
+    });
+  }).listen(0);
+  process.env.ANTHROPIC_API_KEY = 'test-key';
+  process.env.ANTHROPIC_API_URL = `http://127.0.0.1:${aiMock.address().port}`;
   const { connectDb } = await import('../src/db.js');
   await connectDb();
   M = await import('../src/models/index.js');
@@ -45,6 +59,7 @@ before(async () => {
 
 after(async () => {
   server?.close();
+  aiMock?.close();
   await (await import('mongoose')).default.disconnect();
   await mem?.stop();
 });
@@ -216,4 +231,80 @@ test("fanlarni admin boshqaradi: ko'p qo'shish, takrorni o'tkazib yuborish, yash
   const st2 = await api('POST', '/admin/subjects/starter', null, fx.t.admin);
   assert.equal(st1.s, 201);
   assert.equal(st2.j.added, 0);
+});
+
+test("mashq testi: repetitor tuzadi, admin tasdiqlaydi, talaba yechadi, javoblar oldindan ko'rinmaydi", async () => {
+  const body = {
+    subject: String(fx.subject._id), title: 'Sinov testi',
+    questions: [
+      { text: '2+2=?', options: ['3', '4', '5'], correct: 1, explanation: 'Oddiy qo\'shish' },
+      { text: '3*3=?', options: ['9', '6'], correct: 0 },
+    ],
+  };
+  assert.equal((await api('POST', '/quizzes', body, fx.t.a)).s, 403, 'oddiy talaba test tuza olmaydi');
+  assert.equal((await api('POST', '/quizzes', { ...body, questions: [{ text: 'x', options: ['a', 'b'], correct: 3 }] }, fx.t.tutor)).s, 400, "to'g'ri javob variantlar ichida bo'lsin");
+  const c = await api('POST', '/quizzes', body, fx.t.tutor);
+  assert.equal(c.s, 201);
+  assert.equal(c.j.status, 'pending');
+  const id = c.j._id;
+  assert.equal((await api('GET', `/quizzes/${id}`)).s, 404, 'tasdiqlanmagan test talabaga ko\'rinmaydi');
+  assert.equal((await api('GET', `/quizzes/${id}`, null, fx.t.tutor)).s, 200, 'muallif o\'zinikini ko\'radi');
+
+  assert.equal((await api('PATCH', `/admin/quizzes/${id}`, { status: 'approved' }, fx.t.admin)).s, 200);
+  const pub = await api('GET', `/quizzes/${id}`);
+  assert.equal(pub.s, 200);
+  assert.equal(pub.j.questions[0].correct, undefined, "to'g'ri javob oldindan yuborilmaydi");
+  assert.equal(pub.j.questions[0].explanation, undefined);
+  assert.equal((await api('GET', `/subjects/${fx.subject._id}`)).j.quizzes.length, 1);
+
+  const at = await api('POST', `/quizzes/${id}/attempt`, { answers: [0, 0] }, fx.t.a);
+  assert.equal(at.s, 200);
+  assert.equal(at.j.score, 1);
+  assert.equal(at.j.results[0].ok, false);
+  assert.equal(at.j.results[0].correct, 1);
+  assert.equal(await M.QuizAttempt.countDocuments({ quiz: id }), 1);
+  assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1] })).j.score, 1, 'kirmagan ham yecha oladi, natija saqlanmaydi');
+  assert.equal(await M.QuizAttempt.countDocuments({ quiz: id }), 1);
+
+  // repetitor tahrirlasa test qayta tekshiruvga tushadi
+  assert.equal((await api('PUT', `/quizzes/${id}`, body, fx.t.tutor)).j.status, 'pending');
+  assert.equal((await api('PUT', `/quizzes/${id}`, body, fx.t.b)).s, 403, 'begona tahrirlay olmaydi');
+  await api('PATCH', `/admin/quizzes/${id}`, { status: 'approved' }, fx.t.admin);
+  fx.quiz = (await api('GET', `/quizzes/${id}`)).j;
+});
+
+test("AI izohi: faqat xato javobga, kesh, kunlik limit, nazorat kuni o'chadi", async () => {
+  const q = fx.quiz;
+  const qid = q.questions[0]._id;
+  const ex = (token, chosen = 0) => api('POST', `/quizzes/${q._id}/explain`, { questionId: qid, chosen, lang: 'uz' }, token);
+  assert.equal((await ex(null)).s, 401);
+  assert.equal((await ex(fx.t.a, 1)).s, 400, "to'g'ri javobga izoh so'ralmaydi");
+  const first = await ex(fx.t.a);
+  assert.equal(first.s, 200);
+  assert.equal(first.j.text, 'Sinov izohi');
+  assert.equal(aiCalls.length, 1);
+  assert.equal(aiCalls[0].key, 'test-key');
+  assert.match(aiCalls[0].body.messages[0].content, /2\+2/);
+  const again = await ex(fx.t.b);
+  assert.equal(again.j.cached, true, 'ikkinchi talaba keshdan oladi');
+  assert.equal(aiCalls.length, 1, 'AI qayta chaqirilmadi');
+
+  // limit: kesh bo'lmagan savolga
+  await api('PUT', '/admin/settings', settings({ aiDailyLimit: 1 }), fx.t.admin);
+  const q2 = q.questions[1]._id;
+  const lim = await api('POST', `/quizzes/${q._id}/explain`, { questionId: q2, chosen: 1 }, fx.t.a);
+  assert.equal(lim.s, 429, 'talaba A bugun 1 ta ishlatgan');
+
+  // nazorat kuni: shu fan bo'yicha AI o'chadi
+  await api('PUT', '/admin/settings', settings({ aiDailyLimit: 10 }), fx.t.admin);
+  const exam = await M.Exam.create({ subject: fx.subject._id, type: 'oraliq', date: new Date() });
+  assert.equal((await ex(fx.t.b)).s, 403);
+  await exam.deleteOne();
+
+  // admin o'chirsa: 503 va /meta da ko'rinmaydi
+  await api('PUT', '/admin/settings', settings({ aiEnabled: false }), fx.t.admin);
+  assert.equal((await ex(fx.t.b)).s, 503);
+  assert.equal((await api('GET', '/meta')).j.aiExplain, false);
+  await api('PUT', '/admin/settings', settings(), fx.t.admin);
+  assert.equal((await api('GET', '/meta')).j.aiExplain, true);
 });

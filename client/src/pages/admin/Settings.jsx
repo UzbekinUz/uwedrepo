@@ -16,6 +16,7 @@ function System() {
       <ul className="mt-2 divide-y-0">
         <Row label="Ma'lumotlar bazasi" ok={data.db} text="MongoDB" />
         <Row label="Telegram bot" ok={!!data.bot} text={data.bot ? `@${data.bot}` : "TELEGRAM_BOT_TOKEN yo'q"} />
+        <Row label="AI izohlari (Claude)" ok={!!data.ai} text={data.ai || "ANTHROPIC_API_KEY yo'q"} />
         <Row label="To'lov tizimi" ok={data.paymentMode !== 'mock'} text={data.paymentMode === 'mock' ? "Mock: pul yechilmaydi" : data.paymentMode} />
       </ul>
       <p className="mt-3 text-sm text-slate-600">Rejim: <b>{data.env}</b> · Node {data.node} · server {data.uptimeHours} soat ishlayapti · havolalar uchun manzil: {data.clientOrigin}</p>
@@ -49,7 +50,7 @@ export default function Settings() {
   if (loading || !f) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const num = (k) => (e) => setF({ ...f, [k]: e.target.value === '' ? '' : Number(e.target.value) });
-  const save = (e) => { e.preventDefault(); run(async () => setF(await api('/admin/settings', { method: 'PUT', body: { ...f, commission: Number(f.commission), firstLessonDiscount: Number(f.firstLessonDiscount), cancelHours: Number(f.cancelHours) } })), "Saqlandi: o'zgarish darhol kuchga kirdi"); };
+  const save = (e) => { e.preventDefault(); run(async () => setF(await api('/admin/settings', { method: 'PUT', body: { ...f, commission: Number(f.commission), firstLessonDiscount: Number(f.firstLessonDiscount), cancelHours: Number(f.cancelHours), aiDailyLimit: Number(f.aiDailyLimit) } })), "Saqlandi: o'zgarish darhol kuchga kirdi"); };
 
   return (
     <Section title="Sozlamalar"
@@ -79,12 +80,19 @@ export default function Settings() {
           {f.banner.text && <div className={`px-4 py-2 text-center text-sm font-medium ${f.banner.kind === 'warn' ? 'bg-amber-100 text-amber-950' : 'bg-brand-100 text-slate-900'}`}>{f.banner.text}</div>}
         </div>
 
+        <div className="space-y-3">
+          <h3 className="text-xl font-extrabold">Testlardagi AI izohlari</h3>
+          <p className="text-sm text-slate-600">Talaba mashq testida xato qilsa, «Nega noto'g'ri?» tugmasi orqali AI'dan qisqa tushuntirish oladi. Har bir yangi izoh API hisobingizdan pul yechadi; bir savolga bir xil xato javob uchun izoh keshdan olinadi va limitni kamaytirmaydi. Nazorat kuni shu fan bo'yicha AI avtomatik o'chadi. Ishlashi uchun Render'da <code>ANTHROPIC_API_KEY</code> kiritilgan bo'lishi kerak.</p>
+          <label className="flex items-center gap-3"><input type="checkbox" className="h-5 w-5" checked={f.aiEnabled !== false} onChange={(e) => setF({ ...f, aiEnabled: e.target.checked })} />AI izohlarini yoqish</label>
+          <div className="max-w-xs"><FField label="Bitta talabaga kuniga, ta"><input className="input" type="number" min="0" max="100" value={f.aiDailyLimit ?? 10} onChange={num('aiDailyLimit')} /></FField></div>
+        </div>
+
         <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
         <button className="btn-primary px-8" disabled={busy}>Saqlash</button>
       </form>
       <Password />
       <Hint title="Bu yerda yo'q narsalar">
-        <p>Telegram bot tokeni, ma'lumotlar bazasi manzili va to'lov kalitlari xavfsizlik uchun saytdan emas, <code>server/.env</code> faylidan o'zgartiriladi.</p>
+        <p>Telegram bot tokeni, AI kaliti (<code>ANTHROPIC_API_KEY</code>), ma'lumotlar bazasi manzili va to'lov kalitlari xavfsizlik uchun saytdan emas, <code>server/.env</code> faylidan o'zgartiriladi.</p>
       </Hint>
     </Section>
   );

@@ -24,6 +24,8 @@ services:
         sync: false # kamida 10 belgi; "Admin12345" qabul qilinmaydi
       - key: TELEGRAM_BOT_TOKEN
         sync: false # @BotFather tokeni (bo'sh qoldirsangiz, sayt email bilan ishlaydi)
+      - key: ANTHROPIC_API_KEY
+        sync: false # testlardagi AI izohlari uchun (bo'sh bo'lsa AI tugmasi ko'rinmaydi)
       - key: JWT_SECRET
         generateValue: true # Render o'zi tasodifiy qiymat yaratadi
       # --- Qoidalar (keyin admin paneldan o'zgartiriladi) ---

@@ -176,6 +176,8 @@ const settingsSchema = new Schema({
   cancelHours: Number,
   registrationOpen: Boolean,
   banner: { text: { type: String, maxlength: 200, default: '' }, kind: { type: String, enum: ['info', 'warn'], default: 'info' }, active: { type: Boolean, default: false } },
+  aiEnabled: Boolean, // testlardagi "Nega noto'g'ri?" AI izohi
+  aiDailyLimit: Number, // bitta talabaga kuniga nechta AI izoh
 });
 
 // Admin harakatlari jurnali
@@ -198,6 +200,58 @@ const announcementSchema = new Schema(
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
+
+/* ---------- Mashq testlari ---------- */
+const questionSchema = new Schema({
+  text: { type: String, required: true, trim: true, maxlength: 2000 },
+  options: { type: [{ type: String, trim: true, maxlength: 500 }], validate: (v) => v.length >= 2 && v.length <= 6 },
+  correct: { type: Number, required: true, min: 0, max: 5 },
+  explanation: { type: String, default: '', maxlength: 2000 }, // muallif izohi (AI'siz ham ko'rinadi)
+});
+
+const quizSchema = new Schema(
+  {
+    subject: ref('Subject', { required: true }),
+    title: { type: String, required: true, trim: true, maxlength: 140 },
+    description: { type: String, default: '', maxlength: 500 },
+    author: ref('User', { required: true }),
+    byTutor: { type: Boolean, default: false }, // repetitor tuzgan: "Repetitor tekshirgan" belgisi
+    // Repetitor tuzgan test admin tasdiqlaguncha talabalarga ko'rinmaydi; admin tuzgani darhol chiqadi
+    status: { type: String, enum: ['pending', 'approved', 'hidden'], default: 'pending' },
+    questions: { type: [questionSchema], validate: (v) => v.length >= 1 && v.length <= 60 },
+    attempts: { type: Number, default: 0 },
+  },
+  { timestamps: true }
+);
+quizSchema.index({ subject: 1, status: 1 });
+
+const quizAttemptSchema = new Schema(
+  {
+    quiz: ref('Quiz', { required: true }),
+    student: ref('User', { required: true }),
+    answers: [Number],
+    score: Number,
+    total: Number,
+  },
+  { timestamps: { createdAt: true, updatedAt: false } }
+);
+quizAttemptSchema.index({ student: 1, createdAt: -1 });
+
+// AI izohlari keshi: bir savol + bir xil noto'g'ri javob uchun AI qayta chaqirilmaydi (pul tejaladi)
+const aiExplainSchema = new Schema(
+  { quiz: ref('Quiz'), question: Schema.Types.ObjectId, chosen: Number, lang: String, text: String },
+  { timestamps: { createdAt: true, updatedAt: false } }
+);
+aiExplainSchema.index({ question: 1, chosen: 1, lang: 1 }, { unique: true });
+
+// Har bir foydalanuvchining kunlik AI so'rovlari soni (Toshkent kuni bo'yicha)
+const aiUsageSchema = new Schema({ user: ref('User', { required: true }), day: { type: String, required: true }, count: { type: Number, default: 0 } });
+aiUsageSchema.index({ user: 1, day: 1 }, { unique: true });
+
+export const Quiz = model('Quiz', quizSchema);
+export const QuizAttempt = model('QuizAttempt', quizAttemptSchema);
+export const AiExplain = model('AiExplain', aiExplainSchema);
+export const AiUsage = model('AiUsage', aiUsageSchema);
 
 export const Settings = model('Settings', settingsSchema);
 export const AuditLog = model('AuditLog', auditSchema);
