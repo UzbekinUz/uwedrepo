@@ -173,13 +173,13 @@ export default function Home() {
         {/* Fon: ikki yumshoq firuza nur va nozik nuqtali to'r */}
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_15%,rgba(94,224,210,0.18),transparent_55%),radial-gradient(ellipse_at_0%_100%,rgba(18,145,139,0.25),transparent_50%)]" />
         <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(circle,#fff_1px,transparent_1px)] [background-size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
-        <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.25fr_1fr] lg:items-center lg:gap-16`}>
+        <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14`}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3.5 py-1.5 text-sm font-medium text-brand-100 ring-1 ring-white/10">
               <span className="h-2 w-2 animate-pulse rounded-full bg-brand-300" />{t('Pilot · talabalar uchun bepul')}
             </span>
-            <h1 className="mt-5 text-[clamp(2.25rem,5.6vw,4.25rem)] font-extrabold leading-[0.98] tracking-[-0.035em]">
-              {t('UWED talabalari uchun')}<br /><span className="text-brand-300">{t('repetitorlar va testlar')}</span>
+            <h1 className="mt-5 text-[clamp(2.25rem,4.6vw,3.4rem)] font-extrabold leading-[1.02] tracking-[-0.035em]">
+              <span className="lg:whitespace-nowrap">{t('UWED talabalari uchun')}</span><br /><span className="text-brand-300">{t('repetitorlar va testlar')}</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-slate-300">{t("Repetitorlar, materiallar, nazoratlar kalendari va fan guruhlari. Kursingizga moslashtirilgan, narxlari ochiq, sharhlari haqiqiy.")}</p>
             <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-base text-white">
