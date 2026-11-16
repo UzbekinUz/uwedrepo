@@ -7,6 +7,7 @@ import { LANGS, t } from '../lib/i18n.js';
 const links = [
   ['/subjects', 'Fanlar'],
   ['/tutors', 'Repetitorlar'],
+  ['/quizzes', 'Testlar'],
   ['/calendar', 'Nazoratlar'],
   ['/materials', 'Materiallar'],
 ];

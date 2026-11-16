@@ -192,6 +192,7 @@ export default function Home() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/tutors" className="btn bg-brand-300 px-7 py-3 text-base text-slate-900 hover:bg-white">{t('Repetitor topish')}</Link>
               <Link to="/subjects" className="btn bg-white/10 px-7 py-3 text-base text-white hover:bg-white/20">{t("Fanlarimni ko'rish")}</Link>
+              <Link to="/quizzes" className="btn bg-white/10 px-7 py-3 text-base text-white hover:bg-white/20">{t("Testlarni ko'rish")}</Link>
             </div>
             <TutorFaces tutors={tutors.data} total={stats.data?.tutors} />
           </motion.div>
