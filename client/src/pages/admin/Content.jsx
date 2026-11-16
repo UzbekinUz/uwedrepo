@@ -81,7 +81,7 @@ function Subjects() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="chip-row">
         <button className={`choice ${mode === 'one' ? 'choice-on' : ''}`} onClick={() => setMode('one')}>{editId ? 'Fanni tahrirlash' : 'Bitta fan qo\'shish'}</button>
         <button className={`choice ${mode === 'many' ? 'choice-on' : ''}`} disabled={!!editId} onClick={() => setMode('many')}>Bir nechta fan qo'shish</button>
       </div>
@@ -222,7 +222,7 @@ function Materials() {
       <Hint title="Materiallarni tekshirish">
         <p>Talabalar yuborgan havolalar avval shu yerga «Kutilmoqda» holatida tushadi. <b>Havolani ochib ko'ring</b>: u haqiqatan ham o'sha fanga tegishlimi, zararli yoki reklama emasmi. Faqat shundan keyin tasdiqlang.</p>
       </Hint>
-      <div className="flex gap-2"><button className={`choice ${status === 'pending' ? 'choice-on' : ''}`} onClick={() => setStatus('pending')}>Kutilmoqda</button><button className={`choice ${status === 'approved' ? 'choice-on' : ''}`} onClick={() => setStatus('approved')}>Tasdiqlangan</button></div>
+      <div className="chip-row"><button className={`choice ${status === 'pending' ? 'choice-on' : ''}`} onClick={() => setStatus('pending')}>Kutilmoqda</button><button className={`choice ${status === 'approved' ? 'choice-on' : ''}`} onClick={() => setStatus('approved')}>Tasdiqlangan</button></div>
       <ErrorBox error={err || error} />
       {loading ? <Spinner /> : !data.length ? <div className="glass p-10 text-center text-slate-600">{status === 'pending' ? "Tekshiruvni kutayotgan material yo'q." : "Tasdiqlangan material yo'q."}</div> : (
         <div className="space-y-2">{data.map((m) => (

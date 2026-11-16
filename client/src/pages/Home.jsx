@@ -5,7 +5,7 @@ import { useApp } from '../context/App.jsx';
 import PrefPicker from '../components/PrefPicker.jsx';
 import { ExamRow, TutorCard } from '../components/Cards.jsx';
 import { Accordion, CountUp, Icon, IconBadge, Item, Reveal, Stagger, StarField } from '../components/Motion.jsx';
-import { HeroBg, Rocket, Spinner, Tabs, useFetch } from '../components/ui.jsx';
+import { HeroBg, Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { qs } from '../api.js';
 import { t } from '../lib/i18n.js';
 import { daysLeft, dateLong, EXAM_LABEL, money } from '../lib/format.js';
@@ -171,10 +171,6 @@ export default function Home() {
       {/* 1. Hero */}
       <section className="relative overflow-hidden bg-field text-white">
         <HeroBg />
-        {/* Raketa: hero'ning o'ng yuqori burchagida, kartalar ortida */}
-        <div aria-hidden="true" className="pointer-events-none absolute right-[3%] top-8 hidden w-24 rotate-[28deg] lg:block xl:w-28">
-          <Rocket className="rocket-float h-auto w-full drop-shadow-[0_0_24px_rgba(94,224,210,0.5)]" />
-        </div>
         <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14`}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3.5 py-1.5 text-sm font-medium text-brand-100 ring-1 ring-white/10">

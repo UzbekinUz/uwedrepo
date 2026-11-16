@@ -73,7 +73,7 @@ export default function Tutors() {
     <Section title="Repetitorlar"
       intro={<><p>Repetitor anketasini yuborsa, u <b>«Kutilmoqda»</b> holatida tushadi va katalogda ko'rinmaydi. Siz anketani o'qib chiqib <b>tasdiqlaysiz</b> yoki <b>sababini yozib rad etasiz</b>, sabab repetitorga Telegram orqali boradi.</p><p>Tasdiqlashdan oldin tekshiring: vaqtlari kiritilganmi (aks holda bron qilib bo'lmaydi), narx o'rinlimi, Telegram username bormi.</p></>}>
       <Filters>
-        <div className="flex flex-wrap gap-2">{tabs.map(([k, l]) => <button key={k} className={`choice ${status === k ? 'choice-on' : ''}`} onClick={() => setStatus(k)}>{l}{k ? ` (${counts[k] || 0})` : ''}</button>)}</div>
+        <div className="chip-row">{tabs.map(([k, l]) => <button key={k} className={`choice ${status === k ? 'choice-on' : ''}`} onClick={() => setStatus(k)}>{l}{k ? ` (${counts[k] || 0})` : ''}</button>)}</div>
         <FField label="Qidirish"><input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ism yoki sarlavha" /></FField>
       </Filters>
       <ErrorBox error={list.error} />
