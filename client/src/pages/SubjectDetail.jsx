@@ -72,11 +72,10 @@ export default function SubjectDetail() {
 
   return (
     <>
-      <Link to="/subjects" className="mb-6 inline-block text-sm font-semibold text-brand-700 hover:underline">← {t('Fanlar')}</Link>
-      <PageTitle title={subject.name} sub={subject.description || subject.years.map((y) => t('{n}-kurs', { n: y })).join(', ')}>
+      <PageTitle back={{ to: '/subjects', label: t('Fanlar') }} title={subject.name} sub={subject.description || subject.years.map((y) => t('{n}-kurs', { n: y })).join(', ')}>
         {subject.telegramGroup ? (
           <a href={subject.telegramGroup} target="_blank" rel="noopener noreferrer" className="btn-primary">{t("Telegram guruhga qo'shilish")}</a>
-        ) : <span className="chip bg-slate-100 text-slate-500">{t("Telegram guruh hali yo'q")}</span>}
+        ) : <span className="chip bg-white/10 text-slate-300">{t("Telegram guruh hali yo'q")}</span>}
       </PageTitle>
       <Tabs tabs={tabs} value={tab} onChange={setTab} />
       {tab === 'tutors' && (tutors.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
