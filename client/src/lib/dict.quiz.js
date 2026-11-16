@@ -98,4 +98,10 @@ export const quiz = {
   'Testni yaratish': ['Создать тест', 'Create test'],
   'Kamida bitta savol kiriting': ['Добавьте хотя бы один вопрос', 'Add at least one question'],
   "{n}-savolda kamida 2 ta variant bo'lsin va to'g'ri javob bo'sh bo'lmasin": ['В вопросе {n} должно быть минимум 2 варианта, и правильный ответ не должен быть пустым', 'Question {n} needs at least 2 options and a non-empty correct answer'],
+  "Testlarni ko'rish": ['Смотреть тесты', 'Browse tests'],
+  'Hammasi': ['Все', 'All'],
+  "Nazoratga tayyorlanish uchun mashq testlari: yeching, natijani ko'ring, tushunmaganingizni tahlil qiling": ['Тренировочные тесты для подготовки к контрольным: решайте, смотрите результат, разбирайте ошибки', 'Practice tests to prepare for exams: take them, see your score, review what you missed'],
+  "Boshqa kurslar testlarini ham ko'rsatish": ['Показать тесты других курсов', 'Show tests from other courses too'],
+  "Sizning fanlaringiz bo'yicha hali test yo'q. «Boshqa kurslar testlarini ham ko'rsatish»ni belgilab ko'ring.": ['По вашим предметам тестов пока нет. Отметьте «Показать тесты других курсов».', 'No tests for your subjects yet. Try ticking “Show tests from other courses too”.'],
+  "Hali test qo'shilmagan.": ['Тестов пока нет.', 'No tests yet.'],
 };
