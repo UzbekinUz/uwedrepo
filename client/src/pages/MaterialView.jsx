@@ -20,12 +20,12 @@ export default function MaterialView() {
   return (
     <>
       <PageTitle back={subjectId ? { to: `/subjects/${subjectId}`, label: m.subject.name } : { to: '/materials', label: t('Materiallar') }} title={m.title} sub={m.description} />
-      <div className="grid gap-8 lg:grid-cols-[1fr_16rem]">
+      <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_16rem]">
         <article className="card min-w-0 p-5 sm:p-8">
           <Notes text={m.body} />
         </article>
         {sib.length > 1 && (
-          <aside className="order-first lg:order-none">
+          <aside className="order-first min-w-0 lg:order-none">
             <div className="card p-4 lg:sticky lg:top-24">
               <div className="mb-2 text-sm font-bold text-slate-900">{t('Mavzular')}</div>
               <ol className="no-scrollbar flex gap-2 overflow-x-auto lg:block lg:space-y-1">
