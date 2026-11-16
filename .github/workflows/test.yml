@@ -13,11 +13,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
-      - name: Server paketlari
-        run: npm ci --prefix server
-      - name: Server testlari
-        run: npm --prefix server test
+      # Avval sayt build qilinadi: server testlaridan biri tayyor client/dist ni (SPA va CSP) tekshiradi
       - name: Sayt paketlari
         run: npm ci --prefix client
       - name: Sayt build
         run: npm run build --prefix client
+      - name: Server paketlari
+        run: npm ci --prefix server
+      - name: Server testlari
+        run: npm --prefix server test
