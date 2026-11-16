@@ -37,7 +37,7 @@ function Results({ id, onBack }) {
         ))}
       </Table>
       {summary.saved > 0 && (
-        <div className="space-y-2 bg-white p-5">
+        <div className="space-y-2 glass p-5">
           <h3 className="text-xl font-extrabold">Savollar bo'yicha: necha foiz to'g'ri javob berdi</h3>
           {summary.questions.map((q, i) => (
             <div key={i} className="flex items-center gap-3 text-sm">

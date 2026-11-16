@@ -4,7 +4,16 @@
 
 @layer base {
   html { scroll-behavior: smooth; }
-  body { @apply bg-slate-50 text-slate-900 antialiased; font-feature-settings: 'tnum' 1; }
+  body {
+    @apply bg-slate-50 text-slate-900 antialiased; font-feature-settings: 'tnum' 1;
+    /* Bosh sahifadagi fonning och varianti: ikki yumshoq firuza nur va nozik nuqtali to'r */
+    background-image:
+      radial-gradient(ellipse at 85% 0%, rgba(94, 224, 210, 0.22), transparent 55%),
+      radial-gradient(ellipse at 0% 100%, rgba(18, 145, 139, 0.14), transparent 50%),
+      radial-gradient(circle, rgba(14, 38, 39, 0.07) 1px, transparent 1px);
+    background-size: auto, auto, 28px 28px;
+    background-attachment: fixed;
+  }
   ::selection { @apply bg-brand-300 text-slate-900; }
   :focus-visible { @apply outline-none ring-2 ring-brand-500 ring-offset-2 ring-offset-slate-50; }
   h1, h2, h3 { text-wrap: balance; }
@@ -17,9 +26,12 @@
   .btn-ghost { @apply btn bg-slate-100 text-slate-800 hover:bg-slate-200; }
   .btn-danger { @apply btn bg-red-700 text-white hover:bg-red-800; }
   .btn-sm { @apply px-3.5 py-1.5 text-xs; }
-  /* Yuzalar: chiziq va soyasiz, faqat ton farqi */
-  .card { @apply bg-white; }
-  .card-link { @apply card transition hover:bg-brand-50; }
+  /* Yuzalar: shisha effekti (bosh sahifadagi kartalar kabi) — yarim shaffof, orqa fon xiralashadi */
+  .glass { @apply rounded-2xl bg-white/55 ring-1 ring-white/70 backdrop-blur-xl; box-shadow: 0 8px 30px rgba(14, 38, 39, 0.06); }
+  .card { @apply glass; }
+  .card-link { @apply card transition hover:bg-white/80; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
   .input { @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-600; }
   .label { @apply mb-1.5 block text-sm font-medium text-slate-600; }
   .chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium; }

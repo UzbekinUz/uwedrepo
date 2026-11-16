@@ -71,7 +71,7 @@ function Subjects() {
       </Hint>
 
       {!loading && data.length === 0 && (
-        <div className="space-y-3 bg-white p-6">
+        <div className="space-y-3 glass p-6">
           <h3 className="text-xl font-extrabold">Hali bitta ham fan yo'q</h3>
           <p className="text-slate-700">Quyidagi shakldan o'zingiz kiriting yoki hisobotdagi 8 ta namunaviy fanni (Hisoblash 1-2, Ekonomika, Rus tili 1-2, Iqtisodiyotda miqdoriy usullar, IELTS, Dasturlash) bir bosishda qo'shing. Keyin istalganini o'zgartirishingiz yoki o'chirishingiz mumkin.</p>
           <button className="btn-primary" onClick={() => run(async () => {
@@ -87,7 +87,7 @@ function Subjects() {
       </div>
 
       {mode === 'one' || editId ? (
-        <form onSubmit={save} className="space-y-4 bg-white p-5">
+        <form onSubmit={save} className="space-y-4 glass p-5">
           <h3 className="text-lg font-extrabold">{editId ? 'Fanni tahrirlash' : "Yangi fan qo'shish"}</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <FField label="Nomi"><input className="input" required minLength={2} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></FField>
@@ -102,7 +102,7 @@ function Subjects() {
           <div className="flex gap-2"><button className="btn-primary" disabled={!f.years.length}>{editId ? 'Saqlash' : "Qo'shish"}</button>{editId && <button type="button" className="btn-ghost" onClick={() => { setEditId(null); setF(emptySubject(meta)); }}>Bekor</button>}</div>
         </form>
       ) : (
-        <form onSubmit={saveMany} className="space-y-4 bg-white p-5">
+        <form onSubmit={saveMany} className="space-y-4 glass p-5">
           <h3 className="text-lg font-extrabold">Bir nechta fanni birdan qo'shish</h3>
           <p className="text-sm text-slate-600">Fakultet, kurs va turi hammasi uchun bir xil bo'ladi. Telegram guruh havolasi va tavsifni keyin har bir fan uchun alohida kiritasiz. Allaqachon bor nomlar o'tkazib yuboriladi.</p>
           <FField label="Fanlar ro'yxati: har bir qatorga bitta nom">
@@ -171,7 +171,7 @@ function Exams() {
         <p>Demo sanalarda <b>«Demo sana»</b> izohi bor. Rasmiy sana kiritilgach izohni o'chiring: qatordagi «Rasmiy» tugmasi buni bir bosishda qiladi.</p>
       </Hint>
       {demo > 0 && <Hint kind="warn" title={`${demo} ta sana hali «demo»`}><p>Sayt ularni talabaga «Demo sana» belgisi bilan ko'rsatmoqda. Pilotdan oldin rasmiy jadvalga almashtiring.</p></Hint>}
-      <form onSubmit={add} className="space-y-3 bg-white p-5">
+      <form onSubmit={add} className="space-y-3 glass p-5">
         <h3 className="text-lg font-extrabold">Yangi sana</h3>
         <Filters>
           <FField label="Fan"><Select value={f.subject} onChange={(v) => setF({ ...f, subject: v })} required><option value="">Tanlang</option>{subjects.data?.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}</Select></FField>
@@ -224,9 +224,9 @@ function Materials() {
       </Hint>
       <div className="flex gap-2"><button className={`choice ${status === 'pending' ? 'choice-on' : ''}`} onClick={() => setStatus('pending')}>Kutilmoqda</button><button className={`choice ${status === 'approved' ? 'choice-on' : ''}`} onClick={() => setStatus('approved')}>Tasdiqlangan</button></div>
       <ErrorBox error={err || error} />
-      {loading ? <Spinner /> : !data.length ? <div className="bg-white p-10 text-center text-slate-600">{status === 'pending' ? "Tekshiruvni kutayotgan material yo'q." : "Tasdiqlangan material yo'q."}</div> : (
+      {loading ? <Spinner /> : !data.length ? <div className="glass p-10 text-center text-slate-600">{status === 'pending' ? "Tekshiruvni kutayotgan material yo'q." : "Tasdiqlangan material yo'q."}</div> : (
         <div className="space-y-2">{data.map((m) => (
-          <div key={m._id} className="flex flex-wrap items-center justify-between gap-3 bg-white p-4">
+          <div key={m._id} className="flex flex-wrap items-center justify-between gap-3 glass p-4">
             <div className="min-w-0">
               <div className="font-semibold">{m.title} <Chip tone="brand">{MATERIAL_LABEL[m.type]}</Chip></div>
               <div className="text-sm text-slate-600">{m.subject?.name} · yuborgan: {m.author?.name || '—'} {m.author?.telegram || ''}</div>

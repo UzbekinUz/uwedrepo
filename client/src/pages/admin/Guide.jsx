@@ -44,11 +44,11 @@ export default function Guide({ go }) {
       </div>
 
       <div className="grid gap-3 md:grid-cols-2">
-        <div className="bg-white p-5"><h3 className="text-lg font-extrabold">Har kuni (5 daqiqa)</h3><ul className="mt-3 space-y-2">{DAILY.map((x) => <li key={x} className="flex gap-2"><span className="mt-0.5 shrink-0 text-brand-600"><Icon name="check" size={20} /></span>{x}</li>)}</ul></div>
-        <div className="bg-white p-5"><h3 className="text-lg font-extrabold">Haftada bir marta</h3><ul className="mt-3 space-y-2">{WEEKLY.map((x) => <li key={x} className="flex gap-2"><span className="mt-0.5 shrink-0 text-brand-600"><Icon name="check" size={20} /></span>{x}</li>)}</ul></div>
+        <div className="glass p-5"><h3 className="text-lg font-extrabold">Har kuni (5 daqiqa)</h3><ul className="mt-3 space-y-2">{DAILY.map((x) => <li key={x} className="flex gap-2"><span className="mt-0.5 shrink-0 text-brand-600"><Icon name="check" size={20} /></span>{x}</li>)}</ul></div>
+        <div className="glass p-5"><h3 className="text-lg font-extrabold">Haftada bir marta</h3><ul className="mt-3 space-y-2">{WEEKLY.map((x) => <li key={x} className="flex gap-2"><span className="mt-0.5 shrink-0 text-brand-600"><Icon name="check" size={20} /></span>{x}</li>)}</ul></div>
       </div>
 
-      <div className="bg-white p-5 sm:p-6">
+      <div className="glass p-5 sm:p-6">
         <h3 className="text-xl font-extrabold">Atamalar</h3>
         <dl className="mt-3 grid gap-x-8 gap-y-3 md:grid-cols-2">
           {[

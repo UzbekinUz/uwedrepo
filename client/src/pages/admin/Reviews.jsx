@@ -17,11 +17,11 @@ export default function Reviews() {
         <FField label="Baho"><Select value={f.rating} onChange={(v) => setF({ ...f, rating: v })}><option value="">Hammasi</option>{[1, 2, 3, 4, 5].map((n) => <option key={n} value={n}>{n} yulduz</option>)}</Select></FField>
       </Filters>
       <ErrorBox error={err || list.error} />
-      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="bg-white p-10 text-center text-slate-600">Sharh yo'q.</div> : (
+      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="glass p-10 text-center text-slate-600">Sharh yo'q.</div> : (
         <>
           <div className="space-y-2">
             {list.data.items.map((r) => (
-              <div key={r._id} className={`flex flex-wrap items-start justify-between gap-3 p-4 ${r.hidden ? 'bg-slate-100' : 'bg-white'}`}>
+              <div key={r._id} className={`flex flex-wrap items-start justify-between gap-3 p-4 ${r.hidden ? 'bg-slate-100' : 'glass'}`}>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-2"><Stars value={r.rating} size="text-base" /><b>{r.student?.name}</b> → {r.tutor?.user?.name} {r.hidden && <Chip tone="amber">Yashirilgan</Chip>}<span className="text-xs text-slate-500">{dateTime(r.createdAt)}</span></div>
                   <p className="mt-1 break-words text-slate-800">{r.comment || <span className="text-slate-500">Matnsiz baho</span>}</p>

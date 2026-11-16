@@ -109,7 +109,7 @@ function QuizCard({ quiz }) {
 /** Tavsiya etilgan repetitor (hero uchun ixcham) */
 function TutorMini({ tutor }) {
   return (
-    <Link to={`/tutors/${tutor._id}`} className="group block rounded-2xl bg-white p-5 text-slate-900 shadow-2xl shadow-black/30 transition hover:-translate-y-0.5 sm:p-6">
+    <Link to={`/tutors/${tutor._id}`} className="group block rounded-2xl glass p-5 text-slate-900 shadow-2xl shadow-black/30 transition hover:-translate-y-0.5 sm:p-6">
       <div className="flex items-center gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">{initial(tutor.user?.name)}</div>
         <div className="min-w-0 flex-1">
@@ -322,7 +322,7 @@ export default function Home() {
       <section className={`${wrap} mt-24 sm:mt-32`}>
         <Reveal><h2 className={`${h2} max-w-3xl`}>{t('Telegram kanallari bilan solishtiring')}</h2></Reveal>
         <Reveal delay={0.05} className="relative mt-10 overflow-x-auto">
-          <table className="w-full min-w-[34rem] bg-white text-left text-base">
+          <table className="w-full min-w-[34rem] text-left text-base">
             <thead>
               <tr className="bg-slate-100 text-slate-900">
                 <th className="p-4 font-semibold sm:p-5" />
