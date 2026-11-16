@@ -4,7 +4,7 @@ import { Subject, Exam, Material, Tutor, Quiz, QuizAttempt, AiExplain } from '..
 import { STARTER_SUBJECTS } from '../../seed.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
 import { FACULTY_KEYS, EXAM_TYPES } from '../../data/meta.js';
-import { audit } from './helpers.js';
+import { audit, toCsv, sendCsv } from './helpers.js';
 
 const r = Router();
 
@@ -140,6 +140,42 @@ r.get('/quizzes', wrap(async (req, res) => {
   const f = req.query.status ? { status: String(req.query.status) } : {};
   const list = await Quiz.find(f).populate('subject', 'name').populate('author', 'name').sort({ status: 1, updatedAt: -1 }).limit(300).lean();
   res.json(list.map(({ questions, ...q }) => ({ ...q, count: questions.length })));
+}));
+// Kimlar yechgan: har bir urinish (faqat saytga kirgan talabalarniki saqlanadi) va savollar bo'yicha statistika
+async function quizResults(id) {
+  const quiz = await Quiz.findById(id).populate('subject', 'name').lean();
+  if (!quiz) throw new HttpError(404, 'Test topilmadi');
+  const attempts = await QuizAttempt.find({ quiz: id }).populate('student', 'name telegram phone faculty year').sort({ createdAt: -1 }).limit(2000).lean();
+  const right = quiz.questions.map(() => 0);
+  for (const a of attempts) quiz.questions.forEach((q, i) => { if (a.answers?.[i] === q.correct) right[i] += 1; });
+  const perStudent = new Map();
+  for (const a of attempts) perStudent.set(String(a.student?._id), (perStudent.get(String(a.student?._id)) || 0) + 1);
+  const pct = (a) => (a.total ? Math.round((a.score / a.total) * 100) : 0);
+  return {
+    quiz: { _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts },
+    summary: {
+      saved: attempts.length,
+      students: perStudent.size,
+      avgPct: attempts.length ? Math.round(attempts.reduce((s, a) => s + pct(a), 0) / attempts.length) : null,
+      questions: quiz.questions.map((q, i) => ({ text: q.text, rightPct: attempts.length ? Math.round((right[i] / attempts.length) * 100) : null })),
+    },
+    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, tries: perStudent.get(String(a.student?._id)) })),
+  };
+}
+r.get('/quizzes/:id/attempts', wrap(async (req, res) => res.json(await quizResults(req.params.id))));
+r.get('/quizzes/:id/attempts.csv', wrap(async (req, res) => {
+  const { rows } = await quizResults(req.params.id);
+  sendCsv(res, `test-natijalari-${req.params.id}.csv`, toCsv([
+    { label: 'Talaba', get: (x) => x.student?.name },
+    { label: 'Telegram', get: (x) => x.student?.telegram },
+    { label: 'Telefon', get: (x) => x.student?.phone },
+    { label: 'Fakultet', get: (x) => x.student?.faculty },
+    { label: 'Kurs', get: (x) => x.student?.year },
+    { label: 'Ball', get: (x) => x.score },
+    { label: 'Jami', get: (x) => x.total },
+    { label: 'Foiz', get: (x) => x.pct },
+    { label: 'Sana', get: (x) => x.createdAt },
+  ], rows));
 }));
 r.patch('/quizzes/:id', wrap(async (req, res) => {
   const { status } = z.object({ status: z.enum(['approved', 'pending', 'hidden']) }).parse(req.body);
