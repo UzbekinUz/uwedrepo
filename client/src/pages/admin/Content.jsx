@@ -230,7 +230,9 @@ function Materials() {
             <div className="min-w-0">
               <div className="font-semibold">{m.title} <Chip tone="brand">{MATERIAL_LABEL[m.type]}</Chip></div>
               <div className="text-sm text-slate-600">{m.subject?.name} · yuborgan: {m.author?.name || '—'} {m.author?.telegram || ''}</div>
-              <a href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all text-sm text-brand-700 underline">{m.url}</a>
+              {m.url
+                ? <a href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all text-sm text-brand-700 underline">{m.url}</a>
+                : <a href={`/materials/${m._id}`} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-700 underline">Saytdagi konspekt (o'qish)</a>}
             </div>
             <div className="flex gap-2">
               {status === 'pending' ? <button className="btn-primary btn-sm" onClick={() => call(() => api(`/admin/materials/${m._id}`, { method: 'PATCH', body: { status: 'approved' } }))}>Tasdiqlash</button>

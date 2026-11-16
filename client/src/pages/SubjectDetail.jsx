@@ -11,16 +11,23 @@ export function MaterialList({ items }) {
   if (!items.length) return <Empty>{t("Hozircha material yo'q. Birinchi bo'lib yuklang!")}</Empty>;
   return (
     <div className="space-y-2">
-      {items.map((m) => (
-        <a key={m._id} href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5">
-          <span className="chip shrink-0 bg-brand-100 text-brand-700">{MATERIAL_LABEL[m.type]}</span>
-          <div className="min-w-0 flex-1">
-            <div className="break-words text-lg font-bold text-slate-900">{m.title}</div>
-            {(m.description || m.subject?.name) && <div className="text-sm text-slate-600">{m.subject?.name} {m.description}</div>}
-          </div>
-          <span className="shrink-0 text-sm font-semibold text-brand-700">{t('Ochish ↗')}</span>
-        </a>
-      ))}
+      {items.map((m) => {
+        const cls = 'card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5';
+        const inner = (
+          <>
+            <span className="chip shrink-0 bg-brand-100 text-brand-700">{MATERIAL_LABEL[m.type]}</span>
+            <div className="min-w-0 flex-1">
+              <div className="break-words text-lg font-bold text-slate-900">{m.title}</div>
+              {(m.description || m.subject?.name) && <div className="text-sm text-slate-600">{m.subject?.name} {m.description}</div>}
+            </div>
+            <span className="shrink-0 text-sm font-semibold text-brand-700">{m.url ? t('Ochish ↗') : t("O'qish →")}</span>
+          </>
+        );
+        // Havolasiz material — saytning o'zida o'qiladigan konspekt
+        return m.url
+          ? <a key={m._id} href={m.url} target="_blank" rel="noopener noreferrer nofollow" className={cls}>{inner}</a>
+          : <Link key={m._id} to={`/materials/${m._id}`} className={cls}>{inner}</Link>;
+      })}
     </div>
   );
 }
@@ -83,12 +90,16 @@ export default function SubjectDetail() {
         <div className="card p-5 sm:p-6">
           <p className="mb-4 text-sm text-slate-600">{t("Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.")}</p>
           <ol className="space-y-2">
-            {topics.map((x, i) => (
-              <li key={i} className="flex gap-3 border-b border-slate-100 pb-2 last:border-0">
-                <span className="w-7 shrink-0 text-right font-extrabold text-brand-700">{i + 1}.</span>
-                <span className="text-slate-800">{x}</span>
-              </li>
-            ))}
+            {topics.map((x, i) => {
+              const note = materials.find((m) => !m.url && m.order === i + 1);
+              return (
+                <li key={i} className="flex items-center gap-3 border-b border-slate-100 pb-2 last:border-0">
+                  <span className="w-7 shrink-0 text-right font-extrabold text-brand-700">{i + 1}.</span>
+                  <span className="flex-1 text-slate-800">{x}</span>
+                  {note && <Link to={`/materials/${note._id}`} className="shrink-0 text-sm font-semibold text-brand-700 hover:underline">{t('Konspekt →')}</Link>}
+                </li>
+              );
+            })}
           </ol>
         </div>
       )}

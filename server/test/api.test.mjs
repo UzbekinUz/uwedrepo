@@ -394,3 +394,26 @@ test("fan mavzulari: admin kiritadi, fan sahifasida tartib bilan chiqadi", async
   const pub = await api('GET', `/subjects/${id}`);
   assert.deepEqual(pub.j.subject.topics, ['Ketma-ketlik limiti', 'Funksiya limiti', 'Hosila']);
 });
+
+test("matnli konspekt: faqat admin yozadi, ro'yxatda matnsiz, alohida sahifada to'liq va mavzu tartibida", async () => {
+  const subject = String(fx.subject._id);
+  const note = { subject, title: '2-mavzu: Funksiya limiti', body: '## Tushuncha\n\nFunksiya limiti haqida qisqa matn.', order: 2 };
+  assert.equal((await api('POST', '/admin/materials', note, fx.t.a)).s, 403);
+  const n2 = await api('POST', '/admin/materials', note, fx.t.admin);
+  assert.equal(n2.s, 201);
+  const n1 = await api('POST', '/admin/materials', { ...note, title: '1-mavzu: Ketma-ketlik', order: 1 }, fx.t.admin);
+  // Oddiy foydalanuvchi havolasiz material yubora olmaydi (body faqat admin yo'li orqali)
+  assert.equal((await api('POST', '/materials', { subject, title: 'Matn', type: 'konspekt', body: 'x'.repeat(50) }, fx.t.a)).s, 400);
+  const pub = await api('GET', `/subjects/${subject}`);
+  const notes = pub.j.materials.filter((m) => !m.url);
+  assert.deepEqual(notes.map((m) => m.title), ['1-mavzu: Ketma-ketlik', '2-mavzu: Funksiya limiti']);
+  assert.ok(notes.every((m) => m.body === undefined), "ro'yxatda matn yuborilmaydi");
+  const one = await api('GET', `/materials/${n2.j._id}`);
+  assert.equal(one.s, 200);
+  assert.match(one.j.body, /Funksiya limiti/);
+  assert.deepEqual(one.j.siblings.map((x) => String(x._id)), [String(n1.j._id), String(n2.j._id)]);
+  const upd = await api('PUT', `/admin/materials/${n2.j._id}`, { body: '## Yangi\n\nYangilangan matn, yetarlicha uzun.' }, fx.t.admin);
+  assert.equal(upd.s, 200);
+  assert.match((await api('GET', `/materials/${n2.j._id}`)).j.body, /Yangilangan/);
+  assert.equal((await api('GET', '/materials/notanid')).s, 400);
+});
