@@ -8,7 +8,7 @@ export function TutorCard({ t: tutor }) {
     <Link to={`/tutors/${tutor._id}`} className="card-link flex flex-col gap-4 p-6">
       <div className="flex items-start gap-3">
         <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-brand-600 text-lg font-bold text-white">
-          {tutor.user?.name?.[0] || '?'}
+          {Array.from(tutor.user?.name?.trim() || '?')[0]}
         </div>
         <div className="min-w-0">
           <div className="flex flex-wrap items-center gap-2">
