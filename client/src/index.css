@@ -42,6 +42,12 @@
   .rise { animation: rise 0.6s cubic-bezier(0.22, 1, 0.36, 1) both; }
 }
 
+/* Raketa: yengil suzish va olov miltillashi */
+.rocket-float { animation: rocket-float 4s ease-in-out infinite; }
+.rocket-flame { transform-origin: 60px 132px; animation: rocket-flame 0.35s ease-in-out infinite alternate; }
+@keyframes rocket-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+@keyframes rocket-flame { from { transform: scaleY(0.85); opacity: 0.85; } to { transform: scaleY(1.1); opacity: 1; } }
+
 @keyframes rise {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: none; }
@@ -49,6 +55,6 @@
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .rise { animation: none; }
+  .rise, .rocket-float, .rocket-flame { animation: none; }
   * { transition-duration: 0.01ms !important; }
 }
