@@ -63,7 +63,7 @@ export default function Users({ me }) {
               <Fragment key={u._id}>
                 <tr>
                   <td className="font-semibold">{u.name} {u.blocked && <Chip tone="red">Bloklangan</Chip>}</td>
-                  <td><Chip tone={ROLE[u.role][0]}>{ROLE[u.role][1]}</Chip></td>
+                  <td><Chip tone={(ROLE[u.role] || ['slate'])[0]}>{(ROLE[u.role] || [null, u.role || '—'])[1]}</Chip></td>
                   <td className="text-slate-700">{u.telegram || u.email || '—'}{u.phone ? ` · ${u.phone}` : ''}</td>
                   <td>{u.bookings}</td>
                   <td className="whitespace-nowrap">{dateTime(u.createdAt)}</td>
