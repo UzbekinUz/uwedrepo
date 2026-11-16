@@ -81,8 +81,7 @@ export default function Quiz() {
 
   return (
     <>
-      <Link to={`/subjects/${quiz.subject._id}`} className="mb-6 inline-block text-sm font-semibold text-brand-700 hover:underline">← {quiz.subject.name}</Link>
-      <PageTitle title={quiz.title} sub={quiz.description || t('{n} ta savol', { n: quiz.questions.length })}>
+      <PageTitle back={{ to: `/subjects/${quiz.subject._id}`, label: quiz.subject.name }} title={quiz.title} sub={quiz.description || t('{n} ta savol', { n: quiz.questions.length })}>
         {quiz.byTutor && <span className="chip bg-emerald-100 text-emerald-800">{t('Repetitor tuzgan')}</span>}
       </PageTitle>
       {quiz.status && quiz.status !== 'approved' && <div className="mb-6 rounded-md bg-amber-50 px-4 py-3 text-sm font-medium text-amber-800">{t("Ko'rib chiqish rejimi: bu test hali talabalarga ko'rinmaydi.")}</div>}

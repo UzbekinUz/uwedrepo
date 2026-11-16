@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { api } from '../api.js';
 import { t } from '../lib/i18n.js';
@@ -18,15 +19,30 @@ export function Stars({ value = 0, count, size = 'text-base' }) {
   );
 }
 
-export function PageTitle({ title, sub, children }) {
+/** Bosh sahifadagi fon: ikki yumshoq firuza nur va nozik nuqtali to'r (to'q bg-field ustida) */
+export function HeroBg() {
   return (
-    <div className="mb-10 flex flex-wrap items-end justify-between gap-4">
-      <div className="max-w-3xl">
-        <h1 className="text-[clamp(2rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-slate-900">{title}</h1>
-        {sub && <p className="mt-4 text-base text-slate-600 sm:text-lg">{sub}</p>}
+    <>
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_15%,rgba(94,224,210,0.18),transparent_55%),radial-gradient(ellipse_at_0%_100%,rgba(18,145,139,0.25),transparent_50%)]" />
+      <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(circle,#fff_1px,transparent_1px)] [background-size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+    </>
+  );
+}
+
+/** Sahifa sarlavhasi: bosh sahifadagidek to'q fonli to'liq kenglikdagi bant. back = { to, label } */
+export function PageTitle({ title, sub, children, back }) {
+  return (
+    <section className="relative left-1/2 -mt-12 mb-10 w-screen -translate-x-1/2 overflow-hidden bg-field text-white sm:-mt-16">
+      <HeroBg />
+      <div className="relative mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4 px-4 py-10 sm:px-6 sm:py-14">
+        <div className="max-w-3xl">
+          {back && <Link to={back.to} className="mb-4 inline-block text-sm font-semibold text-brand-300 hover:text-white">← {back.label}</Link>}
+          <h1 className="text-[clamp(2rem,5vw,3.75rem)] font-extrabold leading-[1.02] tracking-[-0.03em] text-white">{title}</h1>
+          {sub && <p className="mt-4 text-base text-slate-300 sm:text-lg">{sub}</p>}
+        </div>
+        {children}
       </div>
-      {children}
-    </div>
+    </section>
   );
 }
 

@@ -31,7 +31,7 @@ export default function Layout() {
   const home = pathname === '/';
 
   return (
-    <div className="flex min-h-screen flex-col">
+    <div className="flex min-h-screen flex-col overflow-x-clip">
       {meta?.banner && (
         <div role="status" className={`px-4 py-2 text-center text-sm font-medium ${meta.banner.kind === 'warn' ? 'bg-amber-100 text-amber-950' : 'bg-brand-100 text-slate-900'}`}>{meta.banner.text}</div>
       )}
