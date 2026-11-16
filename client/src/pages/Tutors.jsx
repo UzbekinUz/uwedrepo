@@ -37,7 +37,7 @@ export default function Tutors() {
 
       <div className="mb-8 space-y-4">
         {/* Telefonda: ikki qatorli karusel (yonga suriladi); kattaroq ekranda: pastga qarab o'raladi */}
-        <div className="no-scrollbar -mx-4 grid snap-x auto-cols-max grid-flow-col grid-rows-2 gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex sm:flex-wrap sm:overflow-visible sm:px-0" role="group" aria-label={t('Fan')}>
+        <div className="chip-row" role="group" aria-label={t('Fan')}>
           <Pill on={!subject} onClick={() => pick('')}>{pref ? t('Mening fanlarim') : t('Barcha fanlar')}</Pill>
           {list?.map((s) => <Pill key={s._id} on={subject === s._id} onClick={() => pick(s._id)}>{s.name}</Pill>)}
         </div>

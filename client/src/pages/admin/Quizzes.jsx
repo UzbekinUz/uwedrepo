@@ -85,7 +85,7 @@ export default function Quizzes() {
         <p>Talabalar fan sahifasidagi «Testlar» bo'limida mashq testlarini yechadi va natijani darhol ko'radi. Xato javob yonida <b>«Nega noto'g'ri?»</b> tugmasi AI izohini beradi (Sozlamalarda yoqiladi), natija ostida esa shu fan repetitorlari chiqadi.</p>
         <p>Siz tuzgan test darhol ko'rinadi. <b>Repetitor tuzgan yoki tahrirlagan test «Kutilmoqda»</b> holatiga tushadi: javoblari to'g'riligini tekshirib, «Tasdiqlash»ni bosing. Rasmiy imtihon variantlarini emas, o'xshash mashq savollarini joylang.</p>
       </>}>
-      <div className="flex flex-wrap gap-2">
+      <div className="chip-row">
         {[['', 'Hammasi'], ['pending', 'Kutilmoqda'], ['approved', "Ko'rinadi"], ['hidden', 'Yashirilgan']].map(([k, l]) => (
           <button key={k} className={`choice ${status === k ? 'choice-on' : ''}`} onClick={() => setStatus(k)}>{l}</button>
         ))}
