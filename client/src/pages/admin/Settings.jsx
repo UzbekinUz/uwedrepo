@@ -11,7 +11,7 @@ function System() {
   const { data, loading } = useFetch('/admin/system');
   if (loading) return <Spinner />;
   return (
-    <div className="bg-white p-5 sm:p-6">
+    <div className="glass p-5 sm:p-6">
       <h3 className="text-xl font-extrabold">Tizim holati</h3>
       <ul className="mt-2 divide-y-0">
         <Row label="Ma'lumotlar bazasi" ok={data.db} text="MongoDB" />
@@ -29,7 +29,7 @@ function Password() {
   const [f, setF] = useState({ current: '', next: '' });
   const { run, err, msg, busy } = useAct();
   return (
-    <form onSubmit={(e) => { e.preventDefault(); run(async () => { await api('/admin/me/password', { method: 'POST', body: f }); setF({ current: '', next: '' }); }, "Parol almashtirildi"); }} className="space-y-3 bg-white p-5 sm:p-6">
+    <form onSubmit={(e) => { e.preventDefault(); run(async () => { await api('/admin/me/password', { method: 'POST', body: f }); setF({ current: '', next: '' }); }, "Parol almashtirildi"); }} className="space-y-3 glass p-5 sm:p-6">
       <h3 className="text-xl font-extrabold">Parolni almashtirish</h3>
       <p className="text-sm text-slate-600">Faqat email va parol bilan kirgan adminlar uchun. Yangi parol kamida 10 belgi bo'lsin. Standart paroldan (<code>Admin12345</code>) albatta voz keching.</p>
       <div className="grid gap-3 sm:grid-cols-2">
@@ -56,7 +56,7 @@ export default function Settings() {
     <Section title="Sozlamalar"
       intro={<p>Sayt qoidalarini kod o'zgartirmasdan shu yerda boshqarasiz. O'zgarish <b>yangi bronlarga</b> ta'sir qiladi; allaqachon yaratilgan bronlarning narxi o'zgarmaydi.</p>}>
       <System />
-      <form onSubmit={save} className="space-y-6 bg-white p-5 sm:p-6">
+      <form onSubmit={save} className="space-y-6 glass p-5 sm:p-6">
         <h3 className="text-xl font-extrabold">Pul va qoidalar</h3>
         <div className="grid gap-5 sm:grid-cols-3">
           <div><FField label="Komissiya, %"><input className="input" type="number" min="0" max="50" step="0.5" value={f.commission} onChange={num('commission')} /></FField><p className="mt-1 text-sm text-slate-600">Platforma har to'lovdan oladigan ulush. Qolgani repetitorga. 0–50.</p></div>

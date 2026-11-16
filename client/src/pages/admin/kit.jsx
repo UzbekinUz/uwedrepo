@@ -22,7 +22,7 @@ export function Section({ title, intro, actions, children }) {
 
 export function Stat({ label, value, hint, tip, warn }) {
   return (
-    <div className={`p-5 ${warn ? 'bg-amber-50' : 'bg-white'}`}>
+    <div className={`p-5 ${warn ? 'bg-amber-50' : 'glass'}`}>
       <div className="flex items-center gap-1.5 text-sm font-medium text-slate-600">{label}{tip && <InfoTip text={tip} />}</div>
       <div className="mt-1 text-3xl font-extrabold tracking-tight text-slate-900">{value ?? '—'}</div>
       {hint && <div className="mt-0.5 text-sm text-slate-600">{hint}</div>}
@@ -94,7 +94,7 @@ export function BarChart({ title, data, color = '#0A7E7A', note }) {
   const total = data.reduce((a, d) => a + d.value, 0);
   const w = 600; const h = 110; const bw = w / data.length;
   return (
-    <div className="bg-white p-5">
+    <div className="glass p-5">
       <div className="flex items-baseline justify-between gap-2">
         <h3 className="font-bold text-slate-900">{title}</h3>
         <span className="text-sm text-slate-600">30 kunda: <b className="text-slate-900">{total}</b></span>
@@ -114,7 +114,7 @@ export function BarChart({ title, data, color = '#0A7E7A', note }) {
 
 export function Table({ head, children, empty }) {
   return (
-    <div className="overflow-x-auto bg-white">
+    <div className="overflow-x-auto glass">
       <table className="w-full min-w-[40rem] text-left text-sm">
         <thead><tr className="bg-slate-100 text-slate-800">{head.map((h) => <th key={h} className="whitespace-nowrap px-4 py-3 font-semibold">{h}</th>)}</tr></thead>
         <tbody className="[&>tr:nth-child(even)]:bg-slate-50 [&_td]:px-4 [&_td]:py-3 [&_td]:align-top">{children}</tbody>

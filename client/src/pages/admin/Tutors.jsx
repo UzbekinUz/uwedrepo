@@ -13,7 +13,7 @@ function Card({ t, reload }) {
   const patch = (body) => run(async () => { await api(`/admin/tutors/${t._id}`, { method: 'PATCH', body }); setRejecting(false); reload(); });
   if (editing) {
     return (
-      <div className="space-y-3 bg-white p-5 lg:col-span-2">
+      <div className="space-y-3 glass p-5 lg:col-span-2">
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-lg font-extrabold">Anketani tahrirlash: {t.user?.name}</h3>
           <button className="btn-ghost btn-sm" onClick={() => setEditing(false)}>Bekor</button>
@@ -24,7 +24,7 @@ function Card({ t, reload }) {
     );
   }
   return (
-    <div className="space-y-3 bg-white p-5">
+    <div className="space-y-3 glass p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="text-lg font-extrabold">{t.user?.name} <StatusChip s={t.status} /> {t.featured && <Chip tone="brand">Tavsiya</Chip>} {t.user?.blocked && <Chip tone="red">Bloklangan</Chip>}</div>
@@ -77,7 +77,7 @@ export default function Tutors() {
         <FField label="Qidirish"><input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ism yoki sarlavha" /></FField>
       </Filters>
       <ErrorBox error={list.error} />
-      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="bg-white p-10 text-center text-slate-600">Bu holatda anketa yo'q.</div> : (
+      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="glass p-10 text-center text-slate-600">Bu holatda anketa yo'q.</div> : (
         <div className="grid gap-3 lg:grid-cols-2">{list.data.items.map((t) => <Card key={t._id} t={t} reload={() => setN(n + 1)} />)}</div>
       )}
     </Section>

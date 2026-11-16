@@ -24,7 +24,7 @@ export default function Overview({ go }) {
         </Hint>
       )}
 
-      <div className="bg-white p-5 sm:p-6">
+      <div className="glass p-5 sm:p-6">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <h3 className="text-xl font-extrabold">Pilotga tayyorlik: {done} / {checklist.length}</h3>
           <div className="h-2 w-48 bg-slate-200" role="progressbar" aria-valuenow={done} aria-valuemax={checklist.length}><div className="h-2 bg-brand-600 transition-all" style={{ width: `${(done / checklist.length) * 100}%` }} /></div>
@@ -60,7 +60,7 @@ export default function Overview({ go }) {
         <BarChart title="Yangi bronlar" data={series.bookings} />
       </div>
 
-      <div className="bg-white p-5 sm:p-6">
+      <div className="glass p-5 sm:p-6">
         <h3 className="text-xl font-extrabold">Voronka: odamlar qayerda to'xtab qolmoqda</h3>
         <p className="mt-1 text-sm text-slate-600">Eng uzun tushish — eng katta muammo. Masalan, kirganlar ko'p-u ro'yxatdan o'tganlar kam bo'lsa, kirish sahifasini yaxshilash kerak.</p>
         <ul className="mt-4 space-y-3">
@@ -74,11 +74,11 @@ export default function Overview({ go }) {
       </div>
 
       <div className="grid gap-3 lg:grid-cols-2">
-        <div className="bg-white p-5">
+        <div className="glass p-5">
           <h3 className="font-bold">Eng ko'p bron qilingan fanlar</h3>
           {topSubjects.length ? <ol className="mt-3 space-y-1 text-sm">{topSubjects.map((x) => <li key={x._id} className="flex justify-between"><span>{x.name}</span><b>{x.n}</b></li>)}</ol> : <p className="mt-2 text-sm text-slate-600">Hali bron yo'q.</p>}
         </div>
-        <div className="bg-white p-5">
+        <div className="glass p-5">
           <h3 className="font-bold">Repetitori yo'q fanlar</h3>
           {noTutorSubjects.length ? (
             <>
@@ -87,11 +87,11 @@ export default function Overview({ go }) {
             </>
           ) : <p className="mt-2 text-sm text-slate-600">Hamma fanda kamida bitta repetitor bor.</p>}
         </div>
-        <div className="bg-white p-5">
+        <div className="glass p-5">
           <h3 className="font-bold">Eng ko'p daromad keltirgan repetitorlar</h3>
           {topTutors.length ? <ol className="mt-3 space-y-1 text-sm">{topTutors.map((x) => <li key={x._id} className="flex justify-between"><span>{x.name} <span className="text-slate-500">· {x.n} dars</span></span><b>{money(x.revenue)}</b></li>)}</ol> : <p className="mt-2 text-sm text-slate-600">Hali to'lov yo'q.</p>}
         </div>
-        <div className="bg-white p-5">
+        <div className="glass p-5">
           <h3 className="flex items-center gap-1.5 font-bold">Tashrif manbalari <InfoTip text="Havolaga ?ref=nomi (yoki ?utm_source=nomi) qo'shilsa, tashrif shu nom bilan yoziladi. Har bir chat yoki kanal uchun alohida nom bering." /></h3>
           {sources.length ? <ol className="mt-3 space-y-1 text-sm">{sources.map((x) => <li key={x._id} className="flex justify-between"><span>{x._id}</span><b>{x.n}</b></li>)}</ol> : (
             <p className="mt-2 text-sm text-slate-600">Hozircha manba aniqlanmagan. Havolalarga <code>?ref=nomi</code> qo'shing, masalan <code>/?ref=0-9a-guruh</code> — shunda qaysi chatdan nechta odam kelgani shu yerda ko'rinadi.</p>
