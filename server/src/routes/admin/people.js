@@ -6,6 +6,7 @@ import { refreshTutorRating } from '../../lib.js';
 import { notifyUser } from '../../telegram.js';
 import { config } from '../../config.js';
 import { audit, pageOf, pageMeta, toCsv, sendCsv } from './helpers.js';
+import { tutorSchema } from '../tutors.js';
 
 const r = Router();
 
@@ -119,6 +120,22 @@ r.patch(
         : data.status === 'rejected' ? `Anketangiz rad etildi. Sabab: ${data.rejectReason}\nAnketani yangilab, qayta yuborishingiz mumkin.` : "Anketangiz qayta ko'rib chiqish uchun qaytarildi.");
     }
     audit(req, data.status ? `tutor.${data.status}` : 'tutor.featured', `${tutor.user.name} (${tutor._id})`, data);
+    res.json(tutor);
+  })
+);
+
+// Admin anketani tahrirlaydi (xato, noto'g'ri fan, ismdagi g'alati shrift va h.k.). Holat va reyting o'zgarmaydi.
+r.put(
+  '/tutors/:id',
+  wrap(async (req, res) => {
+    const { name, ...data } = tutorSchema.extend({ name: z.string().trim().min(2).max(80).optional() }).parse(req.body);
+    const tutor = await Tutor.findById(req.params.id).populate('user', 'name');
+    if (!tutor) throw new HttpError(404, 'Topilmadi');
+    Object.assign(tutor, data);
+    await tutor.save();
+    if (name && name !== tutor.user.name) await User.findByIdAndUpdate(tutor.user._id, { name });
+    audit(req, 'tutor.edit', `${name || tutor.user.name} (${tutor._id})`);
+    notifyUser(tutor.user._id, `Administrator anketangizga tuzatish kiritdi. Ko'rib chiqing: ${config.clientOrigin}/tutor`);
     res.json(tutor);
   })
 );

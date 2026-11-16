@@ -87,6 +87,11 @@ export default function Settings() {
           <div className="max-w-xs"><FField label="Bitta talabaga kuniga, ta"><input className="input" type="number" min="0" max="100" value={f.aiDailyLimit ?? 10} onChange={num('aiDailyLimit')} /></FField></div>
         </div>
 
+        <div className="space-y-2">
+          <h3 className="text-xl font-extrabold">Telegram eslatmalari</h3>
+          <label className="flex items-start gap-3"><input type="checkbox" className="mt-1 h-5 w-5" checked={f.telegramReminders !== false} onChange={(e) => setF({ ...f, telegramReminders: e.target.checked })} /><span><b>Talabalarga avtomatik xabarlar</b><br /><span className="text-sm text-slate-600">Nazoratdan bir kun oldin eslatma va yangi mashq testi qo'shilganda xabar. Faqat shu fan o'qitiladigan fakultet va kurs talabalariga, Telegram bot ulangan bo'lsa yuboriladi. Har bir sana va test uchun bir martadan.</span></span></label>
+        </div>
+
         <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
         <button className="btn-primary px-8" disabled={busy}>Saqlash</button>
       </form>

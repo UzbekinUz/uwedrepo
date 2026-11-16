@@ -11,7 +11,7 @@ import { FORMATS, LANGUAGES } from '../data/meta.js';
 const r = Router();
 
 const hhmm = z.string().regex(/^([01]\d|2[0-3]):00$/, 'Soat "HH:00" ko\'rinishida');
-const tutorSchema = z.object({
+export const tutorSchema = z.object({
   headline: z.string().trim().min(5).max(120),
   bio: z.string().trim().max(1500).optional(),
   experience: z.string().trim().max(300).optional(),

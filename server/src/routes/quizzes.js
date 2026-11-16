@@ -7,6 +7,8 @@ import { getSettings } from '../settings.js';
 import { aiAvailable, explainMistake } from '../ai.js';
 import { notifyAdmins } from '../notify.js';
 import { config } from '../config.js';
+import { quizStats } from '../quizStats.js';
+import { notifyNewQuiz } from '../reminders.js';
 
 const r = Router();
 
@@ -81,6 +83,18 @@ r.get(
   })
 );
 
+// Talabaning o'z natijalari (eng yangisi birinchi)
+r.get(
+  '/attempts/mine',
+  requireAuth,
+  wrap(async (req, res) => {
+    const list = await QuizAttempt.find({ student: req.user._id })
+      .populate({ path: 'quiz', select: 'title subject', populate: { path: 'subject', select: 'name' } })
+      .sort({ createdAt: -1 }).limit(200).lean();
+    res.json(list.filter((a) => a.quiz).map((a) => ({ _id: a._id, quiz: a.quiz, score: a.score, total: a.total, createdAt: a.createdAt })));
+  })
+);
+
 r.get(
   '/:id',
   optionalAuth,
@@ -97,6 +111,18 @@ r.get(
   '/:id/full',
   requireAuth,
   wrap(async (req, res) => res.json(await ownQuiz(req)))
+);
+
+// Muallif (repetitor) o'z testi statistikasini ko'radi: ismsiz, faqat umumiy raqamlar
+r.get(
+  '/:id/stats',
+  requireAuth,
+  wrap(async (req, res) => {
+    const q = await ownQuiz(req);
+    const attempts = (await QuizAttempt.find({ quiz: q._id }).populate('student', 'role').lean())
+      .filter((a) => a.student && a.student.role !== 'admin' && String(a.student._id) !== String(q.author));
+    res.json({ attempts: q.attempts, ...quizStats(q, attempts) });
+  })
 );
 
 // Javoblarni tekshirish. Kirmagan talaba ham yecha oladi; kirganining natijasi saqlanadi.
@@ -175,6 +201,7 @@ r.post(
     if (!(await Subject.exists({ _id: data.subject }))) throw new HttpError(400, 'Fan topilmadi');
     const role = await authorRole(req.user, data.subject);
     const q = await Quiz.create({ ...data, author: req.user._id, byTutor: role === 'tutor', status: role === 'admin' ? 'approved' : 'pending' });
+    if (role === 'admin') notifyNewQuiz(q._id).catch((e) => console.error('[notify quiz]', e.message));
     if (role === 'tutor') notifyAdmins(`Yangi test tekshiruvga keldi: «${q.title}» (${req.user.name}). Ko'rib chiqish: ${config.clientOrigin}/admin?tab=quizzes`);
     res.status(201).json(q);
   })

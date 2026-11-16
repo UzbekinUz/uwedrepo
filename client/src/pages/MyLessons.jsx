@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { Hint } from '../components/Motion.jsx';
-import { ErrorBox, Empty, PageTitle, Spinner, useFetch } from '../components/ui.jsx';
+import { ErrorBox, Empty, PageTitle, Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { STATUS, dateTime, money, tgLink } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
 
@@ -73,7 +73,36 @@ function BookingCard({ b, reload }) {
   );
 }
 
+/** Talabaning mashq testlari natijalari */
+function MyResults() {
+  const { data, loading, error } = useFetch('/quizzes/attempts/mine');
+  if (loading) return <Spinner />;
+  if (error) return <ErrorBox error={error} />;
+  if (!data.length) return <Empty>{t('Hali test yechmagansiz.')} <Link className="text-brand-600 underline" to="/subjects">{t('Fanlardan test tanlang →')}</Link></Empty>;
+  const pct = (a) => Math.round((a.score / a.total) * 100);
+  const avg = Math.round(data.reduce((s, a) => s + pct(a), 0) / data.length);
+  return (
+    <div className="space-y-4">
+      <div className="card flex flex-wrap gap-8 p-5">
+        <div><div className="text-3xl font-extrabold">{data.length}</div><div className="text-sm text-slate-600">{t('urinish')}</div></div>
+        <div><div className="text-3xl font-extrabold">{new Set(data.map((a) => a.quiz._id)).size}</div><div className="text-sm text-slate-600">{t('test')}</div></div>
+        <div><div className="text-3xl font-extrabold text-brand-700">{avg}%</div><div className="text-sm text-slate-600">{t("o'rtacha natija")}</div></div>
+      </div>
+      {data.map((a) => (
+        <Link key={a._id} to={`/quizzes/${a.quiz._id}`} className="card-link flex flex-wrap items-center justify-between gap-3 p-4">
+          <div className="min-w-0">
+            <div className="font-semibold">{a.quiz.title}</div>
+            <div className="text-sm text-slate-500">{a.quiz.subject?.name} · {dateTime(a.createdAt)}</div>
+          </div>
+          <span className={`chip ${pct(a) >= 80 ? 'bg-emerald-100 text-emerald-800' : pct(a) >= 50 ? 'bg-amber-100 text-amber-800' : 'bg-red-100 text-red-700'}`}>{a.score} / {a.total} · {pct(a)}%</span>
+        </Link>
+      ))}
+    </div>
+  );
+}
+
 export default function MyLessons() {
+  const [tab, setTab] = useState('lessons');
   const [n, setN] = useState(0);
   const { data, loading, error } = useFetch('/bookings/mine', [n]);
   const reload = () => setN((x) => x + 1);
@@ -83,6 +112,8 @@ export default function MyLessons() {
   return (
     <>
       <PageTitle title={t('Mening darslarim')} sub={t("Kelgusi darslar va o'tgan darslarni baholash")} />
+      <Tabs tabs={[['lessons', t('Darslar')], ['tests', t('Test natijalarim')]]} value={tab} onChange={setTab} />
+      {tab === 'tests' ? <MyResults /> : <>
       <Hint className="mb-8" title={t('Holatlar nimani bildiradi')}>
         <ul>
           <li><b>{t('Kutilmoqda')}</b> — {t('repetitor hali javob bermadi.')}</li>
@@ -98,6 +129,7 @@ export default function MyLessons() {
           <section><h2 className="mb-3 font-semibold">{t('Oldingi')} ({past.length})</h2><div className="grid gap-3 md:grid-cols-2">{past.map((b) => <BookingCard key={b._id} b={b} reload={reload} />)}</div></section>
         </div>
       )}
+      </>}
     </>
   );
 }

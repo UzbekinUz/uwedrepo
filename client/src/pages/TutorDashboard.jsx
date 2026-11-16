@@ -21,12 +21,14 @@ const groupSlots = (av = []) => {
   return map.size ? [...map.values()] : [{ ...newSlot(), days: [1] }];
 };
 
-function TutorForm({ initial, onSaved }) {
+/** Anketa formasi. Admin ham ishlatadi: endpoint (PUT) va ism maydoni bilan */
+export function TutorForm({ initial, onSaved, endpoint, withName = false }) {
   const { meta } = useApp();
   const subjects = useFetch('/subjects');
   const [f, setF] = useState(() => ({
     headline: '', bio: '', experience: '', pricePerHour: 60000, telegram: '', formats: ['online'], languages: ['uz'],
     ...initial,
+    name: initial?.user?.name || '',
     subjects: initial?.subjects?.map((s) => s._id) || [],
     slots: groupSlots(initial?.availability),
   }));
@@ -49,7 +51,8 @@ function TutorForm({ initial, onSaved }) {
     });
     try {
       const body = { headline: f.headline, bio: f.bio, experience: f.experience, pricePerHour: Number(f.pricePerHour), subjects: f.subjects, formats: f.formats, languages: f.languages, telegram: f.telegram, availability };
-      await api(initial ? '/tutors/me' : '/tutors', { method: initial ? 'PUT' : 'POST', body });
+      if (withName) body.name = f.name;
+      await api(endpoint || (initial ? '/tutors/me' : '/tutors'), { method: initial ? 'PUT' : 'POST', body });
       setOk(initial ? 'Saqlandi' : "Anketa yuborildi! Admin tasdiqlagach katalogda ko'rinasiz.");
       onSaved?.();
     } catch (er) { setErr(er.message); }
@@ -63,6 +66,7 @@ function TutorForm({ initial, onSaved }) {
 
   return (
     <form onSubmit={submit} className="card space-y-5 p-5 sm:p-6">
+      {withName && <Field label="Ism (katalogda ko'rinadi)"><input className="input" required minLength={2} maxLength={80} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></Field>}
       <Field label="Qisqa sarlavha"><input className="input" required minLength={5} maxLength={120} placeholder={t('Masalan: Hisoblash va Ekonomika — imtihongacha tayyorlov')} value={f.headline} onChange={(e) => setF({ ...f, headline: e.target.value })} /></Field>
       <Field label="O'zingiz haqingizda"><textarea className="input" rows={3} maxLength={1500} value={f.bio} onChange={(e) => setF({ ...f, bio: e.target.value })} /></Field>
       <div className="grid gap-4 sm:grid-cols-3">

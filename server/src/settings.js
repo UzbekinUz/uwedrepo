@@ -10,6 +10,7 @@ const defaults = () => ({
   banner: { text: '', kind: 'info', active: false },
   aiEnabled: true,
   aiDailyLimit: 10,
+  telegramReminders: true,
 });
 
 let cache = null;
