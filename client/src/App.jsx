@@ -10,6 +10,7 @@ import Tutors from './pages/Tutors.jsx';
 import TutorDetail from './pages/TutorDetail.jsx';
 import Calendar from './pages/Calendar.jsx';
 import Materials from './pages/Materials.jsx';
+import Quiz from './pages/Quiz.jsx';
 import { Login, Register } from './pages/Auth.jsx';
 import MyLessons from './pages/MyLessons.jsx';
 import TutorDashboard from './pages/TutorDashboard.jsx';
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="tutors/:id" element={<TutorDetail />} />
           <Route path="calendar" element={<Calendar />} />
           <Route path="materials" element={<Materials />} />
+          <Route path="quizzes/:id" element={<Quiz />} />
           <Route path="survey" element={<Survey />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />

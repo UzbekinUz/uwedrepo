@@ -66,8 +66,8 @@ export default function SubjectDetail() {
 
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
-  const { subject, tutors, materials, exams } = data;
-  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
+  const { subject, tutors, materials, exams, quizzes = [] } = data;
+  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ['tests', `${t('Testlar')} (${quizzes.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
 
   return (
     <>
@@ -79,6 +79,20 @@ export default function SubjectDetail() {
       </PageTitle>
       <Tabs tabs={tabs} value={tab} onChange={setTab} />
       {tab === 'tutors' && (tutors.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
+      {tab === 'tests' && (quizzes.length ? (
+        <div className="space-y-2">
+          {quizzes.map((q) => (
+            <Link key={q._id} to={`/quizzes/${q._id}`} className="card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5">
+              <span className="chip shrink-0 bg-brand-100 text-brand-700">{t('{n} ta savol', { n: q.count })}</span>
+              <div className="min-w-0 flex-1">
+                <div className="break-words text-lg font-bold text-slate-900">{q.title}</div>
+                <div className="text-sm text-slate-600">{q.description} {q.byTutor && <span className="chip ml-1 bg-emerald-100 text-emerald-800">{t('Repetitor tuzgan')}</span>}</div>
+              </div>
+              <span className="shrink-0 text-sm font-semibold text-brand-700">{t('Yechish →')}</span>
+            </Link>
+          ))}
+        </div>
+      ) : <Empty>{t("Bu fandan hali mashq testi yo'q.")}</Empty>)}
       {tab === 'materials' && <div className="space-y-6"><MaterialList items={materials} /><MaterialForm subjectId={subject._id} onDone={() => setReload((n) => n + 1)} /></div>}
       {tab === 'exams' && (exams.length ? <div className="grid gap-3 md:grid-cols-2">{exams.map((e) => <ExamRow key={e._id} e={{ ...e, subject }} />)}</div> : <Empty>{t('Nazorat sanalari hali kiritilmagan.')}</Empty>)}
     </>

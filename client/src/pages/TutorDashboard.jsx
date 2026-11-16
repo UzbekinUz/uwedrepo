@@ -5,6 +5,7 @@ import { Hint } from '../components/Motion.jsx';
 import { ErrorBox, Field, PageTitle, Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { DAYS, FORMAT_LABEL, LANG_LABEL, STATUS, dateTime, money, tgLink } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
+import { MyQuizzes } from '../components/QuizEditor.jsx';
 
 function TutorForm({ initial, onSaved }) {
   const { meta } = useApp();
@@ -134,8 +135,13 @@ export default function TutorDashboard() {
     <>
       <PageTitle title={t('Repetitor paneli')} sub={`${t('{n} ta dars', { n: tutor.lessonsCount })} · ${t('reyting')} ${tutor.ratingAvg || '—'}`} />
       <div className={`mb-8 rounded-md px-5 py-4 text-base font-medium ${banner[0]}`}>{t(banner[1])}</div>
-      <Tabs tabs={[['bookings', t('Bronlar')], ['profile', t('Anketa')]]} value={tab} onChange={setTab} />
-      {tab === 'bookings' ? <Incoming /> : <TutorForm initial={tutor} onSaved={() => setN(n + 1)} />}
+      <Tabs tabs={[['bookings', t('Bronlar')], ['profile', t('Anketa')], ...(tutor.status === 'approved' ? [['tests', t('Testlar')]] : [])]} value={tab} onChange={setTab} />
+      {tab === 'bookings' && <Incoming />}
+      {tab === 'profile' && <TutorForm initial={tutor} onSaved={() => setN(n + 1)} />}
+      {tab === 'tests' && (
+        <MyQuizzes subjects={tutor.subjects || []}
+          note={<Hint title={t('Mashq testlari')}>{t("Fanlaringiz bo'yicha test tuzing: talabalar uni yechadi va natija ostida sizning profilingizni ko'radi. Har bir test (va har bir tahrir) admin tekshirgach chiqadi. Rasmiy imtihon variantlarini emas, o'xshash mashq savollarini joylang.")}</Hint>} />
+      )}
     </>
   );
 }

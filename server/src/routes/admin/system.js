@@ -24,6 +24,8 @@ r.put(
         cancelHours: z.number().int().min(0).max(168),
         registrationOpen: z.boolean(),
         banner: z.object({ text: z.string().trim().max(200), kind: z.enum(['info', 'warn']), active: z.boolean() }),
+        aiEnabled: z.boolean().optional(),
+        aiDailyLimit: z.number().int().min(0).max(100).optional(),
       })
       .parse(req.body);
     const before = getSettings();
@@ -40,6 +42,7 @@ r.get('/system', wrap(async (_req, res) =>
     db: mongoose.connection.readyState === 1,
     env: config.isProd ? 'production' : 'development',
     paymentMode: process.env.PAYMENT_PROVIDER || 'mock',
+    ai: config.anthropicKey ? config.anthropicModel : null,
     clientOrigin: config.clientOrigin,
     node: process.version,
     uptimeHours: Math.round((process.uptime() / 3600) * 10) / 10,

@@ -10,6 +10,7 @@ const SECTIONS = [
   ['card', 'Moliya', 'finance', "Oylik aylanma va komissiya, repetitorlarga berilishi kerak bo'lgan summalar, «o'tkazildi» belgisi, CSV.", "Haftada bir marta: repetitorlarga pul o'tkazib, shu yerda belgilaysiz."],
   ['star', 'Sharhlar', 'reviews', "Sharhlarni ko'rish, qoidabuzarlarini yashirish yoki o'chirish (reyting o'zi qayta hisoblanadi).", "Shikoyat tushganda."],
   ['file', 'Kontent', 'content', "Fanlar, rasmiy nazorat sanalari, Telegram guruh havolalari va talabalar yuborgan materiallarni tekshirish.", "Semestr boshida va yangi material kelganda."],
+  ['check', 'Testlar', 'quizzes', "Mashq testlari: o'zingiz tuzasiz yoki repetitorlar tuzganini tekshirib tasdiqlaysiz. Talaba xato qilsa AI izoh beradi va shu fan repetitorlariga yo'naltiriladi.", "Repetitor yangi test yuborganda (Telegram'ga xabar keladi) va semestr boshida."],
   ['telegram', 'Xabarlar', 'messages', "Telegram orqali barcha, faqat talabalar yoki faqat repetitorlar uchun e'lon yuborish va tarixini ko'rish.", "Muhim o'zgarish bo'lganda: sana ko'chdi, yangi fan qo'shildi."],
   ['lock', 'Sozlamalar', 'settings', "Komissiya, chegirma, bekor qilish muddati, ro'yxatdan o'tishni yopish, saytning yuqori xabari, tizim holati, parolni almashtirish.", "Bir marta sozlab qo'yiladi; qoida o'zgarganda qaytiladi."],
   ['clock', 'Jurnal', 'audit', "Adminlar bajargan har bir amalning o'chirib bo'lmaydigan tarixi.", "Nimadir o'zgarib qolsa, sababini topish uchun."],
@@ -19,6 +20,7 @@ const DAILY = [
   "Umumiy ko'rinishni oching: sariq «tasdiqni kutayotgan» blok bormi?",
   "Yangi repetitor anketalarini o'qing: tasdiqlang yoki sabab yozib rad eting.",
   "Yangi materiallarni havolasini ochib tekshiring va tasdiqlang.",
+  "Testlar: «Kutilmoqda» dagi repetitor testlarining javoblarini tekshirib tasdiqlang.",
   "Bronlar: «To'lov kutilmoqda» da uzoq turib qolganlar yoki shikoyatlar bormi?",
 ];
 const WEEKLY = [

@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { Subject, Exam, Material, Tutor } from '../../models/index.js';
+import { Subject, Exam, Material, Tutor, Quiz, QuizAttempt, AiExplain } from '../../models/index.js';
 import { STARTER_SUBJECTS } from '../../seed.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
 import { FACULTY_KEYS, EXAM_TYPES } from '../../data/meta.js';
@@ -91,7 +91,7 @@ r.put('/subjects/:id', wrap(async (req, res) => {
 }));
 r.delete('/subjects/:id', wrap(async (req, res) => {
   const s = await Subject.findByIdAndDelete(req.params.id);
-  await Promise.all([Exam.deleteMany({ subject: req.params.id }), Material.deleteMany({ subject: req.params.id })]);
+  await Promise.all([Exam.deleteMany({ subject: req.params.id }), Material.deleteMany({ subject: req.params.id }), Quiz.deleteMany({ subject: req.params.id })]);
   if (s) audit(req, 'subject.delete', s.name);
   res.json({ ok: true });
 }));
@@ -131,6 +131,27 @@ r.patch('/materials/:id', wrap(async (req, res) => {
 r.delete('/materials/:id', wrap(async (req, res) => {
   const m = await Material.findByIdAndDelete(req.params.id);
   if (m) audit(req, 'material.delete', m.title);
+  res.json({ ok: true });
+}));
+
+/* ---------- Mashq testlari ---------- */
+// Yaratish va tahrirlash umumiy /api/quizzes orqali (admin tuzgani darhol tasdiqlanadi); bu yerda moderatsiya
+r.get('/quizzes', wrap(async (req, res) => {
+  const f = req.query.status ? { status: String(req.query.status) } : {};
+  const list = await Quiz.find(f).populate('subject', 'name').populate('author', 'name').sort({ status: 1, updatedAt: -1 }).limit(300).lean();
+  res.json(list.map(({ questions, ...q }) => ({ ...q, count: questions.length })));
+}));
+r.patch('/quizzes/:id', wrap(async (req, res) => {
+  const { status } = z.object({ status: z.enum(['approved', 'pending', 'hidden']) }).parse(req.body);
+  const q = await Quiz.findByIdAndUpdate(req.params.id, { status }, { new: true });
+  if (!q) throw new HttpError(404, 'Test topilmadi');
+  audit(req, `quiz.${status}`, q.title);
+  res.json(q);
+}));
+r.delete('/quizzes/:id', wrap(async (req, res) => {
+  const q = await Quiz.findByIdAndDelete(req.params.id);
+  await Promise.all([QuizAttempt.deleteMany({ quiz: req.params.id }), AiExplain.deleteMany({ quiz: req.params.id })]);
+  if (q) audit(req, 'quiz.delete', q.title);
   res.json({ ok: true });
 }));
 

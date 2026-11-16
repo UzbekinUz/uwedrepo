@@ -14,6 +14,7 @@ import tutors from './routes/tutors.js';
 import bookings from './routes/bookings.js';
 import admin from './routes/admin/index.js';
 import pub from './routes/public.js';
+import quizzes from './routes/quizzes.js';
 import { handleUpdate, webhookPath, webhookSecret } from './telegram.js';
 
 /** Express ilovasini yig'adi (DB ulanishsiz): sinash va ishga tushirish uchun umumiy */
@@ -64,6 +65,8 @@ app.get('/api/auth/telegram/status/:token', limiter(1500));
 app.use('/api/auth', auth);
 app.use('/api/bookings', bookings);
 app.use('/api/tutors', tutors);
+app.post('/api/quizzes/:id/explain', limiter(100)); // AI so'rovlari pulli: IP bo'yicha qo'shimcha cheklov
+app.use('/api/quizzes', quizzes);
 app.use('/api/admin', admin);
 // Cheklov faqat yozuvchi ochiq yo'llarga (ommaviy katalog GET so'rovlari cheklanmaydi)
 app.use(['/api/survey', '/api/track'], limiter(300));

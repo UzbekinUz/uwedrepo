@@ -1,4 +1,5 @@
 import { extra } from './dict.extra.js';
+import { quiz } from './dict.quiz.js';
 
 // Kalit — o'zbekcha matn; qiymat — [ruscha, inglizcha]
 export const dict = {
@@ -285,4 +286,4 @@ export const dict = {
   "Parol kamida 8 belgi bo'lsin": ['Пароль должен быть не короче 8 символов', 'Password must be at least 8 characters'],
 };
 
-Object.assign(dict, extra);
+Object.assign(dict, extra, quiz);

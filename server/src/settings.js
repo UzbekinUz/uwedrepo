@@ -8,6 +8,8 @@ const defaults = () => ({
   cancelHours: 24,
   registrationOpen: true,
   banner: { text: '', kind: 'info', active: false },
+  aiEnabled: true,
+  aiDailyLimit: 10,
 });
 
 let cache = null;
