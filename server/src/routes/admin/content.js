@@ -17,6 +17,7 @@ const subjectSchema = z.object({
   years: z.array(z.number().int().min(1).max(4)).min(1),
   category: z.enum(['core', 'extra']).default('core'),
   description: z.string().max(500).optional(),
+  topics: z.array(z.string().trim().min(1).max(300)).max(80).optional(),
   telegramGroup: z.union([z.string().url().refine((u) => /^https?:\/\//i.test(u), 'Faqat http(s) havola'), z.literal('')]).optional(),
   active: z.boolean().optional(),
 });
@@ -89,6 +90,14 @@ r.put('/subjects/:id', wrap(async (req, res) => {
   const s = await Subject.findByIdAndUpdate(req.params.id, subjectSchema.parse(req.body), { new: true });
   if (!s) throw new HttpError(404, 'Fan topilmadi');
   audit(req, 'subject.update', s.name);
+  res.json(s);
+}));
+// Faqat mavzular ro'yxatini yangilash (sillabusdan ommaviy kiritish uchun qulay)
+r.put('/subjects/:id/topics', wrap(async (req, res) => {
+  const { topics } = z.object({ topics: z.array(z.string().trim().min(1).max(300)).max(80) }).parse(req.body);
+  const s = await Subject.findByIdAndUpdate(req.params.id, { topics }, { new: true });
+  if (!s) throw new HttpError(404, 'Fan topilmadi');
+  audit(req, 'subject.topics', s.name, { n: topics.length });
   res.json(s);
 }));
 r.delete('/subjects/:id', wrap(async (req, res) => {

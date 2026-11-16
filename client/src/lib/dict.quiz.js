@@ -61,6 +61,9 @@ export const quiz = {
   "Foiz — shu savolga to'g'ri javob berganlar ulushi. Past foizli mavzularni darslaringizda ko'proq tushuntiring.": ['Процент — доля ответивших верно. Темы с низким процентом стоит разобрать на уроках подробнее.', 'Percent = share who answered correctly. Spend more lesson time on low-scoring topics.'],
   "Ism (katalogda ko'rinadi)": ['Имя (видно в каталоге)', 'Name (shown in catalogue)'],
 
+  Mavzular: ['Темы', 'Topics'],
+  "Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.": ['Последовательность тем по силлабусу. Если тема сложная — спросите репетитора или решите тренировочный тест.', 'Topic sequence from the syllabus. If a topic is hard, ask a tutor or take a practice test.'],
+
   // Repetitor: bo'sh vaqtlar
   'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
   "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],

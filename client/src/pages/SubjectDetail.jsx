@@ -67,7 +67,8 @@ export default function SubjectDetail() {
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const { subject, tutors, materials, exams, quizzes = [] } = data;
-  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ['tests', `${t('Testlar')} (${quizzes.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
+  const topics = subject.topics || [];
+  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ...(topics.length ? [['topics', `${t('Mavzular')} (${topics.length})`]] : []), ['tests', `${t('Testlar')} (${quizzes.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
 
   return (
     <>
@@ -79,6 +80,19 @@ export default function SubjectDetail() {
       </PageTitle>
       <Tabs tabs={tabs} value={tab} onChange={setTab} />
       {tab === 'tutors' && (tutors.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
+      {tab === 'topics' && (
+        <div className="card p-5 sm:p-6">
+          <p className="mb-4 text-sm text-slate-600">{t("Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.")}</p>
+          <ol className="space-y-2">
+            {topics.map((x, i) => (
+              <li key={i} className="flex gap-3 border-b border-slate-100 pb-2 last:border-0">
+                <span className="w-7 shrink-0 text-right font-extrabold text-brand-700">{i + 1}.</span>
+                <span className="text-slate-800">{x}</span>
+              </li>
+            ))}
+          </ol>
+        </div>
+      )}
       {tab === 'tests' && (quizzes.length ? (
         <div className="space-y-2">
           {quizzes.map((q) => (
