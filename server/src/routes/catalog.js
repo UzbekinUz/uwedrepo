@@ -63,7 +63,7 @@ r.get(
         .populate('user', 'name faculty year')
         .sort({ featured: -1, ratingAvg: -1 })
         .lean(),
-      Material.find({ subject: subject._id, status: 'approved' }).sort({ createdAt: -1 }).lean(),
+      Material.find({ subject: subject._id, status: 'approved' }).select('-body').sort({ order: 1, createdAt: -1 }).lean(),
       Exam.find({ subject: subject._id }).sort({ date: 1 }).lean(),
       Quiz.find({ subject: subject._id, status: 'approved' }).select('title description byTutor attempts questions._id').sort({ createdAt: -1 }).lean(),
     ]);
@@ -94,7 +94,19 @@ r.get(
       const subs = await Subject.find(subjectFilter(req.query)).select('_id');
       f.subject = req.query.subject ? req.query.subject : { $in: subs.map((s) => s._id) };
     }
-    res.json(await Material.find(f).populate('subject', 'name').populate('author', 'name').sort({ createdAt: -1 }).limit(200).lean());
+    res.json(await Material.find(f).select('-body').populate('subject', 'name').populate('author', 'name').sort({ order: 1, createdAt: -1 }).limit(200).lean());
+  })
+);
+
+// Bitta material (matnli konspekt saytning o'zida o'qiladi)
+r.get(
+  '/materials/:id',
+  wrap(async (req, res) => {
+    const m = await Material.findOne({ _id: req.params.id, status: 'approved' }).populate('subject', 'name topics').lean();
+    if (!m) throw new HttpError(404, 'Material topilmadi');
+    // Shu fanning boshqa matnli konspektlari: oldingi/keyingi mavzuga o'tish uchun
+    const siblings = await Material.find({ subject: m.subject?._id, status: 'approved', url: '' }).select('title order').sort({ order: 1, createdAt: 1 }).lean();
+    res.json({ ...m, siblings });
   })
 );
 

@@ -104,4 +104,6 @@ export const quiz = {
   "Boshqa kurslar testlarini ham ko'rsatish": ['Показать тесты других курсов', 'Show tests from other courses too'],
   "Sizning fanlaringiz bo'yicha hali test yo'q. «Boshqa kurslar testlarini ham ko'rsatish»ni belgilab ko'ring.": ['По вашим предметам тестов пока нет. Отметьте «Показать тесты других курсов».', 'No tests for your subjects yet. Try ticking “Show tests from other courses too”.'],
   "Hali test qo'shilmagan.": ['Тестов пока нет.', 'No tests yet.'],
+  "O'qish →": ['Читать →', 'Read →'],
+  'Konspekt →': ['Конспект →', 'Notes →'],
 };

@@ -3,7 +3,7 @@ import { z } from 'zod';
 import { Subject, Exam, Material, Tutor, Quiz, QuizAttempt, AiExplain } from '../../models/index.js';
 import { STARTER_SUBJECTS } from '../../seed.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
-import { FACULTY_KEYS, EXAM_TYPES } from '../../data/meta.js';
+import { FACULTY_KEYS, EXAM_TYPES, MATERIAL_TYPES } from '../../data/meta.js';
 import { audit, toCsv, sendCsv } from './helpers.js';
 import { quizStats, pct } from '../../quizStats.js';
 import { notifyNewQuiz } from '../../reminders.js';
@@ -130,7 +130,30 @@ r.delete('/exams/:id', wrap(async (req, res) => {
 /* ---------- Materiallar ---------- */
 r.get('/materials', wrap(async (req, res) => {
   const f = req.query.status ? { status: String(req.query.status) } : {};
-  res.json(await Material.find(f).populate('subject', 'name').populate('author', 'name telegram').sort({ createdAt: -1 }).limit(300).lean());
+  res.json(await Material.find(f).select('-body').populate('subject', 'name').populate('author', 'name telegram').sort({ createdAt: -1 }).limit(300).lean());
+}));
+// Matnli konspekt (saytda o'qiladi): admin yozadi, darhol tasdiqlanadi
+const noteSchema = z.object({
+  subject: z.string(),
+  title: z.string().trim().min(3).max(140),
+  type: z.enum(MATERIAL_TYPES).default('konspekt'),
+  body: z.string().trim().min(20).max(100000),
+  description: z.string().max(500).optional(),
+  order: z.number().int().min(0).max(500).optional(),
+});
+r.post('/materials', wrap(async (req, res) => {
+  const data = noteSchema.parse(req.body);
+  if (!(await Subject.exists({ _id: data.subject }))) throw new HttpError(404, 'Fan topilmadi');
+  const m = await Material.create({ ...data, url: '', author: req.user._id, status: 'approved' });
+  audit(req, 'material.create', m.title);
+  res.status(201).json({ _id: m._id, title: m.title });
+}));
+r.put('/materials/:id', wrap(async (req, res) => {
+  const data = noteSchema.partial().omit({ subject: true }).parse(req.body);
+  const m = await Material.findByIdAndUpdate(req.params.id, data, { new: true }).select('-body');
+  if (!m) throw new HttpError(404, 'Material topilmadi');
+  audit(req, 'material.update', m.title);
+  res.json(m);
 }));
 r.patch('/materials/:id', wrap(async (req, res) => {
   const { status } = z.object({ status: z.enum(['approved', 'pending']) }).parse(req.body ?? { status: 'approved' });
