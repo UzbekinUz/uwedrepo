@@ -28,6 +28,7 @@ const subjectSchema = new Schema(
     years: { type: [Number], default: [1, 2, 3, 4] },
     category: { type: String, enum: ['core', 'extra'], default: 'core' },
     description: { type: String, default: '' },
+    topics: { type: [{ type: String, trim: true, maxlength: 300 }], default: [] }, // mavzular ketma-ketligi (sillabus)
     telegramGroup: { type: String, default: '' },
     // false bo'lsa talabalarga ko'rinmaydi (arxiv), lekin nazorat sanalari va materiallari saqlanadi
     active: { type: Boolean, default: true },

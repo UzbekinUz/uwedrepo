@@ -9,7 +9,7 @@ const ymd = (iso) => { const x = tz(iso); return `${x.y}-${String(x.m + 1).padSt
 const toIso = (date) => new Date(`${date}T10:00:00+05:00`).toISOString();
 
 /* ---------- Fanlar ---------- */
-const emptySubject = (meta) => ({ name: '', faculty: meta.faculties[0].key, years: [1], category: 'core', description: '', telegramGroup: '' });
+const emptySubject = (meta) => ({ name: '', faculty: meta.faculties[0].key, years: [1], category: 'core', description: '', telegramGroup: '', topicsText: '' });
 
 function YearPicker({ value, onChange }) {
   const toggle = (y) => onChange(value.includes(y) ? value.filter((x) => x !== y) : [...value, y].sort());
@@ -43,7 +43,8 @@ function Subjects() {
   const save = (e) => {
     e.preventDefault();
     run(async () => {
-      const body = { ...f, telegramGroup: f.telegramGroup || '', description: f.description || '' };
+      const { topicsText, ...rest } = f;
+      const body = { ...rest, telegramGroup: f.telegramGroup || '', description: f.description || '', topics: (topicsText || '').split('\n').map((x) => x.trim()).filter(Boolean) };
       await api(editId ? `/admin/subjects/${editId}` : '/admin/subjects', { method: editId ? 'PUT' : 'POST', body });
       setF(emptySubject(meta)); setEditId(null); reload();
     }, editId ? 'Saqlandi' : "Fan qo'shildi");
@@ -95,6 +96,7 @@ function Subjects() {
             <FField label="Telegram guruh havolasi"><input className="input" type="url" placeholder="https://t.me/..." value={f.telegramGroup} onChange={(e) => setF({ ...f, telegramGroup: e.target.value })} /></FField>
           </div>
           <FField label="Qisqa tavsif (ixtiyoriy)"><input className="input" maxLength={500} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></FField>
+          <FField label="Mavzular ketma-ketligi (har biri yangi qatorda, sillabus tartibida)"><textarea className="input font-mono text-sm" rows={6} value={f.topicsText} onChange={(e) => setF({ ...f, topicsText: e.target.value })} placeholder={'Ketma-ketlik va uning limiti\nFunksiya va uning limiti\nHosila'} /></FField>
           <YearPicker value={f.years} onChange={(years) => setF({ ...f, years })} />
           <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
           <div className="flex gap-2"><button className="btn-primary" disabled={!f.years.length}>{editId ? 'Saqlash' : "Qo'shish"}</button>{editId && <button type="button" className="btn-ghost" onClick={() => { setEditId(null); setF(emptySubject(meta)); }}>Bekor</button>}</div>
@@ -125,16 +127,17 @@ function Subjects() {
           </Filters>
         </div>
         {loading ? <Spinner /> : (
-          <Table head={['Fan', 'Fakultet', 'Kurs', 'Guruh', 'Repetitor', 'Sana', 'Material', '']} empty={!rows.length && (data.length ? 'Filtrga mos fan yo\'q.' : "Hali fan yo'q.")}>
+          <Table head={['Fan', 'Fakultet', 'Kurs', 'Mavzular', 'Guruh', 'Repetitor', 'Sana', 'Material', '']} empty={!rows.length && (data.length ? 'Filtrga mos fan yo\'q.' : "Hali fan yo'q.")}>
             {rows.map((s) => (
               <tr key={s._id} className={s.active ? '' : 'opacity-60'}>
                 <td className="font-semibold">{s.name} {s.category === 'extra' && <Chip tone="brand">Qo'shimcha</Chip>} {!s.active && <Chip tone="amber">Yashirin</Chip>}</td>
                 <td>{fname(s.faculty)}</td><td>{s.years.join(', ')}</td>
+                <td>{s.topics?.length ? s.topics.length : <span className="text-amber-700">yo'q</span>}</td>
                 <td>{s.telegramGroup ? <a className="text-brand-700 underline" href={s.telegramGroup} target="_blank" rel="noopener noreferrer">bor</a> : <span className="text-amber-700">yo'q</span>}</td>
                 <td>{s.tutors === 0 ? <span className="text-amber-700">0</span> : s.tutors}</td>
                 <td>{s.exams}</td><td>{s.materials}</td>
                 <td><div className="flex flex-wrap gap-1.5">
-                  <button className="btn-ghost btn-sm" onClick={() => { setMode('one'); setEditId(s._id); setMsg(''); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
+                  <button className="btn-ghost btn-sm" onClick={() => { setMode('one'); setEditId(s._id); setMsg(''); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '', topicsText: (s.topics || []).join('\n') }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
                   <button className="btn-ghost btn-sm" onClick={() => run(async () => { await api(`/admin/subjects/${s._id}/active`, { method: 'PATCH', body: { active: !s.active } }); reload(); })}>{s.active ? 'Yashirish' : "Ko'rsatish"}</button>
                   <button className="btn-ghost btn-sm text-red-700" onClick={() => confirm(`"${s.name}" butunlay o'chiriladi, shu bilan birga ${s.exams} ta nazorat sanasi va ${s.materials} ta material ham. Qaytarib bo'lmaydi. Ehtimol «Yashirish» yetarlidir. Baribir o'chiraymi?`) && run(async () => { await api(`/admin/subjects/${s._id}`, { method: 'DELETE' }); reload(); })}>O'chirish</button>
                 </div></td>

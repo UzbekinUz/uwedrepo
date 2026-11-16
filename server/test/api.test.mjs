@@ -385,3 +385,12 @@ test("Telegram eslatmalari: ertangi nazorat va yangi test — bir martadan, faqa
     tg.bot.username = '';
   }
 });
+
+test("fan mavzulari: admin kiritadi, fan sahifasida tartib bilan chiqadi", async () => {
+  const id = String(fx.subject._id);
+  assert.equal((await api('PUT', `/admin/subjects/${id}/topics`, { topics: ['A'] }, fx.t.a)).s, 403);
+  const r = await api('PUT', `/admin/subjects/${id}/topics`, { topics: ['Ketma-ketlik limiti', 'Funksiya limiti', 'Hosila'] }, fx.t.admin);
+  assert.equal(r.s, 200);
+  const pub = await api('GET', `/subjects/${id}`);
+  assert.deepEqual(pub.j.subject.topics, ['Ketma-ketlik limiti', 'Funksiya limiti', 'Hosila']);
+});
