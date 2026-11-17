@@ -1,5 +1,6 @@
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../../context/App.jsx';
+import { useSeo } from '../../lib/seo.js';
 import { PageTitle, Tabs } from '../../components/ui.jsx';
 import Overview from './Overview.jsx';
 import Research from './Research.jsx';
@@ -21,6 +22,7 @@ const TABS = [
 ];
 
 export default function Admin() {
+  useSeo("Admin panel", '', { noindex: true });
   const { user } = useApp();
   const [sp, setSp] = useSearchParams();
   const tab = TABS.some(([k]) => k === sp.get('tab')) ? sp.get('tab') : 'overview';

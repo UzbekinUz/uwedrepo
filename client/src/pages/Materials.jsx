@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { useApp } from '../context/App.jsx';
 import PrefPicker from '../components/PrefPicker.jsx';
 import { Hint } from '../components/Motion.jsx';
@@ -13,6 +14,7 @@ export default function Materials() {
   const [type, setType] = useState('');
   const [subject, setSubject] = useState('');
   const [reload, setReload] = useState(0);
+  useSeo("UWED o'quv materiallari: konspekt, test va video", "UWED talabalari uchun fanlar bo'yicha o'quv materiallari, konspektlar va tayyorgarlik resurslari.");
   const subjects = useFetch(`/subjects${qs({ faculty: pref?.faculty, year: pref?.year })}`);
   const { data, loading, error } = useFetch(`/materials${qs({ type, subject, faculty: pref?.faculty, year: pref?.year })}`, [reload]);
 

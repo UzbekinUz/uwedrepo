@@ -1,4 +1,5 @@
 import { useApp } from '../context/App.jsx';
+import { useSeo } from '../lib/seo.js';
 import PrefPicker from '../components/PrefPicker.jsx';
 import { ExamRow } from '../components/Cards.jsx';
 import { Hint } from '../components/Motion.jsx';
@@ -9,6 +10,7 @@ import { t } from '../lib/i18n.js';
 
 export default function Calendar() {
   const { pref } = useApp();
+  useSeo("UWED nazorat kalendari: oraliq va yakuniy sanalar", "UWED talabalari uchun oraliq va yakuniy nazorat sanalari kalendari, fakultet va kurs bo'yicha.");
   const { data, loading, error } = useFetch(`/exams${qs({ faculty: pref?.faculty, year: pref?.year })}`);
 
   const groups = [];

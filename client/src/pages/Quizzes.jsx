@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/App.jsx';
 import PrefPicker from '../components/PrefPicker.jsx';
@@ -16,6 +17,7 @@ const Pill = ({ on, onClick, children }) => (
 /** Barcha tasdiqlangan mashq testlari: tanlangan fakultet/kurs fanlari bo'yicha */
 export default function Quizzes() {
   const { pref } = useApp();
+  useSeo("UWED mashq testlari: fanlar bo'yicha onlayn test", "UWED talabalari uchun fanlar bo'yicha mashq testlari: yeching, xatolaringiz izohini ko'ring va nazoratga tayyorlaning.");
   const [subject, setSubject] = useState('');
   const [all, setAll] = useState(false);
   const quizzes = useFetch('/quizzes');

@@ -4,6 +4,7 @@ import { ErrorBox, PageTitle, Spinner, useFetch } from '../components/ui.jsx';
 import Notes, { headings, noteStats } from '../components/Notes.jsx';
 import { Icon } from '../components/Motion.jsx';
 import { t } from '../lib/i18n.js';
+import { useSeo } from '../lib/seo.js';
 
 /* O'zlashtirilgan mavzular shu brauzerda saqlanadi (hisob talab qilinmaydi) */
 const KEY = 'konspekt-done';
@@ -37,6 +38,8 @@ function useActive(ids) {
 export default function MaterialView() {
   const { id } = useParams();
   const { data: m, loading, error } = useFetch(`/materials/${id}`, [id]);
+  const subj = m?.subject?.name;
+  useSeo(m && `${m.title}${subj ? `: ${subj}` : ''} konspekti`, m && (m.description || `${subj ? `${subj} fanidan ` : ''}${m.title} mavzusi bo'yicha UWED talabalari uchun konspekt, misollar va formulalar.`));
   const [done, setDone] = useState(readDone);
   const toc = useMemo(() => headings(m?.body || ''), [m?.body]);
   const stats = useMemo(() => noteStats(m?.body || ''), [m?.body]);

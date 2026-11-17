@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link } from 'react-router-dom';
 import { api } from '../api.js';
 import { Hint } from '../components/Motion.jsx';
@@ -102,6 +103,7 @@ function MyResults() {
 }
 
 export default function MyLessons() {
+  useSeo("Mening darslarim", '', { noindex: true });
   const [tab, setTab] = useState('lessons');
   const [n, setN] = useState(0);
   const { data, loading, error } = useFetch('/bookings/mine', [n]);

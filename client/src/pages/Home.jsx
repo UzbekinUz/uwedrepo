@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link } from 'react-router-dom';
 import { AnimatePresence, motion } from 'framer-motion';
 import { useApp } from '../context/App.jsx';
@@ -164,6 +165,7 @@ export default function Home() {
   const stats = useFetch('/stats');
   const quizzes = useFetch('/quizzes');
   const [who, setWho] = useState('student');
+  useSeo("UWEDRepo: UWED talabalari uchun repetitor, material va testlar", "UWEDRepo: UWED talabalari uchun repetitorlar, o'quv materiallari, mashq testlari, nazorat sanalari kalendari va fan guruhlari bitta saytda.");
   const steps = who === 'student' ? stepsStudent(meta) : stepsTutor(meta);
 
   return (

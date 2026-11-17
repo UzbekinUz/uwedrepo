@@ -1,4 +1,5 @@
 import { useMemo, useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
@@ -73,6 +74,8 @@ export default function TutorDetail() {
   const { id } = useParams();
   const { meta } = useApp();
   const { data, loading, error } = useFetch(`/tutors/${id}`);
+  const tt = data?.tutor;
+  useSeo(tt && `${tt.user?.name}: ${tt.headline}`, tt && `${tt.user?.name} - UWED talabalari uchun repetitor. ${tt.headline}. Soatiga ${tt.pricePerHour} so'm.`);
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const { tutor, reviews } = data;

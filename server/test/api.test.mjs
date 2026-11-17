@@ -386,6 +386,37 @@ test("Telegram eslatmalari: ertangi nazorat va yangi test — bir martadan, faqa
   }
 });
 
+test("SEO: robots.txt va sitemap.xml faqat ommaviy sahifalarni beradi", async () => {
+  const root = base.replace(/\/api$/, '');
+  const robots = await (await fetch(`${root}/robots.txt`)).text();
+  assert.match(robots, /Disallow: \/admin/);
+  assert.match(robots, /Sitemap: .+\/sitemap\.xml/);
+
+  const hidden = await M.User.create({ name: 'Yashirin', telegramId: '9901', role: 'tutor' });
+  const pending = await M.Tutor.create({ user: hidden._id, subjects: [fx.subject._id], headline: 'Kutilmoqda', pricePerHour: 100000, status: 'pending' });
+  const archived = await M.Subject.create({ name: 'Arxiv fan', faculty: 'xim', years: [1], active: false });
+  const note = await M.Material.create({ subject: fx.subject._id, title: 'SEO konspekt', type: 'konspekt', body: 'Matn', status: 'approved' });
+  const link = await M.Material.create({ subject: fx.subject._id, title: 'Tashqi havola', type: 'konspekt', url: 'https://example.com/x', status: 'approved' });
+
+  const res = await fetch(`${root}/sitemap.xml`);
+  assert.equal(res.status, 200);
+  assert.match(res.headers.get('content-type'), /xml/);
+  const xml = await res.text();
+  assert.match(xml, /<urlset/);
+  assert.ok(xml.includes(`/tutors/${fx.tutor._id}`), 'tasdiqlangan repetitor sitemap da bo\'lishi kerak');
+  assert.ok(xml.includes(`/subjects/${fx.subject._id}`), 'faol fan sitemap da bo\'lishi kerak');
+  assert.ok(xml.includes('/materials/' + note._id), "matnli konspekt sitemap da bo'lishi kerak");
+  assert.ok(!xml.includes(String(link._id)), "tashqi havolali material sitemap da bo'lmasligi kerak");
+  assert.ok(!xml.includes(String(pending._id)), 'tasdiqlanmagan repetitor sitemap da bo\'lmasligi kerak');
+  assert.ok(!xml.includes(String(archived._id)), 'arxivdagi fan sitemap da bo\'lmasligi kerak');
+  assert.ok(!xml.includes('/admin'), 'admin sahifasi sitemap da bo\'lmasligi kerak');
+  // boshqa testlarga ta'sir qilmasin
+  await M.Material.deleteMany({ _id: { $in: [note._id, link._id] } });
+  await M.Tutor.deleteOne({ _id: pending._id });
+  await M.User.deleteOne({ _id: hidden._id });
+  await M.Subject.deleteOne({ _id: archived._id });
+});
+
 test("fan mavzulari: admin kiritadi, fan sahifasida tartib bilan chiqadi", async () => {
   const id = String(fx.subject._id);
   assert.equal((await api('PUT', `/admin/subjects/${id}/topics`, { topics: ['A'] }, fx.t.a)).s, 403);
