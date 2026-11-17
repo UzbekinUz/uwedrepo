@@ -84,7 +84,7 @@ function inline(str, key = 'k') {
     }
     // Qisqa daraja: x^2, x^n, e^x, x^-1
     if (c === '^') {
-      const m = /^\^(-?[0-9a-zA-Z]+)/.exec(str.slice(i));
+      const m = /^\^(-?(?:\d+|[a-zA-Z]))/.exec(str.slice(i)); // x^2dx → daraja faqat «2»
       if (m) { push(<sup key={k} className="text-[0.72em]">{m[1].replace('-', '−')}</sup>); i += m[0].length; continue; }
     }
     if (c === '{') {
@@ -249,7 +249,7 @@ function Callout({ type, title, children }) {
     <div className={`not-prose my-6 rounded-2xl px-4 py-4 ring-1 sm:px-6 sm:py-5 ${c.box} ${c.dark ? 'notes-dark' : ''}`}>
       <div className={`mb-1 flex items-center gap-2.5 text-sm font-bold uppercase tracking-wide ${c.head}`}>
         <span className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-full ${c.ic}`}><Icon name={c.icon} size={18} /></span>
-        <span>{title || c.label}</span>
+        <span>{title ? <Inline text={title} /> : c.label}</span>
       </div>
       <Blocks blocks={children} />
     </div>
@@ -297,7 +297,7 @@ function Test({ b }) {
       <div className="mb-4 flex flex-wrap items-center justify-between gap-2">
         <div className="flex items-center gap-2.5 text-lg font-extrabold text-slate-900">
           <span className="flex h-9 w-9 items-center justify-center rounded-full bg-brand-600 text-white"><Icon name="check" size={20} /></span>
-          {b.title || 'O\'zingizni tekshiring'}
+          {b.title ? <Inline text={b.title} /> : 'O\'zingizni tekshiring'}
         </div>
         <span className="rounded-full bg-white px-3 py-1 text-sm font-semibold text-slate-700 ring-1 ring-slate-200">{right} / {b.qs.length} to'g'ri</span>
       </div>
@@ -348,7 +348,7 @@ function Mashq({ b }) {
     <div className="my-6 rounded-2xl bg-white ring-1 ring-slate-200">
       <div className="flex items-center gap-2.5 border-b border-slate-100 px-4 py-3 font-bold text-slate-900 sm:px-6">
         <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-800"><Icon name="file" size={18} /></span>
-        {b.title || 'Mustaqil ishlash uchun'}
+        {b.title ? <Inline text={b.title} /> : 'Mustaqil ishlash uchun'}
       </div>
       <ol className="divide-y divide-slate-100">
         {b.items.map((it, i) => (

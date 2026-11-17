@@ -4,8 +4,10 @@
  * ::: grafik x: -3..3, y: -2..6 | Sarlavha
  * y = x^2 | teal | y = x²
  * y = 4x - 4 | amber | urinma
+ * y = x^2 | rose | x < 1 da | -1..1          (faqat shu oraliqda chiziladi — bo'lakli funksiyalar uchun)
  * soha x ; x^2 | 0..1 | teal | yuza          (ikki egri chiziq orasini bo'yash; ikkinchisi bo'lmasa — Ox o'qigacha)
  * nuqta 2, 4 | P(2; 4)
+ * nuqta 1, 1 | | ochiq                      (bo'sh doiracha — «teshik»)
  * vertikal 1 | x = 1
  * gorizontal 2 | y = 2
  * :::
@@ -103,12 +105,13 @@ export function parseSpec(head, lines) {
     const [main, ...rest] = parts;
     let m;
     if ((m = /^y\s*=\s*(.+)$/.exec(main))) {
-      const f = compile(m[1]); if (f) spec.curves.push({ f, color: rest[0], label: rest[1] ?? '' });
+      const f = compile(m[1]); const r = /(.+?)\.\.(.+)/.exec(rest[2] || '');
+      if (f) spec.curves.push({ f, color: rest[0], label: rest[1] ?? '', from: r ? num(r[1]) : null, to: r ? num(r[2]) : null });
     } else if ((m = /^soha\s+(.+)$/.exec(main))) {
       const [a, b] = m[1].split(';').map((e) => compile(e)); const r = /(.+?)\.\.(.+)/.exec(rest[0] || '');
       if (a && r) spec.areas.push({ f: a, g: b || (() => 0), from: num(r[1]), to: num(r[2]), color: rest[1], label: rest[2] ?? '' });
     } else if ((m = /^nuqta\s+(.+?)\s*,\s*(.+)$/.exec(main))) {
-      spec.points.push({ x: num(m[1]), y: num(m[2]), label: rest[0] ?? '' });
+      spec.points.push({ x: num(m[1]), y: num(m[2]), label: rest[0] ?? '', open: /ochiq/.test(rest[1] || '') });
     } else if ((m = /^vertikal\s+(.+)$/.exec(main))) {
       spec.vlines.push({ x: num(m[1]), label: rest[0] ?? '' });
     } else if ((m = /^gorizontal\s+(.+)$/.exec(main))) {
@@ -139,12 +142,13 @@ export default function Plot({ spec }) {
   const sy = (y) => H - P - ((y - y0) / (y1 - y0)) * (H - 2 * P);
   const inY = (y) => y >= y0 - (y1 - y0) * 2 && y <= y1 + (y1 - y0) * 2;
 
-  const path = (f) => {
+  const path = (c) => {
     let d = '', pen = false, prev = null;
-    const N = 700;
+    const a = c.from ?? x0, b = c.to ?? x1;
+    const N = Math.max(60, Math.round((700 * (b - a)) / (x1 - x0)));
     for (let k = 0; k <= N; k++) {
-      const x = x0 + ((x1 - x0) * k) / N; const y = f(x);
-      const ok = Number.isFinite(y) && inY(y) && !(prev !== null && Math.abs(y - prev) > (y1 - y0) * 1.5);
+      const x = a + ((b - a) * k) / N; const y = c.f(x);
+      const ok = Number.isFinite(y) && inY(y) && !(prev !== null && Math.abs(y - prev) > (y1 - y0) * 0.35);
       if (ok) { d += `${pen ? 'L' : 'M'}${sx(x).toFixed(1)} ${sy(y).toFixed(1)}`; pen = true; } else pen = false;
       prev = Number.isFinite(y) ? y : null;
     }
@@ -187,13 +191,15 @@ export default function Plot({ spec }) {
           {spec.areas.map((a, i) => <path key={`a${i}`} d={area(a)} fill={color(a.color, i)} fillOpacity="0.18" stroke="none" />)}
           {spec.vlines.map((v, i) => <line key={`v${i}`} x1={sx(v.x)} x2={sx(v.x)} y1={P} y2={H - P} stroke="#E11D48" strokeDasharray="6 5" strokeWidth="1.4" />)}
           {spec.hlines.map((h, i) => <line key={`h${i}`} y1={sy(h.y)} y2={sy(h.y)} x1={P} x2={W - P} stroke="#E11D48" strokeDasharray="6 5" strokeWidth="1.4" />)}
-          {spec.curves.map((c, i) => <path key={`c${i}`} d={path(c.f)} fill="none" stroke={color(c.color, i)} strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round" />)}
+          {spec.curves.map((c, i) => <path key={`c${i}`} d={path(c)} fill="none" stroke={color(c.color, i)} strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round" />)}
         </g>
         {spec.vlines.filter((v) => v.label).map((v, i) => <text key={`vl${i}`} x={sx(v.x) + 5} y={P + 14} fontSize="12" fill="#E11D48">{v.label}</text>)}
         {spec.hlines.filter((h) => h.label).map((h, i) => <text key={`hl${i}`} x={W - P - 4} y={sy(h.y) - 6} fontSize="12" fill="#E11D48" textAnchor="end">{h.label}</text>)}
         {spec.points.map((p, i) => (
           <g key={`p${i}`}>
-            <circle cx={sx(p.x)} cy={sy(p.y)} r="5" fill="#0F1B1A" stroke="#fff" strokeWidth="2" />
+            {p.open
+              ? <circle cx={sx(p.x)} cy={sy(p.y)} r="5" fill="#fff" stroke="#0F1B1A" strokeWidth="2" />
+              : <circle cx={sx(p.x)} cy={sy(p.y)} r="5" fill="#0F1B1A" stroke="#fff" strokeWidth="2" />}
             {p.label && <text x={sx(p.x) + 9} y={sy(p.y) - 9} fontSize="13" fontWeight="600" fill="#0F1B1A">{p.label}</text>}
           </g>
         ))}
