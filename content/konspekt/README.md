@@ -15,3 +15,4 @@ yangilash: `PUT /api/admin/materials/:id`.
   (CALC_S1–S11, Thomas «Calculus» asosida) va ma'ruzalar (1-mavzu ketma-ketlik, 9-mavzu U. Dalabayev).
 - `iqtisodiyot-nazariyasi/` — Iqtisodiyot nazariyasi, 15 mavzu (ma'ruza va seminar materiallari asosida).
 - `mikroiqtisodiyot/` — Mikroiqtisodiyot, 15 mavzu (ma'ruza va seminar materiallari asosida).
+- `menejment/` — Menejment, 15 mavzu (ma'ruza va seminar materiallari asosida).
