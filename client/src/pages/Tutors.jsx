@@ -12,7 +12,7 @@ const SORTS = [['rating', "Reyting bo'yicha"], ['priceAsc', 'Narx: arzondan'], [
 /** Tugma ko'rinishidagi tanlov (chip) */
 const Pill = ({ on, onClick, children }) => (
   <button type="button" onClick={onClick} aria-pressed={on}
-    className={`whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${on ? 'bg-slate-900 text-white shadow-sm' : 'bg-white text-slate-700 ring-1 ring-slate-200 hover:bg-brand-50 hover:ring-brand-300'}`}>
+    className={`snap-start whitespace-nowrap rounded-full px-4 py-2 text-sm font-semibold transition ${on ? 'bg-slate-900 text-white shadow-sm' : 'bg-white/60 text-slate-700 ring-1 ring-white/80 backdrop-blur-md hover:bg-white hover:ring-brand-300'}`}>
     {children}
   </button>
 );
@@ -38,12 +38,13 @@ export default function Tutors() {
       <PageTitle title={t('Repetitorlar')} sub={t("Narx, til va format bo'yicha taqqoslang")} />
 
       <div className="mb-8 space-y-4">
-        <div className="flex gap-2 overflow-x-auto pb-1" role="group" aria-label={t('Fan')}>
+        {/* Telefonda: ikki qatorli karusel (yonga suriladi); kattaroq ekranda: pastga qarab o'raladi */}
+        <div className="chip-row" role="group" aria-label={t('Fan')}>
           <Pill on={!subject} onClick={() => pick('')}>{pref ? t('Mening fanlarim') : t('Barcha fanlar')}</Pill>
           {list?.map((s) => <Pill key={s._id} on={subject === s._id} onClick={() => pick(s._id)}>{s.name}</Pill>)}
         </div>
         <div className="flex flex-wrap items-center justify-between gap-3">
-          <div className="inline-flex rounded-full bg-slate-100 p-1" role="group" aria-label={t('Saralash')}>
+          <div className="inline-flex rounded-full bg-white/50 p-1 ring-1 ring-white/70 backdrop-blur-md" role="group" aria-label={t('Saralash')}>
             {SORTS.map(([k, l]) => (
               <button key={k} type="button" onClick={() => setSort(k)} aria-pressed={sort === k}
                 className={`rounded-full px-4 py-1.5 text-sm font-semibold transition ${sort === k ? 'bg-white text-slate-900 shadow-sm' : 'text-slate-600 hover:text-slate-900'}`}>{t(l)}</button>

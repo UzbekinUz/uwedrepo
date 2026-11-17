@@ -24,7 +24,7 @@ export default function Messages() {
     <Section title="Xabarlar (Telegram e'lonlari)"
       intro={<><p>Telegram boti orqali foydalanuvchilarga bir vaqtda xabar yuborasiz: yangi fan qo'shildi, nazorat sanasi o'zgardi, saytda texnik ish bor va hokazo. Xabar faqat <b>Telegram orqali kirgan</b> va botga Start bosgan odamlarga boradi.</p><ul><li>Faqat zarur xabar yuboring: ko'p yozsangiz, odamlar botni bloklaydi.</li><li>Xabar oddiy matn (rasm va havola preview'siz). Uzunligi — 1000 belgigacha.</li></ul></>}>
       {!aud.loading && !botOn && <Hint kind="warn" title="Telegram bot ulanmagan"><p>E'lon yuborish uchun <code>server/.env</code> ga <code>TELEGRAM_BOT_TOKEN</code> qo'shing va serverni qayta ishga tushiring.</p></Hint>}
-      <form onSubmit={send} className="space-y-4 bg-white p-5 sm:p-6">
+      <form onSubmit={send} className="space-y-4 glass p-5 sm:p-6">
         <div className="grid gap-3 sm:grid-cols-[14rem_1fr] sm:items-end">
           <FField label="Kimga"><Select value={audience} onChange={setAudience}>{Object.entries(AUD).map(([k, l]) => <option key={k} value={k}>{l}</option>)}</Select></FField>
           <p className="pb-2 text-sm text-slate-700">Qabul qiluvchilar: <b className="text-xl">{aud.data?.count ?? '…'}</b> kishi</p>

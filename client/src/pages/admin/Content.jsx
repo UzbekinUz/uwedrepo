@@ -9,7 +9,7 @@ const ymd = (iso) => { const x = tz(iso); return `${x.y}-${String(x.m + 1).padSt
 const toIso = (date) => new Date(`${date}T10:00:00+05:00`).toISOString();
 
 /* ---------- Fanlar ---------- */
-const emptySubject = (meta) => ({ name: '', faculty: meta.faculties[0].key, years: [1], category: 'core', description: '', telegramGroup: '' });
+const emptySubject = (meta) => ({ name: '', faculty: meta.faculties[0].key, years: [1], category: 'core', description: '', telegramGroup: '', topicsText: '' });
 
 function YearPicker({ value, onChange }) {
   const toggle = (y) => onChange(value.includes(y) ? value.filter((x) => x !== y) : [...value, y].sort());
@@ -43,7 +43,8 @@ function Subjects() {
   const save = (e) => {
     e.preventDefault();
     run(async () => {
-      const body = { ...f, telegramGroup: f.telegramGroup || '', description: f.description || '' };
+      const { topicsText, ...rest } = f;
+      const body = { ...rest, telegramGroup: f.telegramGroup || '', description: f.description || '', topics: (topicsText || '').split('\n').map((x) => x.trim()).filter(Boolean) };
       await api(editId ? `/admin/subjects/${editId}` : '/admin/subjects', { method: editId ? 'PUT' : 'POST', body });
       setF(emptySubject(meta)); setEditId(null); reload();
     }, editId ? 'Saqlandi' : "Fan qo'shildi");
@@ -70,7 +71,7 @@ function Subjects() {
       </Hint>
 
       {!loading && data.length === 0 && (
-        <div className="space-y-3 bg-white p-6">
+        <div className="space-y-3 glass p-6">
           <h3 className="text-xl font-extrabold">Hali bitta ham fan yo'q</h3>
           <p className="text-slate-700">Quyidagi shakldan o'zingiz kiriting yoki hisobotdagi 8 ta namunaviy fanni (Hisoblash 1-2, Ekonomika, Rus tili 1-2, Iqtisodiyotda miqdoriy usullar, IELTS, Dasturlash) bir bosishda qo'shing. Keyin istalganini o'zgartirishingiz yoki o'chirishingiz mumkin.</p>
           <button className="btn-primary" onClick={() => run(async () => {
@@ -80,13 +81,13 @@ function Subjects() {
         </div>
       )}
 
-      <div className="flex flex-wrap gap-2">
+      <div className="chip-row">
         <button className={`choice ${mode === 'one' ? 'choice-on' : ''}`} onClick={() => setMode('one')}>{editId ? 'Fanni tahrirlash' : 'Bitta fan qo\'shish'}</button>
         <button className={`choice ${mode === 'many' ? 'choice-on' : ''}`} disabled={!!editId} onClick={() => setMode('many')}>Bir nechta fan qo'shish</button>
       </div>
 
       {mode === 'one' || editId ? (
-        <form onSubmit={save} className="space-y-4 bg-white p-5">
+        <form onSubmit={save} className="space-y-4 glass p-5">
           <h3 className="text-lg font-extrabold">{editId ? 'Fanni tahrirlash' : "Yangi fan qo'shish"}</h3>
           <div className="grid gap-3 sm:grid-cols-2">
             <FField label="Nomi"><input className="input" required minLength={2} value={f.name} onChange={(e) => setF({ ...f, name: e.target.value })} /></FField>
@@ -95,12 +96,13 @@ function Subjects() {
             <FField label="Telegram guruh havolasi"><input className="input" type="url" placeholder="https://t.me/..." value={f.telegramGroup} onChange={(e) => setF({ ...f, telegramGroup: e.target.value })} /></FField>
           </div>
           <FField label="Qisqa tavsif (ixtiyoriy)"><input className="input" maxLength={500} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></FField>
+          <FField label="Mavzular ketma-ketligi (har biri yangi qatorda, sillabus tartibida)"><textarea className="input font-mono text-sm" rows={6} value={f.topicsText} onChange={(e) => setF({ ...f, topicsText: e.target.value })} placeholder={'Ketma-ketlik va uning limiti\nFunksiya va uning limiti\nHosila'} /></FField>
           <YearPicker value={f.years} onChange={(years) => setF({ ...f, years })} />
           <ErrorBox error={err} />{msg && <p className="text-sm font-medium text-emerald-700">{msg}</p>}
           <div className="flex gap-2"><button className="btn-primary" disabled={!f.years.length}>{editId ? 'Saqlash' : "Qo'shish"}</button>{editId && <button type="button" className="btn-ghost" onClick={() => { setEditId(null); setF(emptySubject(meta)); }}>Bekor</button>}</div>
         </form>
       ) : (
-        <form onSubmit={saveMany} className="space-y-4 bg-white p-5">
+        <form onSubmit={saveMany} className="space-y-4 glass p-5">
           <h3 className="text-lg font-extrabold">Bir nechta fanni birdan qo'shish</h3>
           <p className="text-sm text-slate-600">Fakultet, kurs va turi hammasi uchun bir xil bo'ladi. Telegram guruh havolasi va tavsifni keyin har bir fan uchun alohida kiritasiz. Allaqachon bor nomlar o'tkazib yuboriladi.</p>
           <FField label="Fanlar ro'yxati: har bir qatorga bitta nom">
@@ -125,16 +127,17 @@ function Subjects() {
           </Filters>
         </div>
         {loading ? <Spinner /> : (
-          <Table head={['Fan', 'Fakultet', 'Kurs', 'Guruh', 'Repetitor', 'Sana', 'Material', '']} empty={!rows.length && (data.length ? 'Filtrga mos fan yo\'q.' : "Hali fan yo'q.")}>
+          <Table head={['Fan', 'Fakultet', 'Kurs', 'Mavzular', 'Guruh', 'Repetitor', 'Sana', 'Material', '']} empty={!rows.length && (data.length ? 'Filtrga mos fan yo\'q.' : "Hali fan yo'q.")}>
             {rows.map((s) => (
               <tr key={s._id} className={s.active ? '' : 'opacity-60'}>
                 <td className="font-semibold">{s.name} {s.category === 'extra' && <Chip tone="brand">Qo'shimcha</Chip>} {!s.active && <Chip tone="amber">Yashirin</Chip>}</td>
                 <td>{fname(s.faculty)}</td><td>{s.years.join(', ')}</td>
+                <td>{s.topics?.length ? s.topics.length : <span className="text-amber-700">yo'q</span>}</td>
                 <td>{s.telegramGroup ? <a className="text-brand-700 underline" href={s.telegramGroup} target="_blank" rel="noopener noreferrer">bor</a> : <span className="text-amber-700">yo'q</span>}</td>
                 <td>{s.tutors === 0 ? <span className="text-amber-700">0</span> : s.tutors}</td>
                 <td>{s.exams}</td><td>{s.materials}</td>
                 <td><div className="flex flex-wrap gap-1.5">
-                  <button className="btn-ghost btn-sm" onClick={() => { setMode('one'); setEditId(s._id); setMsg(''); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '' }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
+                  <button className="btn-ghost btn-sm" onClick={() => { setMode('one'); setEditId(s._id); setMsg(''); setF({ name: s.name, faculty: s.faculty, years: s.years, category: s.category, description: s.description || '', telegramGroup: s.telegramGroup || '', topicsText: (s.topics || []).join('\n') }); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>Tahrirlash</button>
                   <button className="btn-ghost btn-sm" onClick={() => run(async () => { await api(`/admin/subjects/${s._id}/active`, { method: 'PATCH', body: { active: !s.active } }); reload(); })}>{s.active ? 'Yashirish' : "Ko'rsatish"}</button>
                   <button className="btn-ghost btn-sm text-red-700" onClick={() => confirm(`"${s.name}" butunlay o'chiriladi, shu bilan birga ${s.exams} ta nazorat sanasi va ${s.materials} ta material ham. Qaytarib bo'lmaydi. Ehtimol «Yashirish» yetarlidir. Baribir o'chiraymi?`) && run(async () => { await api(`/admin/subjects/${s._id}`, { method: 'DELETE' }); reload(); })}>O'chirish</button>
                 </div></td>
@@ -168,7 +171,7 @@ function Exams() {
         <p>Demo sanalarda <b>«Demo sana»</b> izohi bor. Rasmiy sana kiritilgach izohni o'chiring: qatordagi «Rasmiy» tugmasi buni bir bosishda qiladi.</p>
       </Hint>
       {demo > 0 && <Hint kind="warn" title={`${demo} ta sana hali «demo»`}><p>Sayt ularni talabaga «Demo sana» belgisi bilan ko'rsatmoqda. Pilotdan oldin rasmiy jadvalga almashtiring.</p></Hint>}
-      <form onSubmit={add} className="space-y-3 bg-white p-5">
+      <form onSubmit={add} className="space-y-3 glass p-5">
         <h3 className="text-lg font-extrabold">Yangi sana</h3>
         <Filters>
           <FField label="Fan"><Select value={f.subject} onChange={(v) => setF({ ...f, subject: v })} required><option value="">Tanlang</option>{subjects.data?.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}</Select></FField>
@@ -219,15 +222,17 @@ function Materials() {
       <Hint title="Materiallarni tekshirish">
         <p>Talabalar yuborgan havolalar avval shu yerga «Kutilmoqda» holatida tushadi. <b>Havolani ochib ko'ring</b>: u haqiqatan ham o'sha fanga tegishlimi, zararli yoki reklama emasmi. Faqat shundan keyin tasdiqlang.</p>
       </Hint>
-      <div className="flex gap-2"><button className={`choice ${status === 'pending' ? 'choice-on' : ''}`} onClick={() => setStatus('pending')}>Kutilmoqda</button><button className={`choice ${status === 'approved' ? 'choice-on' : ''}`} onClick={() => setStatus('approved')}>Tasdiqlangan</button></div>
+      <div className="chip-row"><button className={`choice ${status === 'pending' ? 'choice-on' : ''}`} onClick={() => setStatus('pending')}>Kutilmoqda</button><button className={`choice ${status === 'approved' ? 'choice-on' : ''}`} onClick={() => setStatus('approved')}>Tasdiqlangan</button></div>
       <ErrorBox error={err || error} />
-      {loading ? <Spinner /> : !data.length ? <div className="bg-white p-10 text-center text-slate-600">{status === 'pending' ? "Tekshiruvni kutayotgan material yo'q." : "Tasdiqlangan material yo'q."}</div> : (
+      {loading ? <Spinner /> : !data.length ? <div className="glass p-10 text-center text-slate-600">{status === 'pending' ? "Tekshiruvni kutayotgan material yo'q." : "Tasdiqlangan material yo'q."}</div> : (
         <div className="space-y-2">{data.map((m) => (
-          <div key={m._id} className="flex flex-wrap items-center justify-between gap-3 bg-white p-4">
+          <div key={m._id} className="flex flex-wrap items-center justify-between gap-3 glass p-4">
             <div className="min-w-0">
               <div className="font-semibold">{m.title} <Chip tone="brand">{MATERIAL_LABEL[m.type]}</Chip></div>
               <div className="text-sm text-slate-600">{m.subject?.name} · yuborgan: {m.author?.name || '—'} {m.author?.telegram || ''}</div>
-              <a href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all text-sm text-brand-700 underline">{m.url}</a>
+              {m.url
+                ? <a href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="break-all text-sm text-brand-700 underline">{m.url}</a>
+                : <a href={`/materials/${m._id}`} target="_blank" rel="noopener noreferrer" className="text-sm text-brand-700 underline">Saytdagi konspekt (o'qish)</a>}
             </div>
             <div className="flex gap-2">
               {status === 'pending' ? <button className="btn-primary btn-sm" onClick={() => call(() => api(`/admin/materials/${m._id}`, { method: 'PATCH', body: { status: 'approved' } }))}>Tasdiqlash</button>

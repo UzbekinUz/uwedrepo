@@ -6,7 +6,7 @@ import { useApp } from '../context/App.jsx';
 import PrefPicker from '../components/PrefPicker.jsx';
 import { ExamRow, TutorCard } from '../components/Cards.jsx';
 import { Accordion, CountUp, Icon, IconBadge, Item, Reveal, Stagger, StarField } from '../components/Motion.jsx';
-import { Spinner, Tabs, useFetch } from '../components/ui.jsx';
+import { HeroBg, Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { qs } from '../api.js';
 import { t } from '../lib/i18n.js';
 import { daysLeft, dateLong, EXAM_LABEL, money } from '../lib/format.js';
@@ -172,9 +172,7 @@ export default function Home() {
     <>
       {/* 1. Hero */}
       <section className="relative overflow-hidden bg-field text-white">
-        {/* Fon: ikki yumshoq firuza nur va nozik nuqtali to'r */}
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 bg-[radial-gradient(ellipse_at_85%_15%,rgba(94,224,210,0.18),transparent_55%),radial-gradient(ellipse_at_0%_100%,rgba(18,145,139,0.25),transparent_50%)]" />
-        <div aria-hidden="true" className="pointer-events-none absolute inset-0 opacity-[0.07] [background-image:radial-gradient(circle,#fff_1px,transparent_1px)] [background-size:28px_28px] [mask-image:linear-gradient(to_bottom,black,transparent)]" />
+        <HeroBg />
         <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14`}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3.5 py-1.5 text-sm font-medium text-brand-100 ring-1 ring-white/10">
@@ -196,6 +194,7 @@ export default function Home() {
             <div className="mt-6 flex flex-wrap gap-3">
               <Link to="/tutors" className="btn bg-brand-300 px-7 py-3 text-base text-slate-900 hover:bg-white">{t('Repetitor topish')}</Link>
               <Link to="/subjects" className="btn bg-white/10 px-7 py-3 text-base text-white hover:bg-white/20">{t("Fanlarimni ko'rish")}</Link>
+              <Link to="/quizzes" className="btn bg-white/10 px-7 py-3 text-base text-white hover:bg-white/20">{t("Testlarni ko'rish")}</Link>
             </div>
             <TutorFaces tutors={tutors.data} total={stats.data?.tutors} />
           </motion.div>
@@ -326,7 +325,7 @@ export default function Home() {
       <section className={`${wrap} mt-24 sm:mt-32`}>
         <Reveal><h2 className={`${h2} max-w-3xl`}>{t('Telegram kanallari bilan solishtiring')}</h2></Reveal>
         <Reveal delay={0.05} className="relative mt-10 overflow-x-auto">
-          <table className="w-full min-w-[34rem] bg-white text-left text-base">
+          <table className="w-full min-w-[34rem] text-left text-base">
             <thead>
               <tr className="bg-slate-100 text-slate-900">
                 <th className="p-4 font-semibold sm:p-5" />

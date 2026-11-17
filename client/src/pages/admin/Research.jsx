@@ -9,7 +9,7 @@ function Market({ budget }) {
   const year = v.budget * 12;
   const som = Math.round((v.sam * v.share) / 100);
   return (
-    <div className="space-y-4 bg-white p-5 sm:p-6">
+    <div className="space-y-4 glass p-5 sm:p-6">
       <h3 className="text-xl font-extrabold">Bozor hajmi kalkulyatori (TAM / SAM / SOM)</h3>
       <p className="text-sm text-slate-600">Hisobotdagi jadval uchun. <b>TAM</b> — butun O'zbekistondagi talabalar; <b>SAM</b> — shundan siz erisha oladigan va pullik qo'shimcha ta'lim oladiganlar; <b>SOM</b> — birinchi yilda real jalb qilish mumkin bo'lgan ulush. Oylik byudjet so'rovnomadagi o'rtacha javobdan olinadi{budget ? '' : " (hozircha ma'lumot yo'q: qo'lda kiriting)"}. Talabalar soni va ulushlar taxminiy, ularni rasmiy manbadan (stat.uz) tekshiring.</p>
       <div className="grid gap-3 sm:grid-cols-4">
@@ -42,8 +42,8 @@ export default function Research() {
         <Stat label="To'lashga tayyor" value={q.willingToPayPct != null ? `${q.willingToPayPct}%` : null} hint={q.avgMonthlyBudget ? `o'rtacha ${money(q.avgMonthlyBudget)}/oy` : ''} tip="O'rtacha byudjet faqat «tayyorman» deb javob berib, summa ko'rsatganlardan hisoblanadi." />
         <Stat label="Repetitorlar qiziqishi" value={q.tutorTotal ? `${q.tutorInterested} / ${q.tutorTotal}` : null} />
       </StatGrid>
-      {q.topNeeds.length > 0 && <div className="bg-white p-5"><h3 className="font-bold">Eng ko'p tilga olingan ehtiyojlar</h3><ol className="mt-2 space-y-1 text-sm">{q.topNeeds.map(([n, c]) => <li key={n} className="flex justify-between"><span>{n}</span><b>{c}</b></li>)}</ol></div>}
-      {q.comments.length > 0 && <div className="bg-white p-5"><h3 className="font-bold">Oxirgi izohlar</h3><ul className="mt-2 space-y-2 text-sm">{q.comments.map((c, i) => <li key={i} className="border-l-4 border-brand-300 pl-3">{c.text}</li>)}</ul></div>}
+      {q.topNeeds.length > 0 && <div className="glass p-5"><h3 className="font-bold">Eng ko'p tilga olingan ehtiyojlar</h3><ol className="mt-2 space-y-1 text-sm">{q.topNeeds.map(([n, c]) => <li key={n} className="flex justify-between"><span>{n}</span><b>{c}</b></li>)}</ol></div>}
+      {q.comments.length > 0 && <div className="glass p-5"><h3 className="font-bold">Oxirgi izohlar</h3><ul className="mt-2 space-y-2 text-sm">{q.comments.map((c, i) => <li key={i} className="border-l-4 border-brand-300 pl-3">{c.text}</li>)}</ul></div>}
       {q.respondents === 0 && <Hint kind="warn" title="Hali javob yo'q"><p>Havolani guruh chatlariga yuboring: <code>{window.location.origin}/survey?ref=chat-nomi</code></p></Hint>}
       <Market budget={q.avgMonthlyBudget} />
     </Section>

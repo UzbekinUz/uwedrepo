@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { Subject, Tutor } from './models/index.js';
+import { Subject, Tutor, Material } from './models/index.js';
 import { wrap } from './middleware/util.js';
 
 /**
@@ -16,6 +16,7 @@ const STATIC = [
   ['/tutors', 0.9, 'daily'],
   ['/subjects', 0.9, 'weekly'],
   ['/materials', 0.7, 'weekly'],
+  ['/quizzes', 0.6, 'weekly'],
   ['/calendar', 0.7, 'weekly'],
 ];
 
@@ -40,15 +41,18 @@ export function createSeoRouter() {
       const origin = base(req);
       if (cache.key === origin && Date.now() - cache.at < TTL) return res.type('application/xml').send(cache.xml);
 
-      const [subjects, tutors] = await Promise.all([
+      const [subjects, tutors, notes] = await Promise.all([
         Subject.find({ active: { $ne: false } }).select('_id updatedAt').lean(),
         Tutor.find({ status: 'approved' }).select('_id updatedAt').lean(),
+        // Saytning o'zida o'qiladigan matnli konspektlar (tashqi havolalar emas): qidiruv uchun eng qimmatli kontent
+        Material.find({ status: 'approved', url: '', body: { $ne: '' } }).select('_id updatedAt').lean(),
       ]);
       const url = (loc, { lastmod, priority, changefreq }) =>
         `  <url><loc>${esc(origin + loc)}</loc>${lastmod ? `<lastmod>${lastmod}</lastmod>` : ''}<changefreq>${changefreq}</changefreq><priority>${priority.toFixed(1)}</priority></url>`;
       const rows = [
         ...STATIC.map(([p, priority, changefreq]) => url(p, { priority, changefreq })),
         ...subjects.map((s) => url(`/subjects/${s._id}`, { lastmod: day(s.updatedAt), priority: 0.8, changefreq: 'weekly' })),
+        ...notes.map((m) => url(`/materials/${m._id}`, { lastmod: day(m.updatedAt), priority: 0.8, changefreq: 'monthly' })),
         ...tutors.map((t) => url(`/tutors/${t._id}`, { lastmod: day(t.updatedAt), priority: 0.8, changefreq: 'weekly' })),
       ];
       const xml = `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n${rows.join('\n')}\n</urlset>\n`;

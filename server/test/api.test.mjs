@@ -395,6 +395,8 @@ test("SEO: robots.txt va sitemap.xml faqat ommaviy sahifalarni beradi", async ()
   const hidden = await M.User.create({ name: 'Yashirin', telegramId: '9901', role: 'tutor' });
   const pending = await M.Tutor.create({ user: hidden._id, subjects: [fx.subject._id], headline: 'Kutilmoqda', pricePerHour: 100000, status: 'pending' });
   const archived = await M.Subject.create({ name: 'Arxiv fan', faculty: 'xim', years: [1], active: false });
+  const note = await M.Material.create({ subject: fx.subject._id, title: 'SEO konspekt', type: 'konspekt', body: 'Matn', status: 'approved' });
+  const link = await M.Material.create({ subject: fx.subject._id, title: 'Tashqi havola', type: 'konspekt', url: 'https://example.com/x', status: 'approved' });
 
   const res = await fetch(`${root}/sitemap.xml`);
   assert.equal(res.status, 200);
@@ -403,7 +405,46 @@ test("SEO: robots.txt va sitemap.xml faqat ommaviy sahifalarni beradi", async ()
   assert.match(xml, /<urlset/);
   assert.ok(xml.includes(`/tutors/${fx.tutor._id}`), 'tasdiqlangan repetitor sitemap da bo\'lishi kerak');
   assert.ok(xml.includes(`/subjects/${fx.subject._id}`), 'faol fan sitemap da bo\'lishi kerak');
+  assert.ok(xml.includes('/materials/' + note._id), "matnli konspekt sitemap da bo'lishi kerak");
+  assert.ok(!xml.includes(String(link._id)), "tashqi havolali material sitemap da bo'lmasligi kerak");
   assert.ok(!xml.includes(String(pending._id)), 'tasdiqlanmagan repetitor sitemap da bo\'lmasligi kerak');
   assert.ok(!xml.includes(String(archived._id)), 'arxivdagi fan sitemap da bo\'lmasligi kerak');
   assert.ok(!xml.includes('/admin'), 'admin sahifasi sitemap da bo\'lmasligi kerak');
+  // boshqa testlarga ta'sir qilmasin
+  await M.Material.deleteMany({ _id: { $in: [note._id, link._id] } });
+  await M.Tutor.deleteOne({ _id: pending._id });
+  await M.User.deleteOne({ _id: hidden._id });
+  await M.Subject.deleteOne({ _id: archived._id });
+});
+
+test("fan mavzulari: admin kiritadi, fan sahifasida tartib bilan chiqadi", async () => {
+  const id = String(fx.subject._id);
+  assert.equal((await api('PUT', `/admin/subjects/${id}/topics`, { topics: ['A'] }, fx.t.a)).s, 403);
+  const r = await api('PUT', `/admin/subjects/${id}/topics`, { topics: ['Ketma-ketlik limiti', 'Funksiya limiti', 'Hosila'] }, fx.t.admin);
+  assert.equal(r.s, 200);
+  const pub = await api('GET', `/subjects/${id}`);
+  assert.deepEqual(pub.j.subject.topics, ['Ketma-ketlik limiti', 'Funksiya limiti', 'Hosila']);
+});
+
+test("matnli konspekt: faqat admin yozadi, ro'yxatda matnsiz, alohida sahifada to'liq va mavzu tartibida", async () => {
+  const subject = String(fx.subject._id);
+  const note = { subject, title: '2-mavzu: Funksiya limiti', body: '## Tushuncha\n\nFunksiya limiti haqida qisqa matn.', order: 2 };
+  assert.equal((await api('POST', '/admin/materials', note, fx.t.a)).s, 403);
+  const n2 = await api('POST', '/admin/materials', note, fx.t.admin);
+  assert.equal(n2.s, 201);
+  const n1 = await api('POST', '/admin/materials', { ...note, title: '1-mavzu: Ketma-ketlik', order: 1 }, fx.t.admin);
+  // Oddiy foydalanuvchi havolasiz material yubora olmaydi (body faqat admin yo'li orqali)
+  assert.equal((await api('POST', '/materials', { subject, title: 'Matn', type: 'konspekt', body: 'x'.repeat(50) }, fx.t.a)).s, 400);
+  const pub = await api('GET', `/subjects/${subject}`);
+  const notes = pub.j.materials.filter((m) => !m.url);
+  assert.deepEqual(notes.map((m) => m.title), ['1-mavzu: Ketma-ketlik', '2-mavzu: Funksiya limiti']);
+  assert.ok(notes.every((m) => m.body === undefined), "ro'yxatda matn yuborilmaydi");
+  const one = await api('GET', `/materials/${n2.j._id}`);
+  assert.equal(one.s, 200);
+  assert.match(one.j.body, /Funksiya limiti/);
+  assert.deepEqual(one.j.siblings.map((x) => String(x._id)), [String(n1.j._id), String(n2.j._id)]);
+  const upd = await api('PUT', `/admin/materials/${n2.j._id}`, { body: '## Yangi\n\nYangilangan matn, yetarlicha uzun.' }, fx.t.admin);
+  assert.equal(upd.s, 200);
+  assert.match((await api('GET', `/materials/${n2.j._id}`)).j.body, /Yangilangan/);
+  assert.equal((await api('GET', '/materials/notanid')).s, 400);
 });

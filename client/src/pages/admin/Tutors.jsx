@@ -13,7 +13,7 @@ function Card({ t, reload }) {
   const patch = (body) => run(async () => { await api(`/admin/tutors/${t._id}`, { method: 'PATCH', body }); setRejecting(false); reload(); });
   if (editing) {
     return (
-      <div className="space-y-3 bg-white p-5 lg:col-span-2">
+      <div className="space-y-3 glass p-5 lg:col-span-2">
         <div className="flex items-center justify-between gap-2">
           <h3 className="text-lg font-extrabold">Anketani tahrirlash: {t.user?.name}</h3>
           <button className="btn-ghost btn-sm" onClick={() => setEditing(false)}>Bekor</button>
@@ -24,7 +24,7 @@ function Card({ t, reload }) {
     );
   }
   return (
-    <div className="space-y-3 bg-white p-5">
+    <div className="space-y-3 glass p-5">
       <div className="flex flex-wrap items-start justify-between gap-2">
         <div>
           <div className="text-lg font-extrabold">{t.user?.name} <StatusChip s={t.status} /> {t.featured && <Chip tone="brand">Tavsiya</Chip>} {t.user?.blocked && <Chip tone="red">Bloklangan</Chip>}</div>
@@ -73,11 +73,11 @@ export default function Tutors() {
     <Section title="Repetitorlar"
       intro={<><p>Repetitor anketasini yuborsa, u <b>«Kutilmoqda»</b> holatida tushadi va katalogda ko'rinmaydi. Siz anketani o'qib chiqib <b>tasdiqlaysiz</b> yoki <b>sababini yozib rad etasiz</b>, sabab repetitorga Telegram orqali boradi.</p><p>Tasdiqlashdan oldin tekshiring: vaqtlari kiritilganmi (aks holda bron qilib bo'lmaydi), narx o'rinlimi, Telegram username bormi.</p></>}>
       <Filters>
-        <div className="flex flex-wrap gap-2">{tabs.map(([k, l]) => <button key={k} className={`choice ${status === k ? 'choice-on' : ''}`} onClick={() => setStatus(k)}>{l}{k ? ` (${counts[k] || 0})` : ''}</button>)}</div>
+        <div className="chip-row">{tabs.map(([k, l]) => <button key={k} className={`choice ${status === k ? 'choice-on' : ''}`} onClick={() => setStatus(k)}>{l}{k ? ` (${counts[k] || 0})` : ''}</button>)}</div>
         <FField label="Qidirish"><input className="input" value={q} onChange={(e) => setQ(e.target.value)} placeholder="Ism yoki sarlavha" /></FField>
       </Filters>
       <ErrorBox error={list.error} />
-      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="bg-white p-10 text-center text-slate-600">Bu holatda anketa yo'q.</div> : (
+      {list.loading ? <Spinner /> : !list.data.items.length ? <div className="glass p-10 text-center text-slate-600">Bu holatda anketa yo'q.</div> : (
         <div className="grid gap-3 lg:grid-cols-2">{list.data.items.map((t) => <Card key={t._id} t={t} reload={() => setN(n + 1)} />)}</div>
       )}
     </Section>

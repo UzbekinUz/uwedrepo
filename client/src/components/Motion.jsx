@@ -176,7 +176,7 @@ export function Accordion({ items }) {
       {items.map(([q, a], i) => {
         const on = open === i;
         return (
-          <div key={q} className="bg-white">
+          <div key={q} className="glass">
             <button type="button" className="flex w-full items-center justify-between gap-4 p-5 text-left text-lg font-bold text-slate-900 sm:p-6" aria-expanded={on} onClick={() => setOpen(on ? -1 : i)}>
               <span>{q}</span>
               <motion.span animate={{ rotate: on ? 45 : 0 }} className="shrink-0 text-brand-700"><Icon name="plus" size={26} /></motion.span>

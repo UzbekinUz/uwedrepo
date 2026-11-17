@@ -61,6 +61,9 @@ export const quiz = {
   "Foiz — shu savolga to'g'ri javob berganlar ulushi. Past foizli mavzularni darslaringizda ko'proq tushuntiring.": ['Процент — доля ответивших верно. Темы с низким процентом стоит разобрать на уроках подробнее.', 'Percent = share who answered correctly. Spend more lesson time on low-scoring topics.'],
   "Ism (katalogda ko'rinadi)": ['Имя (видно в каталоге)', 'Name (shown in catalogue)'],
 
+  Mavzular: ['Темы', 'Topics'],
+  "Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.": ['Последовательность тем по силлабусу. Если тема сложная — спросите репетитора или решите тренировочный тест.', 'Topic sequence from the syllabus. If a topic is hard, ask a tutor or take a practice test.'],
+
   // Repetitor: bo'sh vaqtlar
   'Kamida bitta kunni tanlang': ['Выберите хотя бы один день', 'Pick at least one day'],
   "Har bir qatorda kamida bitta kun tanlang va boshlanish vaqti tugashdan oldin bo'lsin": ['В каждой строке выберите хотя бы один день, и начало должно быть раньше конца', 'Pick at least one day in each row, and the start must be before the end'],
@@ -95,4 +98,12 @@ export const quiz = {
   'Testni yaratish': ['Создать тест', 'Create test'],
   'Kamida bitta savol kiriting': ['Добавьте хотя бы один вопрос', 'Add at least one question'],
   "{n}-savolda kamida 2 ta variant bo'lsin va to'g'ri javob bo'sh bo'lmasin": ['В вопросе {n} должно быть минимум 2 варианта, и правильный ответ не должен быть пустым', 'Question {n} needs at least 2 options and a non-empty correct answer'],
+  "Testlarni ko'rish": ['Смотреть тесты', 'Browse tests'],
+  'Hammasi': ['Все', 'All'],
+  "Nazoratga tayyorlanish uchun mashq testlari: yeching, natijani ko'ring, tushunmaganingizni tahlil qiling": ['Тренировочные тесты для подготовки к контрольным: решайте, смотрите результат, разбирайте ошибки', 'Practice tests to prepare for exams: take them, see your score, review what you missed'],
+  "Boshqa kurslar testlarini ham ko'rsatish": ['Показать тесты других курсов', 'Show tests from other courses too'],
+  "Sizning fanlaringiz bo'yicha hali test yo'q. «Boshqa kurslar testlarini ham ko'rsatish»ni belgilab ko'ring.": ['По вашим предметам тестов пока нет. Отметьте «Показать тесты других курсов».', 'No tests for your subjects yet. Try ticking “Show tests from other courses too”.'],
+  "Hali test qo'shilmagan.": ['Тестов пока нет.', 'No tests yet.'],
+  "O'qish →": ['Читать →', 'Read →'],
+  'Konspekt →': ['Конспект →', 'Notes →'],
 };

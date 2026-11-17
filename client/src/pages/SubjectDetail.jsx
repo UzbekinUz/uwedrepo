@@ -12,16 +12,23 @@ export function MaterialList({ items }) {
   if (!items.length) return <Empty>{t("Hozircha material yo'q. Birinchi bo'lib yuklang!")}</Empty>;
   return (
     <div className="space-y-2">
-      {items.map((m) => (
-        <a key={m._id} href={m.url} target="_blank" rel="noopener noreferrer nofollow" className="card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5">
-          <span className="chip shrink-0 bg-brand-100 text-brand-700">{MATERIAL_LABEL[m.type]}</span>
-          <div className="min-w-0 flex-1">
-            <div className="break-words text-lg font-bold text-slate-900">{m.title}</div>
-            {(m.description || m.subject?.name) && <div className="text-sm text-slate-600">{m.subject?.name} {m.description}</div>}
-          </div>
-          <span className="shrink-0 text-sm font-semibold text-brand-700">{t('Ochish ↗')}</span>
-        </a>
-      ))}
+      {items.map((m) => {
+        const cls = 'card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5';
+        const inner = (
+          <>
+            <span className="chip shrink-0 bg-brand-100 text-brand-700">{MATERIAL_LABEL[m.type]}</span>
+            <div className="min-w-0 flex-1">
+              <div className="break-words text-lg font-bold text-slate-900">{m.title}</div>
+              {(m.description || m.subject?.name) && <div className="text-sm text-slate-600">{m.subject?.name} {m.description}</div>}
+            </div>
+            <span className="shrink-0 text-sm font-semibold text-brand-700">{m.url ? t('Ochish ↗') : t("O'qish →")}</span>
+          </>
+        );
+        // Havolasiz material — saytning o'zida o'qiladigan konspekt
+        return m.url
+          ? <a key={m._id} href={m.url} target="_blank" rel="noopener noreferrer nofollow" className={cls}>{inner}</a>
+          : <Link key={m._id} to={`/materials/${m._id}`} className={cls}>{inner}</Link>;
+      })}
     </div>
   );
 }
@@ -70,18 +77,35 @@ export default function SubjectDetail() {
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const { subject, tutors, materials, exams, quizzes = [] } = data;
-  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ['tests', `${t('Testlar')} (${quizzes.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
+  const topics = subject.topics || [];
+  const tabs = [['tutors', `${t('Repetitorlar')} (${tutors.length})`], ...(topics.length ? [['topics', `${t('Mavzular')} (${topics.length})`]] : []), ['tests', `${t('Testlar')} (${quizzes.length})`], ['materials', `${t('Materiallar')} (${materials.length})`], ['exams', `${t('Nazoratlar')} (${exams.length})`]];
 
   return (
     <>
-      <Link to="/subjects" className="mb-6 inline-block text-sm font-semibold text-brand-700 hover:underline">← {t('Fanlar')}</Link>
-      <PageTitle title={subject.name} sub={subject.description || subject.years.map((y) => t('{n}-kurs', { n: y })).join(', ')}>
+      <PageTitle back={{ to: '/subjects', label: t('Fanlar') }} title={subject.name} sub={subject.description || subject.years.map((y) => t('{n}-kurs', { n: y })).join(', ')}>
         {subject.telegramGroup ? (
           <a href={subject.telegramGroup} target="_blank" rel="noopener noreferrer" className="btn-primary">{t("Telegram guruhga qo'shilish")}</a>
-        ) : <span className="chip bg-slate-100 text-slate-500">{t("Telegram guruh hali yo'q")}</span>}
+        ) : <span className="chip bg-white/10 text-slate-300">{t("Telegram guruh hali yo'q")}</span>}
       </PageTitle>
       <Tabs tabs={tabs} value={tab} onChange={setTab} />
       {tab === 'tutors' && (tutors.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
+      {tab === 'topics' && (
+        <div className="card p-5 sm:p-6">
+          <p className="mb-4 text-sm text-slate-600">{t("Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.")}</p>
+          <ol className="space-y-2">
+            {topics.map((x, i) => {
+              const note = materials.find((m) => !m.url && m.order === i + 1);
+              return (
+                <li key={i} className="flex items-center gap-3 border-b border-slate-100 pb-2 last:border-0">
+                  <span className="w-7 shrink-0 text-right font-extrabold text-brand-700">{i + 1}.</span>
+                  <span className="flex-1 text-slate-800">{x}</span>
+                  {note && <Link to={`/materials/${note._id}`} className="shrink-0 text-sm font-semibold text-brand-700 hover:underline">{t('Konspekt →')}</Link>}
+                </li>
+              );
+            })}
+          </ol>
+        </div>
+      )}
       {tab === 'tests' && (quizzes.length ? (
         <div className="space-y-2">
           {quizzes.map((q) => (

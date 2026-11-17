@@ -17,9 +17,19 @@
   .btn-ghost { @apply btn bg-slate-100 text-slate-800 hover:bg-slate-200; }
   .btn-danger { @apply btn bg-red-700 text-white hover:bg-red-800; }
   .btn-sm { @apply px-3.5 py-1.5 text-xs; }
-  /* Yuzalar: chiziq va soyasiz, faqat ton farqi */
-  .card { @apply bg-white; }
-  .card-link { @apply card transition hover:bg-brand-50; }
+  /* Yuzalar: shisha effekti (bosh sahifadagi kartalar kabi) — yarim shaffof, orqa fon xiralashadi */
+  .glass { @apply rounded-2xl bg-white/55 ring-1 ring-white/70 backdrop-blur-xl; box-shadow: 0 8px 30px rgba(14, 38, 39, 0.06); }
+  .card { @apply glass; }
+  .card-link { @apply card transition hover:bg-white/80; }
+  .no-scrollbar { scrollbar-width: none; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  /* Formulalar: matematik shrift */
+  /* Konspekt: to'q rangli blok ichida matn oq bo'lsin */
+  .notes-dark strong, .notes-dark td, .notes-dark th { color: #fff; }
+  .math { font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', Cambria, 'Times New Roman', serif; }
+  /* Tugmalar qatori: kompyuterda pastga o'raladi, telefonda ikki qatorli karusel (yonga suriladi) */
+  .chip-row { @apply no-scrollbar -mx-4 grid snap-x auto-cols-max grid-flow-col grid-rows-2 gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex sm:flex-wrap sm:overflow-visible sm:px-0; }
+  .chip-row > * { @apply snap-start whitespace-nowrap; }
   .input { @apply w-full rounded-md border border-slate-300 bg-white px-3 py-2.5 text-sm text-slate-900 placeholder:text-slate-400 focus:border-brand-600; }
   .label { @apply mb-1.5 block text-sm font-medium text-slate-600; }
   .chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-medium; }
