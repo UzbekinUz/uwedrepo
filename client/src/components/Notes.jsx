@@ -19,6 +19,7 @@ import { Icon } from './Motion.jsx';
  *   test — «? savol», «- variant», «+ to'g'ri variant», «> izoh»
  *   mashq — «savol || javob» qatorlari (javob tugma bilan ochiladi)
  *   grafik — Plot.jsx dagi tavsif
+ *   Bloklar ichma-ich bo'lishi mumkin (masalan, misol yechimi ichida grafik)
  * Qator ichida:
  *   **qalin**, `formula`, {surat|maxraj} — kasr (ichma-ich ham bo'ladi), ^{daraja} yoki x^2, _{indeks}, lim_{x→a}
  */
@@ -156,8 +157,13 @@ function parse(src, ctx = { misol: 0 }) {
     const cm = /^:::\s*([a-z]+)\s*(.*)$/i.exec(tr);
     if (cm) {
       const type = cm[1].toLowerCase(); const title = cm[2].trim();
-      const inner = []; i++;
-      while (i < lines.length && lines[i].trim() !== ':::') { inner.push(lines[i]); i++; }
+      // Ichki bloklar (masalan, misol yechimidagi grafik) ham bo'lishi mumkin: ochilish/yopilishni sanaymiz
+      const inner = []; i++; let depth = 0;
+      while (i < lines.length) {
+        const t = lines[i].trim();
+        if (t === ':::') { if (depth === 0) break; depth--; } else if (/^:::\s*[a-z]+/i.test(t)) depth++;
+        inner.push(lines[i]); i++;
+      }
       i++;
       if (type === 'misol') {
         const cut = inner.findIndex((l) => l.trim() === '---');
