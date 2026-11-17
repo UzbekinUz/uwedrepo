@@ -11,5 +11,7 @@ Yozish qoidalari `client/src/components/Notes.jsx` boshida: `## sarlavha`, `$$ f
 Saytga yuklash: admin sifatida `POST /api/admin/materials` (`subject`, `title`, `body`, `order`),
 yangilash: `PUT /api/admin/materials/:id`.
 
-- `hisoblash-1/` — Hisoblash 1 (XIM, 1-kurs), 15 mavzu. Manba: Moodle'dagi seminar fayllari
+- `hisoblash-1/` — Hisoblash 1 (XIM, 1-kurs), 15 mavzu. Manba: fan ma'ruza va seminar materiallari
   (CALC_S1–S11, Thomas «Calculus» asosida) va ma'ruzalar (1-mavzu ketma-ketlik, 9-mavzu U. Dalabayev).
+- `iqtisodiyot-nazariyasi/` — Iqtisodiyot nazariyasi, 15 mavzu (ma'ruza va seminar materiallari asosida).
+- `mikroiqtisodiyot/` — Mikroiqtisodiyot, 15 mavzu (ma'ruza va seminar materiallari asosida).
