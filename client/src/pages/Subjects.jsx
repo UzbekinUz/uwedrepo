@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link } from 'react-router-dom';
 import { useApp } from '../context/App.jsx';
 import PrefPicker from '../components/PrefPicker.jsx';
@@ -10,6 +11,7 @@ import { t } from '../lib/i18n.js';
 export default function Subjects() {
   const { pref } = useApp();
   const [q, setQ] = useState('');
+  useSeo("UWED fanlari: repetitor, material va testlar", "UWED talabalari uchun fanlar ro'yxati: har bir fan bo'yicha repetitorlar, o'quv materiallari, mashq testlari va nazorat sanalari.");
   const { data, loading, error } = useFetch(`/subjects${qs({ faculty: pref?.faculty, year: pref?.year, q })}`);
 
   return (

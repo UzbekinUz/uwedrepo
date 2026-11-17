@@ -15,6 +15,7 @@ import bookings from './routes/bookings.js';
 import admin from './routes/admin/index.js';
 import pub from './routes/public.js';
 import quizzes from './routes/quizzes.js';
+import { createSeoRouter } from './seo.js';
 import { handleUpdate, webhookPath, webhookSecret } from './telegram.js';
 
 /** Express ilovasini yig'adi (DB ulanishsiz): sinash va ishga tushirish uchun umumiy */
@@ -49,6 +50,8 @@ app.use(express.json({ limit: '100kb' }));
 const limiter = (max) => rateLimit({ windowMs: 15 * 60e3, max, standardHeaders: true, legacyHeaders: false, message: { error: "Juda ko'p so'rov, birozdan keyin urinib ko'ring" } });
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
+// robots.txt va sitemap.xml: saytni SPA'ning index.html'iga yo'naltirishdan oldin javob berishi kerak
+app.use(createSeoRouter());
 
 // Telegram webhook (production): faqat maxfiy sarlavha to'g'ri bo'lsa qabul qilinadi
 app.post(webhookPath, (req, res) => {

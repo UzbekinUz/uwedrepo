@@ -5,6 +5,7 @@ import { useApp } from '../context/App.jsx';
 import { ErrorBox, Field } from '../components/ui.jsx';
 import { Hint, Icon } from '../components/Motion.jsx';
 import { t } from '../lib/i18n.js';
+import { useSeo } from '../lib/seo.js';
 
 const benefits = () => [
   t("Repetitorga dars bron qilish va platforma ichida to'lash"),
@@ -172,6 +173,7 @@ function EmailRegisterForm() {
 
 export function Login() {
   const { meta } = useApp();
+  useSeo("Kirish", '', { noindex: true });
   const [email, setEmail] = useState(!meta.telegramLogin);
   return (
     <Shell title={t('Kirish')} foot={<>{t("Akkauntingiz yo'qmi?")} <Link to="/register" className="font-semibold text-brand-700 underline">{t("Ro'yxatdan o'ting")}</Link></>}>
@@ -188,6 +190,7 @@ export function Login() {
 
 export function Register() {
   const { meta } = useApp();
+  useSeo("Ro'yxatdan o'tish", '', { noindex: true });
   return (
     <Shell title={t("Ro'yxatdan o'tish")}
       sub={meta.telegramLogin ? t("Parol shart emas: Telegram bot orqali kod olasiz.") : t("Telegram bot hali sozlanmagan, hozircha email bilan ro'yxatdan o'ting.")}

@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
 import { Hint } from '../components/Motion.jsx';
@@ -142,6 +143,7 @@ function Incoming() {
 }
 
 export default function TutorDashboard() {
+  useSeo("Repetitor kabineti", '', { noindex: true });
   const { meta } = useApp();
   const [n, setN] = useState(0);
   const { data: tutor, loading } = useFetch('/tutors/me', [n]);

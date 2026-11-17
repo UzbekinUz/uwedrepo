@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
@@ -63,6 +64,8 @@ export default function SubjectDetail() {
   const [tab, setTab] = useState('tutors');
   const [reload, setReload] = useState(0);
   const { data, loading, error } = useFetch(`/subjects/${id}`, [reload]);
+  const sName = data?.subject?.name;
+  useSeo(sName && `${sName}: repetitor, material va testlar`, sName && `${sName} fanidan UWED talabalari uchun repetitorlar, o'quv materiallari, mashq testlari va nazorat sanalari.`);
 
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;

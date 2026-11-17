@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { useSearchParams } from 'react-router-dom';
 import { useApp } from '../context/App.jsx';
 import { Empty, ErrorBox, PageTitle, Spinner, useFetch } from '../components/ui.jsx';
@@ -21,6 +22,7 @@ export default function Tutors() {
   const [sp, setSp] = useSearchParams();
   const subject = sp.get('subject') || '';
   const [sort, setSort] = useState('rating');
+  useSeo("UWED repetitorlari: dars bron qilish", "UWED talabalari uchun tasdiqlangan repetitorlar: fan, narx, reyting va sharhlar bo'yicha tanlang va onlayn yoki oflayn dars bron qiling.");
 
   // Fanlar: avvalo talabaning kursiga tegishlilari; havola orqali boshqa fan tanlangan bo'lsa — hammasi
   const mine = useFetch(`/subjects${qs({ faculty: pref?.faculty, year: pref?.year })}`);

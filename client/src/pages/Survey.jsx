@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
 import { Hint } from '../components/Motion.jsx';
@@ -6,6 +7,7 @@ import { ErrorBox, Field, PageTitle, useFetch } from '../components/ui.jsx';
 import { t } from '../lib/i18n.js';
 
 export default function Survey() {
+  useSeo("So'rovnoma", '', { noindex: true });
   const { meta } = useApp();
   const opts = useFetch('/survey/options');
   const [role, setRole] = useState('student');

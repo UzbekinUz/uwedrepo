@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useSeo } from '../lib/seo.js';
 import { Link, useParams } from 'react-router-dom';
 import { api } from '../api.js';
 import { useApp } from '../context/App.jsx';
@@ -57,6 +58,7 @@ function TutorCta({ subject }) {
 }
 
 export default function Quiz() {
+  useSeo("Mashq testi", '', { noindex: true });
   const { id } = useParams();
   const { data: quiz, loading, error } = useFetch(`/quizzes/${id}`);
   const [answers, setAnswers] = useState({});
