@@ -100,6 +100,7 @@ export default function Layout() {
               <Link to="/survey" className="hover:text-brand-300">{t("So'rovnomada qatnashing")}</Link>
             </nav>
           </div>
+          <p className="mt-10 max-w-3xl text-xs leading-relaxed text-slate-400">{t("UWEDRepo — Jahon iqtisodiyoti va diplomatiya universiteti (UWED, University of World Economy and Diplomacy, Университет мировой экономики и дипломатии) talabalari uchun mustaqil platforma. Universitetning rasmiy sayti emas.")}</p>
           <div className="select-none pt-14 text-[clamp(3.5rem,17vw,15rem)] font-extrabold leading-[0.85] tracking-[-0.05em] text-brand-600" aria-hidden="true"><span className="text-slate-300">UWED</span>Repo</div>
         </div>
       </footer>

@@ -58,6 +58,8 @@ const stepsTutor = (meta) => [
 ];
 
 const faq = (meta) => [
+  [t('UWED nima?'), t("UWED — Jahon iqtisodiyoti va diplomatiya universiteti (UWED, University of World Economy and Diplomacy, Университет мировой экономики и дипломатии), Toshkent, O'zbekiston. UWEDRepo shu universitet talabalari uchun repetitor, konspekt, mashq testi va nazorat sanalarini bir joyga yig'adi.")],
+  [t("UWEDRepo universitetning rasmiy saytimi?"), t("Yo'q. UWEDRepo — talabalar uchun mustaqil platforma, UWED ma'muriyati bilan bog'liq emas. Universitetning rasmiy ma'lumotlari uchun uning o'z saytiga murojaat qiling.")],
   [t('Sayt bepulmi?'), t("Talabalar uchun foydalanish bepul. Platforma faqat repetitor olgan to'lovdan {n}% komissiya oladi.", { n: meta.commission })],
   [t("To'lov haqiqiymi?"), t("Hozir pilot rejim: «To'lash» tugmasi bosilganda haqiqiy pul yechilmaydi, jarayon sinovdan o'tkazilmoqda. Click va Payme ulanganda bu haqda e'lon qilinadi.")],
   [t('Darsni bekor qila olamanmi?'), t("Ha. To'langan darsni boshlanishiga {h} soatdan ko'p qolganda bekor qilsangiz, to'lov qaytariladi; kamroq qolsa — qaytarilmaydi. Repetitor o'zi rad etsa, pul har doim qaytariladi.", { h: meta.cancelHours })],
@@ -165,7 +167,7 @@ export default function Home() {
   const stats = useFetch('/stats');
   const quizzes = useFetch('/quizzes');
   const [who, setWho] = useState('student');
-  useSeo("UWEDRepo: UWED talabalari uchun repetitor, material va testlar", "UWEDRepo: UWED talabalari uchun repetitorlar, o'quv materiallari, mashq testlari, nazorat sanalari kalendari va fan guruhlari bitta saytda.");
+  useSeo("UWED repetitor, konspekt, test va nazorat sanalari | UWEDRepo", "UWEDRepo: Jahon iqtisodiyoti va diplomatiya universiteti (UWED) talabalari uchun repetitorlar, konspektlar, mashq testlari va nazorat sanalari kalendari. Toshkent, O'zbekiston.");
   const steps = who === 'student' ? stepsStudent(meta) : stepsTutor(meta);
 
   return (
