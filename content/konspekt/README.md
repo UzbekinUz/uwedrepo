@@ -4,7 +4,9 @@ Saytda o'qiladigan mavzu konspektlari (Materiallar → «O'qish →»). Har bir 
 fayl raqami fan sahifasidagi mavzu tartibiga (`order`) mos.
 
 Yozish qoidalari `client/src/components/Notes.jsx` boshida: `## sarlavha`, `$$ formula $$`,
-`> misol bloki`, `{surat|maxraj}`, `x^2`, `a_{n}`, `lim_{x→0}`, jadvallar.
+`{surat|maxraj}`, `x^2`, `a_{n}`, `lim_{x→0}`, jadvallar va interaktiv bloklar:
+`::: maqsad|hayot|oddiy|tushuncha|formula|teorema|eslatma|xato|xulosa`, `::: misol` (yechim `---` dan keyin),
+`::: test` (`? savol`, `- variant`, `+ to'g'ri`, `> izoh`), `::: mashq` (`savol || javob`), `::: grafik` (Plot.jsx).
 
 Saytga yuklash: admin sifatida `POST /api/admin/materials` (`subject`, `title`, `body`, `order`),
 yangilash: `PUT /api/admin/materials/:id`.

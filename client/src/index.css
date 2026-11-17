@@ -24,6 +24,8 @@
   .no-scrollbar { scrollbar-width: none; }
   .no-scrollbar::-webkit-scrollbar { display: none; }
   /* Formulalar: matematik shrift */
+  /* Konspekt: to'q rangli blok ichida matn oq bo'lsin */
+  .notes-dark strong, .notes-dark td, .notes-dark th { color: #fff; }
   .math { font-family: 'Cambria Math', 'STIX Two Math', 'Latin Modern Math', Cambria, 'Times New Roman', serif; }
   /* Tugmalar qatori: kompyuterda pastga o'raladi, telefonda ikki qatorli karusel (yonga suriladi) */
   .chip-row { @apply no-scrollbar -mx-4 grid snap-x auto-cols-max grid-flow-col grid-rows-2 gap-2 overflow-x-auto px-4 pb-1 sm:mx-0 sm:flex sm:flex-wrap sm:overflow-visible sm:px-0; }
