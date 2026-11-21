@@ -6,6 +6,7 @@ import { useApp } from '../context/App.jsx';
 import { ErrorBox, PageTitle, Spinner, useFetch } from '../components/ui.jsx';
 import { TutorCard } from '../components/Cards.jsx';
 import { Hint } from '../components/Motion.jsx';
+import { Inline } from '../components/MathText.jsx';
 import { t, getLang } from '../lib/i18n.js';
 
 const LETTERS = 'ABCDEF';
@@ -105,7 +106,7 @@ export default function Quiz() {
             <li key={q._id} className={`card space-y-3 p-5 sm:p-6 ${r ? (r.ok ? 'border-l-4 border-emerald-500' : 'border-l-4 border-red-500') : ''}`}>
               <div className="flex gap-3">
                 <span className="font-extrabold text-slate-400">{i + 1}.</span>
-                <p className="whitespace-pre-line text-lg font-semibold text-slate-900">{q.text}</p>
+                <p className="whitespace-pre-line text-lg font-semibold leading-relaxed text-slate-900"><Inline text={q.text} /></p>
               </div>
               <div className="grid gap-2">
                 {q.options.map((o, k) => {
@@ -114,7 +115,7 @@ export default function Quiz() {
                   return (
                     <label key={k} className={`flex cursor-pointer items-start gap-3 rounded-md px-4 py-3 transition ${tone} ${r ? 'cursor-default' : ''}`}>
                       <input type="radio" className="sr-only" name={`q-${i}`} disabled={!!r} checked={picked} onChange={() => setAnswers({ ...answers, [i]: k })} />
-                      <b>{LETTERS[k]})</b><span className="whitespace-pre-line">{o}</span>
+                      <b>{LETTERS[k]})</b><span className="whitespace-pre-line leading-relaxed"><Inline text={o} /></span>
                       {r && k === r.correct && <span className="ml-auto text-sm font-semibold">✓ {t("To'g'ri javob")}</span>}
                       {r && picked && !r.ok && <span className="ml-auto text-sm font-semibold">{t('Sizning javobingiz')}</span>}
                     </label>
@@ -122,7 +123,7 @@ export default function Quiz() {
                 })}
               </div>
               {r && !r.ok && r.chosen < 0 && <p className="text-sm font-medium text-amber-700">{t('Javob berilmagan')}</p>}
-              {r?.explanation && <p className="text-sm text-slate-700"><b>{t('Izoh')}:</b> {r.explanation}</p>}
+              {r?.explanation && <p className="text-sm leading-relaxed text-slate-700"><b>{t('Izoh')}:</b> <Inline text={r.explanation} /></p>}
               {r && !r.ok && r.chosen >= 0 && quiz.ai && <Explain quizId={quiz._id} question={q} chosen={r.chosen} />}
             </li>
           );
