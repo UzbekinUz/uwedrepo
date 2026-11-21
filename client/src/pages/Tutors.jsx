@@ -56,7 +56,7 @@ export default function Tutors() {
 
       <ErrorBox error={error} />
       {loading ? <Spinner /> : !data?.length ? <Empty>{t("Bu fandan hali repetitor yo'q.")}</Empty> : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.map((x) => <TutorCard key={x._id} t={x} />)}</div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.map((x) => <TutorCard key={x._id} t={x} />)}</div>
       )}
     </>
   );

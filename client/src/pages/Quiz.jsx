@@ -51,7 +51,7 @@ function TutorCta({ subject }) {
         <p className="mt-1 text-slate-700">{t("Xato qilgan savollaringizni repetitor bilan bir darsda tushunib oling. Birinchi darsga chegirma bor.")}</p>
       </div>
       {data?.length ? (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.slice(0, 3).map((x) => <TutorCard key={x._id} t={x} />)}</div>
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{data.slice(0, 3).map((x) => <TutorCard key={x._id} t={x} />)}</div>
       ) : data && <p className="text-sm text-slate-600">{t("Bu fandan hali repetitor yo'q.")}</p>}
       <Link to={`/tutors?subject=${subject._id}`} className="btn-primary">{t('{s} repetitorlarini ko\'rish', { s: subject.name })}</Link>
     </section>

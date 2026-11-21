@@ -88,7 +88,7 @@ export default function SubjectDetail() {
         ) : <span className="chip bg-white/10 text-slate-300">{t("Telegram guruh hali yo'q")}</span>}
       </PageTitle>
       <Tabs tabs={tabs} value={tab} onChange={setTab} />
-      {tab === 'tutors' && (tutors.length ? <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
+      {tab === 'tutors' && (tutors.length ? <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">{tutors.map((x) => <TutorCard key={x._id} t={x} />)}</div> : <Empty>{t("Bu fandan repetitor yo'q.")} <Link to="/tutor" className="text-brand-600 underline">{t("Repetitor bo'ling")}</Link></Empty>)}
       {tab === 'topics' && (
         <div className="card p-5 sm:p-6">
           <p className="mb-4 text-sm text-slate-600">{t("Fan sillabusidagi mavzular ketma-ketligi. Qaysi mavzu qiyin bo'lsa, shu fan repetitoridan so'rang yoki mashq testini yeching.")}</p>
@@ -121,7 +121,7 @@ export default function SubjectDetail() {
         </div>
       ) : <Empty>{t("Bu fandan hali mashq testi yo'q.")}</Empty>)}
       {tab === 'materials' && <div className="space-y-6"><MaterialList items={materials} /><MaterialForm subjectId={subject._id} onDone={() => setReload((n) => n + 1)} /></div>}
-      {tab === 'exams' && (exams.length ? <div className="grid gap-3 md:grid-cols-2">{exams.map((e) => <ExamRow key={e._id} e={{ ...e, subject }} />)}</div> : <Empty>{t('Nazorat sanalari hali kiritilmagan.')}</Empty>)}
+      {tab === 'exams' && (exams.length ? <div className="grid grid-cols-1 gap-3 md:grid-cols-2">{exams.map((e) => <ExamRow key={e._id} e={{ ...e, subject }} />)}</div> : <Empty>{t('Nazorat sanalari hali kiritilmagan.')}</Empty>)}
     </>
   );
 }
