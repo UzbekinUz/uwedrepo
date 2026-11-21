@@ -44,7 +44,7 @@ export default function Calendar() {
           {groups.map((g) => (
             <section key={g.key}>
               <h2 className="mb-4 text-3xl font-extrabold capitalize tracking-[-0.02em] text-slate-900 sm:text-4xl">{g.label}</h2>
-              <div className="grid gap-3 md:grid-cols-2">{g.items.map((e) => <ExamRow key={e._id} e={e} />)}</div>
+              <div className="grid grid-cols-1 gap-3 md:grid-cols-2">{g.items.map((e) => <ExamRow key={e._id} e={e} />)}</div>
             </section>
           ))}
         </div>

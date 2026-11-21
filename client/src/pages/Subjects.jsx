@@ -29,7 +29,7 @@ export default function Subjects() {
       {loading ? <Spinner /> : !data?.length ? (
         <Empty>{t("Bu kurs uchun fanlar hali kiritilmagan. Admin panel orqali qo'shiladi.")}</Empty>
       ) : (
-        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {data.map((s) => (
             <Link key={s._id} to={`/subjects/${s._id}`} className="card-link flex min-h-[11rem] flex-col p-6">
               <div className="flex items-start justify-between gap-2">

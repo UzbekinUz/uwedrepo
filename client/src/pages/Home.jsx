@@ -248,7 +248,7 @@ export default function Home() {
               <Link to="/calendar" className="text-base font-semibold text-brand-700 hover:underline">{t('Barchasi →')}</Link>
             </div>
             {exams.loading ? <Spinner /> : (
-              <Stagger className="grid gap-3 md:grid-cols-2">
+              <Stagger className="grid grid-cols-1 gap-3 md:grid-cols-2">
                 {exams.data?.slice(0, 4).map((e) => <Item key={e._id}><ExamRow e={e} /></Item>)}
                 {!exams.data?.length && <div className="card p-8 text-base text-slate-600 md:col-span-2">{t('Hozircha nazorat sanalari kiritilmagan.')}</div>}
               </Stagger>
@@ -260,7 +260,7 @@ export default function Home() {
               <h2 className={h2}>{t('Nazoratga tayyorlaning')}</h2>
               <p className="mt-3 max-w-2xl text-lg text-slate-600">{t("Mashq testini yeching: natija darhol chiqadi, xato qilgan savollaringiz izohi bilan ko'rinadi.")}</p>
             </div>
-            <Stagger className="grid gap-3 md:grid-cols-2">
+            <Stagger className="grid grid-cols-1 gap-3 md:grid-cols-2">
               {quizzes.data.slice(0, 4).map((q) => (
                 <Item key={q._id}>
                   <Link to={`/quizzes/${q._id}`} className="card-link group flex h-full items-center gap-5 p-6">
@@ -353,7 +353,7 @@ export default function Home() {
           <Link to="/tutors" className="text-base font-semibold text-brand-700 hover:underline">{t('Barchasi →')}</Link>
         </div>
         {tutors.loading ? <Spinner /> : (
-          <Stagger className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <Stagger className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {tutors.data?.slice(0, 3).map((x) => <Item key={x._id}><motion.div whileHover={{ y: -6 }} transition={{ type: 'spring', stiffness: 300, damping: 20 }} className="h-full"><TutorCard t={x} /></motion.div></Item>)}
             {!tutors.data?.length && <div className="card p-8 text-base text-slate-600 sm:col-span-3">{t("Bu kurs uchun repetitorlar hali yo'q.")} <Link to="/tutor" className="font-semibold text-brand-700 underline">{t("Birinchi bo'ling!")}</Link></div>}
           </Stagger>
