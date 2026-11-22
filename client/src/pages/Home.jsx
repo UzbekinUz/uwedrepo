@@ -173,7 +173,7 @@ export default function Home() {
       {/* 1. Hero */}
       <section className="relative overflow-hidden bg-field text-white">
         <HeroBg />
-        <div className={`${wrap} relative grid gap-12 py-14 sm:py-20 lg:grid-cols-[1.35fr_1fr] lg:items-center lg:gap-14`}>
+        <div className={`${wrap} relative grid grid-cols-1 gap-12 py-14 sm:py-20 lg:grid-cols-[minmax(0,1.35fr)_minmax(0,1fr)] lg:items-center lg:gap-14`}>
           <motion.div initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7, ease: [0.22, 1, 0.36, 1] }}>
             <span className="inline-flex items-center gap-2 rounded-full bg-white/[0.08] px-3.5 py-1.5 text-sm font-medium text-brand-100 ring-1 ring-white/10">
               <span className="h-2 w-2 animate-pulse rounded-full bg-brand-300" />{t('Pilot · talabalar uchun bepul')}

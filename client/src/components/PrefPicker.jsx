@@ -10,7 +10,7 @@ export default function PrefPicker({ compact = false }) {
   const set = (patch) => savePref({ faculty, year: year || 1, ...patch });
   return (
     <div className={`flex flex-wrap gap-2 ${compact ? '' : 'sm:gap-3'}`}>
-      <select className="input !w-auto min-w-[14rem] flex-1" value={faculty} onChange={(e) => set({ faculty: e.target.value })} aria-label={t('Fakultet')}>
+      <select className="input !w-auto min-w-[14rem] max-w-full flex-1" value={faculty} onChange={(e) => set({ faculty: e.target.value })} aria-label={t('Fakultet')}>
         <option value="" disabled>{t('Fakultetni tanlang')}</option>
         {meta.faculties.map((f) => <option key={f.key} value={f.key}>{t(f.name)}</option>)}
       </select>
