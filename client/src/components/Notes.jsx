@@ -23,17 +23,22 @@ import { Inline } from './MathText.jsx';
  *   Bloklar ichma-ich bo'lishi mumkin (masalan, misol yechimi ichida grafik)
  * Qator ichida:
  *   **qalin**, `formula`, {surat|maxraj} — kasr (ichma-ich ham bo'ladi), ^{daraja} yoki x^2, _{indeks}, lim_{x→a}
+ *   [[1 2; 3 4]] matritsa, [[3; 4]] ustun-vektor, [|1 2; 3 4|] determinant, [:x + y = 2; x − y = 0:] sistema
+ *   (to'liq qoidalar MathText.jsx dagi grid() izohida)
  */
 
 
-/** Jadval qatorini katakchalarga bo'lish: {…} ichidagi | (kasr) bo'luvchi emas */
+/** Jadval qatorini katakchalarga bo'lish: {…} ichidagi | (kasr) va [|…|] determinant bo'luvchi emas */
 function splitRow(r) {
   const cells = [];
-  let d = 0, cur = '';
-  for (const ch of r) {
+  let d = 0, det = false, cur = '';
+  for (let i = 0; i < r.length; i++) {
+    const ch = r[i];
     if (ch === '{') d++;
     if (ch === '}') d--;
-    if (ch === '|' && d === 0) { cells.push(cur.trim()); cur = ''; } else cur += ch;
+    if (d === 0 && !det && ch === '[' && r[i + 1] === '|') { det = true; cur += '[|'; i++; continue; }
+    if (d === 0 && det && ch === '|' && r[i + 1] === ']') { det = false; cur += '|]'; i++; continue; }
+    if (ch === '|' && d === 0 && !det) { cells.push(cur.trim()); cur = ''; } else cur += ch;
   }
   cells.push(cur.trim());
   return cells;
