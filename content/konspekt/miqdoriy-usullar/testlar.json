@@ -1,0 +1,93 @@
+[
+  {
+    "title": "Matritsalar, determinantlar va tenglamalar sistemasi: 15 savol",
+    "description": "1–4-mavzular: matritsa amallari, rang, determinant, teskari matritsa, Kramer, Gauss, Kroneker–Kapelli, FYS. Har savolda izoh.",
+    "questions": [
+      {"text": "A — 3 × 2, B — 2 × 4 matritsa. AB ning o'lchami qanday?", "options": ["2 × 2", "3 × 4", "4 × 3", "Ko'paytirib bo'lmaydi"], "correct": 1, "explanation": "Ichki o'lchamlar teng (2 = 2), natija tashqi o'lchamlardan olinadi: 3 × 4."},
+      {"text": "A = (1 2; 3 4), B = (0 −1; 2 5). AB ning birinchi qatori?", "options": ["(4 9)", "(0 −2)", "(2 4)", "(−3 −4)"], "correct": 0, "explanation": "1·0 + 2·2 = 4, 1·(−1) + 2·5 = 9."},
+      {"text": "(AB)^{T} nimaga teng?", "options": ["A^{T}B^{T}", "B^{T}A^{T}", "BA", "AB"], "correct": 1, "explanation": "Transponirlashda ko'paytuvchilar tartibi almashadi."},
+      {"text": "(1 2 3; 2 4 7; 1 2 4) matritsaning rangi?", "options": ["1", "2", "3", "0"], "correct": 1, "explanation": "Pog'onali ko'rinish: (1 2 3; 0 0 1; 0 0 0) — noldan farqli qatorlar 2 ta."},
+      {"text": "det (3 5; 2 4) = ?", "options": ["22", "2", "−2", "7"], "correct": 1, "explanation": "3·4 − 5·2 = 12 − 10 = 2."},
+      {"text": "det (2 1 3; 0 −1 4; 1 2 1) = ?", "options": ["11", "−11", "−7", "5"], "correct": 1, "explanation": "1-ustun bo'yicha: 2·(−1 − 8) + 1·(4 + 3) = −18 + 7 = −11."},
+      {"text": "3 × 3 matritsada det A = 2. det(3A) = ?", "options": ["6", "18", "54", "9"], "correct": 2, "explanation": "Har bir qatordan 3 chiqadi: 3^3·2 = 54."},
+      {"text": "Ikki qator o'rni almashtirilsa, determinant...", "options": ["o'zgarmaydi", "ishorasini o'zgartiradi", "nolga aylanadi", "ikki baravar oshadi"], "correct": 1, "explanation": "Determinantning 2-xossasi."},
+      {"text": "(2 1; 5 3)^{−1} = ?", "options": ["(3 −1; −5 2)", "(3 1; 5 2)", "(−3 1; 5 −2)", "(2 −1; −5 3)"], "correct": 0, "explanation": "det = 6 − 5 = 1; (a b; c d)^{−1} = {1|ad − bc}·(d −b; −c a)."},
+      {"text": "Kramer: 2x + y = 5; x − 3y = −8. x = ?", "options": ["3", "−1", "1", "2"], "correct": 2, "explanation": "Δ = −7, Δ_{x} = det(5 1; −8 −3) = −7, x = 1 (y = 3)."},
+      {"text": "Sistemada r(A) = 2, r(A ∣ B) = 3. Sistema...", "options": ["yagona yechimga ega", "cheksiz ko'p yechimga ega", "birgalikda emas", "bir jinsli"], "correct": 2, "explanation": "Kroneker–Kapelli: ranglar teng bo'lmasa, yechim yo'q."},
+      {"text": "4 noma'lumli birgalikdagi sistemada r(A) = r(A ∣ B) = 3. Erkin noma'lumlar soni?", "options": ["0", "1", "3", "4"], "correct": 1, "explanation": "n − r = 4 − 3 = 1 ta erkin noma'lum — cheksiz ko'p yechim."},
+      {"text": "Gauss usulida pog'onali matritsada (0 0 0 ∣ 5) qatori chiqdi. Xulosa?", "options": ["x_{3} = 5", "Yechim yo'q", "Cheksiz ko'p yechim", "Bu qatorni tashlab yuboramiz"], "correct": 1, "explanation": "0 = 5 — ziddiyat, r(A ∣ B) > r(A)."},
+      {"text": "Kvadrat bir jinsli sistema notrivial yechimga ega bo'lishi uchun...", "options": ["det A ≠ 0", "det A = 0", "A simmetrik", "b ≠ 0"], "correct": 1, "explanation": "AX = 0 notrivial yechimga ega ⇔ r(A) < n ⇔ det A = 0."},
+      {"text": "x_{1} + 2x_{2} − x_{3} = 0, x_{1} + x_{2} + x_{3} = 0 sistemasining FYS vektori?", "options": ["(1; 1; 1)", "(−3; 2; 1)", "(3; 2; 1)", "(0; 0; 0)"], "correct": 1, "explanation": "x_{2} = 2x_{3}, x_{1} = −3x_{3}; x_{3} = 1 da (−3; 2; 1). Tekshiruv: −3 + 4 − 1 = 0, −3 + 2 + 1 = 0."}
+    ]
+  },
+  {
+    "title": "Xos qiymatlar va Leontyev modeli: 10 savol",
+    "description": "5–6-mavzular: xarakteristik tenglama, diagonallashtirish, Markov zanjiri, tarmoqlararo balans, mahsuldorlik, narx modeli.",
+    "questions": [
+      {"text": "A = (4 1; 2 3) ning xos sonlari?", "options": ["4 va 3", "5 va 2", "7 va 10", "1 va 6"], "correct": 1, "explanation": "λ^2 − 7λ + 10 = 0 ⇒ λ = 5; 2."},
+      {"text": "A = (4 1; 2 3) da λ = 5 ga mos xos vektor?", "options": ["(1; 1)", "(1; −2)", "(2; 1)", "(0; 1)"], "correct": 0, "explanation": "A(1; 1) = (5; 5) = 5·(1; 1)."},
+      {"text": "2 × 2 matritsada tr A = 6, det A = 8. Xos sonlar?", "options": ["2 va 4", "1 va 8", "3 va 3", "−2 va −4"], "correct": 0, "explanation": "λ^2 − 6λ + 8 = 0 ⇒ 2 va 4 (yig'indi — iz, ko'paytma — determinant)."},
+      {"text": "Qaysi matritsaning haqiqiy xos sonlari yo'q?", "options": ["(2 0; 0 3)", "(0 −1; 1 0)", "(1 2; 2 1)", "(2 1; 0 2)"], "correct": 1, "explanation": "λ^2 + 1 = 0 ⇒ λ = ±i (90° ga burish)."},
+      {"text": "A = PDP^{−1} bo'lsa, A^{5} = ?", "options": ["P^{5}D^{5}P^{−5}", "PD^{5}P^{−1}", "D^{5}", "5PDP^{−1}"], "correct": 1, "explanation": "O'rtadagi P^{−1}P lar qisqaradi."},
+      {"text": "O'tish matritsasi P = (0,9 0,1; 0,2 0,8). Uzoq muddatda 1-brend ulushi?", "options": ["50%", "{2|3}", "{1|3}", "90%"], "correct": 1, "explanation": "0,1π_{1} = 0,2π_{2} ⇒ π_{1} = 2π_{2}, π_{1} = {2|3}."},
+      {"text": "Leontyev modelida yalpi mahsulot formulasi?", "options": ["X = AY", "X = (E − A)Y", "X = (E − A)^{−1}Y", "X = A^{−1}Y"], "correct": 2, "explanation": "X = AX + Y ⇒ (E − A)X = Y ⇒ X = (E − A)^{−1}Y."},
+      {"text": "A = (0,2 0,3; 0,4 0,1), Y = (120; 180). x_{1} = ?", "options": ["240", "270", "300", "320"], "correct": 1, "explanation": "B = (1,5 0,5; 0,667 1,333); x_{1} = 1,5·120 + 0,5·180 = 270 (x_{2} = 320)."},
+      {"text": "Shu modelda 1-tarmoq yakuniy talabi 30 ga oshsa, 2-tarmoq yalpi mahsuloti qanchaga oshadi?", "options": ["0", "10", "20", "30"], "correct": 2, "explanation": "ΔX = BΔY: Δx_{2} = 0,667·30 = 20 — bilvosita ta'sir."},
+      {"text": "Texnologik matritsa mahsuldor bo'lishining yetarli sharti?", "options": ["det A = 0", "A ning ustun elementlari yig'indisi 1 dan kichik", "A simmetrik", "A ning barcha elementlari 1 dan katta"], "correct": 1, "explanation": "Ustun yig'indilari < 1 bo'lsa, (E − A)^{−1} ≥ 0 — model mahsuldor."}
+    ]
+  },
+  {
+    "title": "Chiziqli dasturlash: model, grafik va simpleks usul, ikki yoqlamalik: 12 savol",
+    "description": "7–9-mavzular: model tuzish, joiz va optimal yechim, simpleks jadval, M usul, ikki yoqlama masala va soya narxlari.",
+    "questions": [
+      {"text": "Qaysi cheklov chiziqli dasturlash modeliga kira olmaydi?", "options": ["2x_{1} + 3x_{2} ≤ 12", "x_{1} − x_{2} ≥ 0", "x_{1}x_{2} ≤ 8", "x_{1} = 5"], "correct": 2, "explanation": "O'zgaruvchilar ko'paytmasi — nochiziqli."},
+      {"text": "Ikki o'zgaruvchili ChD masalasining optimal yechimi (mavjud bo'lsa) qayerda yotadi?", "options": ["Joiz soha markazida", "Joiz soha uchlaridan birida", "Faqat o'qlarda", "Koordinata boshida"], "correct": 1, "explanation": "ChDning asosiy teoremasi."},
+      {"text": "Z = 30x_{1} + 20x_{2} → max; 2x_{1} + x_{2} ≤ 100; x_{1} + x_{2} ≤ 80; x_{1} ≤ 40. Z_{max} = ?", "options": ["1 600", "1 800", "2 000", "1 200"], "correct": 1, "explanation": "Optimal uch (20; 60): 600 + 1 200 = 1 800."},
+      {"text": "Z = 3x + 2y → max; x + y ≤ 4; x + 3y ≤ 6; x, y ≥ 0. Optimum?", "options": ["(3; 1)", "(0; 2)", "(4; 0)", "(2; 2)"], "correct": 2, "explanation": "Uchlar: (0;0) — 0, (4;0) — 12, (3;1) — 11, (0;2) — 4."},
+      {"text": "Simpleks usulda bazisga kiruvchi o'zgaruvchi (max masala) qanday tanlanadi?", "options": ["Z-qatordagi eng manfiy son ustuni", "b ustunidagi eng katta son", "Eng kichik nisbat", "Ixtiyoriy"], "correct": 0, "explanation": "Z-qatordagi (−c_{j}) eng manfiy son — Z ni eng tez oshiradigan o'zgaruvchi."},
+      {"text": "Nisbatlar: 100/2, 80/1, 40/1. Qaysi qator hal qiluvchi?", "options": ["1-qator (50)", "2-qator (80)", "3-qator (40)", "Hech qaysi"], "correct": 2, "explanation": "Eng kichik musbat nisbat — 40."},
+      {"text": "Hal qiluvchi ustunda birorta ham musbat element yo'q. Xulosa?", "options": ["Yechim optimal", "Joiz yechim yo'q", "Maqsad funksiyasi chegaralanmagan", "Jadvalda xato"], "correct": 2, "explanation": "Kiruvchi o'zgaruvchini cheksiz oshirish mumkin."},
+      {"text": "x_{1} + x_{2} ≥ 4 cheklovi M usulida qanday yoziladi?", "options": ["x_{1} + x_{2} + s_{1} = 4", "x_{1} + x_{2} − s_{1} + R_{1} = 4", "x_{1} + x_{2} − s_{1} = 4", "x_{1} + x_{2} + R_{1} = 4"], "correct": 1, "explanation": "«≥» da ortiqcha o'zgaruvchi ayiriladi va bazis uchun sun'iy R qo'shiladi."},
+      {"text": "Boshlang'ich masala: max, 3 ta «≤» cheklov, 2 ta o'zgaruvchi. Ikki yoqlamada nechta o'zgaruvchi?", "options": ["2", "3", "5", "6"], "correct": 1, "explanation": "Har bir cheklovga bitta ikki yoqlama o'zgaruvchi mos keladi."},
+      {"text": "Optimumda resursning 12 birligi ishlatilmay qoldi. Uning soya narxi?", "options": ["12", "0", "Manfiy", "1"], "correct": 1, "explanation": "To'ldiruvchi bo'shliq: bo'sh resursning qo'shimcha birligi foyda bermaydi."},
+      {"text": "Mebel masalasida yog'och soya narxi 10, amal qilish oralig'i 80 ≤ b_{1} ≤ 120. b_{1} = 110 da Z_{max} = ?", "options": ["1 800", "1 900", "2 000", "1 700"], "correct": 1, "explanation": "1 800 + 10·(110 − 100) = 1 900."},
+      {"text": "Boshlang'ich masalada Z_{max} = 750. Ikki yoqlamada W_{min} = ?", "options": ["750", "−750", "0", "Aniqlab bo'lmaydi"], "correct": 0, "explanation": "Ikki yoqlamalikning birinchi teoremasi: optimal qiymatlar teng."}
+    ]
+  },
+  {
+    "title": "Butun sonli dasturlash, transport va tayinlash masalalari: 12 savol",
+    "description": "10–12-mavzular: yaxlitlash, shoxlar va chegaralar, 0–1 modellar, shimoli-g'arb va minimal xarajat usullari, potensiallar, ochiq masala, Venger usuli.",
+    "questions": [
+      {"text": "Max BSD masalasida relaksatsiya qiymati 21. Butun optimum haqida nima deyish mumkin?", "options": ["Z = 21", "Z ≤ 21", "Z ≥ 21", "Z = 22"], "correct": 1, "explanation": "Butunlik sharti joiz sohani toraytiradi — natija yaxshilanmaydi."},
+      {"text": "x_{1} = 3,4 bo'yicha shoxlash qanday?", "options": ["x_{1} ≤ 3,4 va x_{1} ≥ 3,4", "x_{1} ≤ 3 va x_{1} ≥ 4", "x_{1} = 3 va x_{1} = 4", "x_{1} ≤ 4 va x_{1} ≥ 3"], "correct": 1, "explanation": "Kasr qiymatlar (3; 4) oralig'i chiqarib tashlanadi."},
+      {"text": "Z = 5x_{1} + 4x_{2} → max; 6x_{1} + 4x_{2} ≤ 24; x_{1} + 2x_{2} ≤ 6; butun. Optimum?", "options": ["(3; 1), Z = 19", "(3; 2), Z = 23", "(4; 0), Z = 20", "(2; 2), Z = 18"], "correct": 2, "explanation": "(3; 2) joiz emas; butun nuqtalar ichida eng yaxshisi (4; 0) — yaxlitlangan (3; 1) dan yaxshi."},
+      {"text": "Byudjet 10: A (narx 4, foyda 6), B (3; 4), C (5; 7), D (2; 3). Eng yaxshi to'plam?", "options": ["A + C", "A + B + D", "B + C + D", "A + C + D"], "correct": 2, "explanation": "B + C + D: narx 10, foyda 14. A + C + D byudjetdan oshadi."},
+      {"text": "5 ta ta'minotchi va 4 ta iste'molchi. Tayanch rejada band kataklar soni?", "options": ["9", "8", "20", "4"], "correct": 1, "explanation": "m + n − 1 = 5 + 4 − 1 = 8."},
+      {"text": "Zaxiralar 300, talablar 250. Nima qo'shiladi?", "options": ["Fiktiv ta'minotchi, 50", "Fiktiv iste'molchi, 50", "Hech narsa", "Ikki fiktiv punkt"], "correct": 1, "explanation": "Ortiqcha yuk fiktiv iste'molchiga (narx 0) «yuboriladi» — aslida omborda qoladi."},
+      {"text": "Potensiallar usulida bo'sh katak uchun Δ_{ij} = c_{ij} − (u_{i} + v_{j}) = −2. Bu nima?", "options": ["Reja optimal", "Rejani yaxshilash mumkin", "Katak taqiqlangan", "Masala ochiq"], "correct": 1, "explanation": "Shu katakka yuk o'tkazish har birlikda 2 ga arzonlashtiradi."},
+      {"text": "Zaxira (30; 40; 30), talab (25; 35; 40), narxlar (4 6 8; 5 3 7; 9 4 2). Shimoli-g'arb rejasi xarajati?", "options": ["340", "350", "360", "300"], "correct": 1, "explanation": "25·4 + 5·6 + 30·3 + 10·7 + 30·2 = 350."},
+      {"text": "Shu masalaning minimal xarajati?", "options": ["320", "330", "340", "350"], "correct": 2, "explanation": "Minimal xarajat usuli 340 beradi va potensiallar bilan barcha Δ_{ij} ≥ 0 — optimal."},
+      {"text": "A_{1} → B_{2} yo'nalishi yopiq. Jadvalga qanday narx yoziladi?", "options": ["0", "M (juda katta son)", "−1", "O'rtacha narx"], "correct": 1, "explanation": "M optimal rejada bu katakni bo'sh qoldirishga majbur qiladi."},
+      {"text": "Tayinlash (9 2 7; 6 4 3; 5 8 1) ning minimal xarajati?", "options": ["9", "10", "14", "12"], "correct": 0, "explanation": "X_{1} → L_{2} (2), X_{2} → L_{1} (6), X_{3} → L_{3} (1): jami 9."},
+      {"text": "Venger usulining birinchi ikki qadami?", "options": ["Eng katta elementni ayirish", "Qator va ustun minimumlarini ayirish", "Diagonalni nolga aylantirish", "Matritsani transponirlash"], "correct": 1, "explanation": "Avval har bir qatordan, keyin har bir ustundan eng kichik element ayiriladi."}
+    ]
+  },
+  {
+    "title": "Nochiziqli dasturlash: kvadratik formalar, shartsiz va shartli ekstremum: 12 savol",
+    "description": "13–15-mavzular: NChD xususiyatlari, qavariqlik, Silvestr mezoni, Gesse matritsasi, yo'qotish usuli, Lagranj usuli va λ ma'nosi.",
+    "questions": [
+      {"text": "Qaysi xususiyat nochiziqli dasturlashga xos?", "options": ["Optimum faqat uchlarda", "Optimum soha ichida ham bo'lishi mumkin", "Simpleks usul doim ishlaydi", "Joiz soha doim ko'pburchak"], "correct": 1, "explanation": "Masalan, monopolist foydasi maksimumi ichki nuqtada."},
+      {"text": "p = 50 − 2q, C = 10q. Foydani maksimallashtiruvchi q?", "options": ["5", "10", "12,5", "20"], "correct": 1, "explanation": "π = 40q − 2q^2, π' = 40 − 4q = 0 ⇒ q = 10 (p = 30, π = 200)."},
+      {"text": "Qaysi funksiya qavariq (pastga qavariq)?", "options": ["√x", "ln x", "x^2 + 1", "−x^2"], "correct": 2, "explanation": "Ikkinchi hosila 2 > 0."},
+      {"text": "Q = 3x^2 − 4xy + 5y^2 ning simmetrik matritsasi?", "options": ["(3 −4; −4 5)", "(3 −2; −2 5)", "(3 2; 2 5)", "(3 −4; 0 5)"], "correct": 1, "explanation": "xy koeffitsiyentining yarmi (−2) ikkala joyga yoziladi."},
+      {"text": "Q = 2x^2 + 2xy + 3y^2 qanday?", "options": ["Musbat aniqlangan", "Manfiy aniqlangan", "Noaniq", "Yarim aniqlangan"], "correct": 0, "explanation": "Δ_{1} = 2 > 0, Δ_{2} = 6 − 1 = 5 > 0."},
+      {"text": "Bosh minorlar: Δ_{1} = −2, Δ_{2} = 5, Δ_{3} = −9. Forma?", "options": ["Musbat aniqlangan", "Manfiy aniqlangan", "Noaniq", "Aniqlab bo'lmaydi"], "correct": 1, "explanation": "Ishoralar −, +, − almashinadi — Silvestr mezoni."},
+      {"text": "f = x^2 + xy + y^2 − 6x − 9y ning statsionar nuqtasi?", "options": ["(1; 4)", "(3; 3)", "(2; 3)", "(4; 1)"], "correct": 0, "explanation": "2x + y = 6, x + 2y = 9 ⇒ (1; 4); Gesse musbat aniqlangan — minimum, f = −21."},
+      {"text": "Statsionar nuqtada f_{xx} = 2, f_{yy} = 3, f_{xy} = 4. Bu nuqta...", "options": ["minimum", "maksimum", "egar nuqta", "aniqlab bo'lmaydi"], "correct": 2, "explanation": "D = 2·3 − 16 = −10 < 0."},
+      {"text": "U = xy → max; 2x + 4y = 40. Optimum?", "options": ["(10; 5)", "(5; 10)", "(20; 0)", "(8; 6)"], "correct": 0, "explanation": "x = 20 − 2y, U = 20y − 2y^2 ⇒ y = 5, x = 10, U = 50."},
+      {"text": "Shu masalada Lagranj ko'paytuvchisi λ = 2,5. Byudjet 2 birlikka oshsa, U taxminan...", "options": ["2,5 ga oshadi", "5 ga oshadi", "o'zgarmaydi", "2,5 ga kamayadi"], "correct": 1, "explanation": "ΔU* ≈ λ·Δb = 2,5·2 = 5."},
+      {"text": "C = x^2 + 2y^2 → min; x + y = 6. Optimum?", "options": ["(3; 3)", "(4; 2)", "(2; 4)", "(6; 0)"], "correct": 1, "explanation": "2x = λ, 4y = λ ⇒ x = 2y; x + y = 6 ⇒ (4; 2), C = 24."},
+      {"text": "U = xy → max; x + y ≤ 10; y ≤ 3. Optimum?", "options": ["(5; 5)", "(7; 3)", "(10; 0)", "(3; 7)"], "correct": 1, "explanation": "(5; 5) da y ≤ 3 buziladi — cheklov faol: y = 3, x = 7, U = 21."}
+    ]
+  }
+]

@@ -13,3 +13,5 @@ yangilash: `PUT /api/admin/materials/:id`.
 
 - `hisoblash-1/` — Hisoblash 1 (XIM, 1-kurs), 15 mavzu. Manba: Moodle'dagi seminar fayllari
   (CALC_S1–S11, Thomas «Calculus» asosida) va ma'ruzalar (1-mavzu ketma-ketlik, 9-mavzu U. Dalabayev).
+- `miqdoriy-usullar/` — Iqtisodiyotda miqdoriy usullar (XIM, 2-kurs), 15 mavzu + `testlar.json` (5 ta mashq testi, 61 savol;
+  `POST /api/quizzes` uchun). Manba: Moodle'dagi ma'ruza rejalari (IMU_M1–M14, Umarova Sh.G.); 13-mavzu uchun Moodle'da fayl yo'q.
