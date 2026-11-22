@@ -8,6 +8,19 @@ Yozish qoidalari `client/src/components/Notes.jsx` boshida: `## sarlavha`, `$$ f
 `::: maqsad|hayot|oddiy|tushuncha|formula|teorema|eslatma|xato|xulosa`, `::: misol` (yechim `---` dan keyin),
 `::: test` (`? savol`, `- variant`, `+ to'g'ri`, `> izoh`), `::: mashq` (`savol || javob`), `::: grafik` (Plot.jsx).
 
+Matritsa va sistemalar (`MathText.jsx`, konspektlarda ham, testlarda ham ishlaydi):
+
+| Yozuv | Ko'rinishi |
+|---|---|
+| `[[1 2; 3 4]]` | matritsa (qavs ichida; qatorlar `;`, elementlar bo'sh joy bilan) |
+| `[[3; 4]]`, `[[2 1]]` | ustun-vektor, satr-vektor |
+| `[[a + b & c; d & e − f]]` | elementda bo'sh joy bo'lsa — ustunlar `&` bilan |
+| `[[1 1 ∣ 2; 0 0 ∣ 1]]` | kengaytirilgan matritsa (`∣` — chiziq) |
+| `[\|a b; c d\|]` | determinant |
+| `[:x + y = 2; x − y = 0:]` | tenglamalar sistemasi (figurali qavs bilan) |
+
+Nuqtalar (chiziqli dasturlashdagi `(20; 60)`) oddiy yozuvda qoladi.
+
 Saytga yuklash: admin sifatida `POST /api/admin/materials` (`subject`, `title`, `body`, `order`),
 yangilash: `PUT /api/admin/materials/:id`.
 
