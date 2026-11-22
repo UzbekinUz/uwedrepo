@@ -141,7 +141,16 @@ function inline(str, key = 'k') {
       const kind = str[i + 1];
       const token = kind === '[' ? ']]' : `${kind}]`;
       const e = closeGrid(str, i + 2, token);
-      if (e > i + 2) { push(grid(kind, str.slice(i + 2, e), k)); i = e + 2; continue; }
+      if (e > i + 2) {
+        const g = grid(kind, str.slice(i + 2, e), k);
+        // [[…]]^{−1} — daraja matritsadan ajralib keyingi qatorga tushmasin
+        const pe = str[e + 2] === '^' && str[e + 3] === '{' ? closeBrace(str, e + 3) : -1;
+        if (pe > 0) {
+          push(<span key={k + 'p'} className="inline-flex items-start whitespace-nowrap align-middle">{g}<span className="-ml-0.5 text-[0.72em] leading-none">{inline(str.slice(e + 4, pe), k + 's')}</span></span>);
+          i = pe + 1; continue;
+        }
+        push(g); i = e + 2; continue;
+      }
     }
     if (c === '{') {
       const e = closeBrace(str, i);
