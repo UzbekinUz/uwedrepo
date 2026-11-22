@@ -23,10 +23,10 @@ export default function Materials() {
       <PageTitle title={t("O'quv materiallari")} sub={t("Konspekt, test, video va imtihon savollari — fanlar bo'yicha")} />
       <div className="mb-6 flex flex-wrap gap-3">
         <PrefPicker compact />
-        <select className="input !w-auto" value={subject} onChange={(e) => setSubject(e.target.value)} aria-label={t('Fan')}>
+        <select className="input !w-auto max-w-full" value={subject} onChange={(e) => setSubject(e.target.value)} aria-label={t('Fan')}>
           <option value="">{t('Barcha fanlar')}</option>{subjects.data?.map((s) => <option key={s._id} value={s._id}>{s.name}</option>)}
         </select>
-        <select className="input !w-auto" value={type} onChange={(e) => setType(e.target.value)} aria-label={t('Turi')}>
+        <select className="input !w-auto max-w-full" value={type} onChange={(e) => setType(e.target.value)} aria-label={t('Turi')}>
           <option value="">{t('Barcha turlar')}</option>{meta.materialTypes.map((x) => <option key={x} value={x}>{MATERIAL_LABEL[x]}</option>)}
         </select>
       </div>

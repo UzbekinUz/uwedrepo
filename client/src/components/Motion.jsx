@@ -30,7 +30,7 @@ const PATHS = {
  *  Ota-komponent animatsiyalariga bog'liq emas: har bir chiziq o'z holatini o'zi boshqaradi. */
 export function Icon({ name, size = 28, className = '', float = false, delay = 0 }) {
   const ref = useRef(null);
-  const seen = useInView(ref, { once: true, margin: '-40px' });
+  const seen = useInView(ref, { once: true, margin: '-40px 0px' });
   const svg = (
     <motion.svg ref={ref} viewBox="0 0 24 24" width={size} height={size} fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round"
       className={className} aria-hidden="true" whileHover={{ scale: 1.12, rotate: [0, -6, 6, 0], transition: { duration: 0.5 } }}>
@@ -62,7 +62,7 @@ export function IconBadge({ name, tone = 'brand', delay = 0, size = 30 }) {
 export function Reveal({ children, delay = 0, y = 28, className = '', as = 'div' }) {
   const M = motion[as];
   return (
-    <M className={className} initial={{ opacity: 0, y }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px' }}
+    <M className={className} initial={{ opacity: 0, y }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: '-80px 0px' }}
       transition={{ duration: 0.6, delay, ease: [0.22, 1, 0.36, 1] }}>
       {children}
     </M>
@@ -73,7 +73,7 @@ const group = { hidden: {}, show: { transition: { staggerChildren: 0.09 } } };
 const item = { hidden: { opacity: 0, y: 26 }, show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.22, 1, 0.36, 1] } } };
 export function Stagger({ children, className = '', as = 'div' }) {
   const M = motion[as];
-  return <M className={className} variants={group} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px' }}>{children}</M>;
+  return <M className={className} variants={group} initial="hidden" whileInView="show" viewport={{ once: true, margin: '-60px 0px' }}>{children}</M>;
 }
 export function Item({ children, className = '', as = 'div' }) {
   const M = motion[as];
