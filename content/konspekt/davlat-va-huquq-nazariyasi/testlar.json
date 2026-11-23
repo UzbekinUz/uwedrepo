@@ -1,0 +1,338 @@
+[
+  {
+    "title": "Davlat va huquq nazariyasi: 30 savollik yakuniy mashq",
+    "description": "Barcha mavzular: fan predmeti va metodlari, davlat kelib chiqishi, tushunchasi, shakllari, funksiyalari va mexanizmi; huquq tushunchasi, manbalari, normalari, huquqiy munosabatlar, huquqni amalga oshirish, huquqbuzarlik va javobgarlik, huquq tizimi, inson huquqlari, huquqiy davlat va fuqarolik jamiyati. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "Davlat va huquq nazariyasi fanining predmeti nima?",
+        "options": [
+          "Faqat amaldagi qonunlar matni",
+          "Faqat jinoyat huquqi",
+          "Davlat va huquqning paydo bo'lishi, rivojlanishi va amal qilishining umumiy qonuniyatlari",
+          "Xalqaro shartnomalar"
+        ],
+        "correct": 2,
+        "explanation": "DHN davlat va huquqning eng umumiy qonuniyatlarini o'rganuvchi fundamental fan."
+      },
+      {
+        "text": "Turli davlatlar huquqini solishtiruvchi metod?",
+        "options": [
+          "Qiyosiy-huquqiy",
+          "Formal-yuridik",
+          "Statistik",
+          "Tarixiy"
+        ],
+        "correct": 0,
+        "explanation": "Qiyosiy-huquqiy metod turli huquqiy tizimlarni taqqoslaydi."
+      },
+      {
+        "text": "Davlat yirik sug'orish ishlarini boshqarish zaruratidan paydo bo'lgan, degan nazariya?",
+        "options": [
+          "Patriarxal",
+          "Teologik",
+          "Psixologik",
+          "Irrigatsion"
+        ],
+        "correct": 3,
+        "explanation": "K. Vittfogelning gidravlik nazariyasi."
+      },
+      {
+        "text": "Ijtimoiy shartnoma nazariyasi vakillari?",
+        "options": [
+          "Marks, Engels",
+          "Gobbs, Lokk, Russo",
+          "Gumplovich, Dyuring",
+          "Spenser, Petrajitskiy"
+        ],
+        "correct": 1,
+        "explanation": "Ular davlatni odamlar o'rtasidagi kelishuv natijasi deb tushuntirgan."
+      },
+      {
+        "text": "Davlatning asosiy belgisi qaysi?",
+        "options": [
+          "Davlat madhiyasi",
+          "Davlat mukofotlari",
+          "Suverenitet",
+          "Poytaxt"
+        ],
+        "correct": 2,
+        "explanation": "Asosiy belgilar: hudud, aholi, ommaviy hokimiyat, suverenitet, huquq, soliqlar."
+      },
+      {
+        "text": "Davlatlarni quldorlik, feodal, burjua va sotsialistik tiplarga bo'luvchi yondashuv?",
+        "options": [
+          "Formatsion",
+          "Sivilizatsion",
+          "Elitar",
+          "Teologik"
+        ],
+        "correct": 0,
+        "explanation": "Formatsion tipologiya ijtimoiy-iqtisodiy formatsiyaga asoslanadi."
+      },
+      {
+        "text": "Monarx «hukmronlik qiladi, lekin boshqarmaydi» — qaysi monarxiya?",
+        "options": [
+          "Mutlaq",
+          "Dualistik",
+          "Teokratik",
+          "Parlamentar"
+        ],
+        "correct": 3,
+        "explanation": "Masalan, Buyuk Britaniya, Yaponiya, Shvetsiya."
+      },
+      {
+        "text": "Suveren davlatlarning muayyan maqsadlar uchun vaqtinchalik ittifoqi?",
+        "options": [
+          "Federatsiya",
+          "Konfederatsiya",
+          "Unitar davlat",
+          "Avtonomiya"
+        ],
+        "correct": 1,
+        "explanation": "Konfederatsiya a'zolari suverenitetini saqlaydi."
+      },
+      {
+        "text": "O'zbekistonning boshqaruv va tuzilish shakli?",
+        "options": [
+          "Parlamentar respublika, federatsiya",
+          "Konstitutsiyaviy monarxiya, unitar davlat",
+          "Prezidentlik respublikasi, unitar davlat",
+          "Aralash respublika, konfederatsiya"
+        ],
+        "correct": 2,
+        "explanation": "Tarkibida suveren Qoraqalpog'iston Respublikasi bo'lgan unitar davlat."
+      },
+      {
+        "text": "Mamlakat mudofaasi qaysi turdagi davlat funksiyasi?",
+        "options": [
+          "Tashqi",
+          "Ichki iqtisodiy",
+          "Ijtimoiy",
+          "Fiskal"
+        ],
+        "correct": 0,
+        "explanation": "Mudofaa tashqi tahdidlardan himoyaga qaratilgan."
+      },
+      {
+        "text": "Davlat mexanizmiga kiradi, lekin davlat apparatiga kirmaydi:",
+        "options": [
+          "Vazirlar Mahkamasi",
+          "Oliy sud",
+          "Hokimlik",
+          "Davlat universiteti"
+        ],
+        "correct": 3,
+        "explanation": "Davlat muassasalari hokimiyat vakolatiga ega emas."
+      },
+      {
+        "text": "O'zbekiston Senati nechta a'zodan iborat (2023-yilgi Konstitutsiya)?",
+        "options": [
+          "100",
+          "65",
+          "150",
+          "84"
+        ],
+        "correct": 1,
+        "explanation": "56 nafari hududlardan saylanadi, 9 nafarini Prezident tayinlaydi."
+      },
+      {
+        "text": "Hokimiyatlar bo'linishi nazariyasini «Qonunlar ruhi» asarida asoslagan mutafakkir?",
+        "options": [
+          "Russo",
+          "Gobbs",
+          "Monteskye",
+          "Volter"
+        ],
+        "correct": 2,
+        "explanation": "Monteskye qonun chiqaruvchi, ijro va sud hokimiyatlarini ajratgan."
+      },
+      {
+        "text": "Huquqni boshqa ijtimoiy normalardan ajratuvchi asosiy belgi?",
+        "options": [
+          "Davlat majburlovi bilan ta'minlanishi",
+          "Yozilmaganligi",
+          "Jamoatchilik fikri bilan ta'minlanishi",
+          "Ixtiyoriyligi"
+        ],
+        "correct": 0,
+        "explanation": "Huquq normalari zarur bo'lganda davlat tomonidan majburan ta'minlanadi."
+      },
+      {
+        "text": "Inson tug'ma va ajralmas huquqlarga ega, degan nazariya?",
+        "options": [
+          "Pozitivizm",
+          "Marksizm",
+          "Psixologik nazariya",
+          "Tabiiy huquq nazariyasi"
+        ],
+        "correct": 3,
+        "explanation": "Tabiiy huquq maktabi bu huquqlarni davlatdan ustun qo'yadi."
+      },
+      {
+        "text": "Anglo-sakson huquq oilasida asosiy manba?",
+        "options": [
+          "Kodeks",
+          "Sud pretsedenti",
+          "Diniy matn",
+          "Odat"
+        ],
+        "correct": 1,
+        "explanation": "Sud qarorlari keyingi o'xshash ishlar uchun majburiy."
+      },
+      {
+        "text": "O'zbekistonda eng yuqori yuridik kuchga ega hujjat?",
+        "options": [
+          "Prezident farmoni",
+          "Vazirlar Mahkamasi qarori",
+          "Konstitutsiya",
+          "Kodeks"
+        ],
+        "correct": 2,
+        "explanation": "Konstitutsiya oliy yuridik kuchga ega, boshqa hujjatlar unga zid bo'lmasligi kerak."
+      },
+      {
+        "text": "Huquq normasining qo'llanish sharoitini ko'rsatuvchi elementi?",
+        "options": [
+          "Gipoteza",
+          "Dispozitsiya",
+          "Sanksiya",
+          "Preambula"
+        ],
+        "correct": 0,
+        "explanation": "Gipoteza — «agar» qismi."
+      },
+      {
+        "text": "Taraflar kelishuvi bilan o'zgartirilishi mumkin bo'lgan norma?",
+        "options": [
+          "Imperativ",
+          "Taqiqlovchi",
+          "Muhofaza qiluvchi",
+          "Dispozitiv"
+        ],
+        "correct": 3,
+        "explanation": "Dispozitiv norma taraflar boshqacha kelishmagan hollarda qo'llanadi."
+      },
+      {
+        "text": "Huquqiy munosabat tarkibi qaysi javobda to'g'ri?",
+        "options": [
+          "Gipoteza, dispozitsiya, sanksiya",
+          "Subyekt, obyekt, mazmun",
+          "Obyekt, ayb, jazo",
+          "Norma, institut, tarmoq"
+        ],
+        "correct": 1,
+        "explanation": "Mazmun — subyektiv huquq va yuridik majburiyat."
+      },
+      {
+        "text": "Inson irodasiga bog'liq bo'lmagan yuridik fakt?",
+        "options": [
+          "Shartnoma tuzish",
+          "Huquqbuzarlik",
+          "Hodisa",
+          "Vasiyat"
+        ],
+        "correct": 2,
+        "explanation": "Hodisalar: tug'ilish, o'lim, tabiiy ofat, vaqt o'tishi."
+      },
+      {
+        "text": "Soliq to'lash huquqni amalga oshirishning qaysi shakli?",
+        "options": [
+          "Ijro etish",
+          "Rioya qilish",
+          "Foydalanish",
+          "Qo'llash"
+        ],
+        "correct": 0,
+        "explanation": "Majburiyatni faol bajarish — ijro etish."
+      },
+      {
+        "text": "Faqat vakolatli davlat organlari amalga oshiradigan shakl?",
+        "options": [
+          "Rioya qilish",
+          "Foydalanish",
+          "Ijro etish",
+          "Qo'llash"
+        ],
+        "correct": 3,
+        "explanation": "Huquqni qo'llash — davlat-hokimiyat faoliyati."
+      },
+      {
+        "text": "Huquqbuzarlik tarkibida ayb, motiv va maqsad qaysi elementga kiradi?",
+        "options": [
+          "Obyekt",
+          "Subyektiv tomon",
+          "Obyektiv tomon",
+          "Subyekt"
+        ],
+        "correct": 1,
+        "explanation": "Subyektiv tomon — huquqbuzarning qilmishga ruhiy munosabati."
+      },
+      {
+        "text": "Ishga sababsiz kelmaslik qanday javobgarlikka olib keladi?",
+        "options": [
+          "Jinoiy",
+          "Konstitutsiyaviy",
+          "Intizomiy",
+          "Xalqaro"
+        ],
+        "correct": 2,
+        "explanation": "Mehnat intizomini buzish — intizomiy huquqbuzarlik."
+      },
+      {
+        "text": "Ayb qonuniy kuchga kirgan sud hukmi bilan isbotlanmaguncha shaxs aybsiz hisoblanadi — bu?",
+        "options": [
+          "Aybsizlik prezumpsiyasi",
+          "Muqarrarlik",
+          "Huquq analogiyasi",
+          "Kazual talqin"
+        ],
+        "correct": 0,
+        "explanation": "Aybsizlik prezumpsiyasi Konstitutsiyada mustahkamlangan."
+      },
+      {
+        "text": "O'zbekiston qaysi huquqiy oilaga mansub?",
+        "options": [
+          "Anglo-sakson",
+          "Musulmon",
+          "An'anaviy",
+          "Romano-german"
+        ],
+        "correct": 3,
+        "explanation": "Asosiy manba — normativ-huquqiy hujjatlar va kodekslar."
+      },
+      {
+        "text": "Mehnat, ta'lim, ijtimoiy ta'minot huquqlari qaysi avlodga kiradi?",
+        "options": [
+          "Birinchi",
+          "Ikkinchi",
+          "Uchinchi",
+          "To'rtinchi"
+        ],
+        "correct": 1,
+        "explanation": "Iqtisodiy, ijtimoiy va madaniy huquqlar — ikkinchi avlod."
+      },
+      {
+        "text": "Davlat organlari uchun qaysi tartibga solish turi amal qiladi?",
+        "options": [
+          "Umumruxsat etuvchi",
+          "Dispozitiv",
+          "Ruxsat beruvchi (faqat qonunda ruxsat etilgan)",
+          "Analogiya"
+        ],
+        "correct": 2,
+        "explanation": "Davlat organlari faqat qonun bergan vakolat doirasida harakat qiladi."
+      },
+      {
+        "text": "Fuqarolik jamiyati instituti qaysi?",
+        "options": [
+          "Mahalla (fuqarolarning o'zini o'zi boshqarish organi)",
+          "Vazirlar Mahkamasi",
+          "Bosh prokuratura",
+          "Konstitutsiyaviy sud"
+        ],
+        "correct": 0,
+        "explanation": "Mahalla davlat organi emas, fuqarolik jamiyati instituti."
+      }
+    ]
+  }
+]
