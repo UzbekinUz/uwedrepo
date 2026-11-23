@@ -1,0 +1,294 @@
+[
+  {
+    "title": "Jamiyat va din: 26 savollik yakuniy mashq",
+    "description": "Barcha mavzular: din tushunchasi va funksiyalari, buddizm va xristianlik, islom tarixi va manbalari, tasavvuf, diniy ekstremizm va terrorizm, dunyoviy davlat va vijdon erkinligi. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "«Jamiyat va din» fanining obyekti nima?",
+        "options": [
+          "Faqat islom dini",
+          "Davlat boshqaruvi",
+          "Din ijtimoiy hodisa sifatida",
+          "Ilohiyot"
+        ],
+        "correct": 2,
+        "explanation": "Fan dinni ijtimoiy hodisa sifatida — e'tiqod, marosim va tashkilotlar majmui sifatida o'rganadi."
+      },
+      {
+        "text": "«Religio» so'zining ma'nosi?",
+        "options": [
+          "Bog'lanish, taqvo",
+          "Ibodat",
+          "Kitob",
+          "Payg'ambar"
+        ],
+        "correct": 0,
+        "explanation": "Lotincha religio — bog'lanish, taqvo."
+      },
+      {
+        "text": "Urug'ning biror hayvon bilan qarindoshligiga ishonch qanday ataladi?",
+        "options": [
+          "Animizm",
+          "Fetishizm",
+          "Shomonlik",
+          "Totemizm"
+        ],
+        "correct": 3,
+        "explanation": "Totemizm — urug' va totem (hayvon, o'simlik) o'rtasidagi «qon-qarindoshlik» e'tiqodi."
+      },
+      {
+        "text": "Quyidagilardan qaysi biri milliy din?",
+        "options": [
+          "Buddizm",
+          "Hinduizm",
+          "Xristianlik",
+          "Islom"
+        ],
+        "correct": 1,
+        "explanation": "Hinduizm asosan hind xalqlari orasida tarqalgan milliy din."
+      },
+      {
+        "text": "Qiyinchilikda tasalli va umid berish dinning qaysi funksiyasi?",
+        "options": [
+          "Integrativ",
+          "Kommunikativ",
+          "Kompensatorlik",
+          "Regulyativ"
+        ],
+        "correct": 2,
+        "explanation": "Kompensatorlik funksiyasi ruhiy tasalli beradi."
+      },
+      {
+        "text": "Buddizm asoschisi kim?",
+        "options": [
+          "Siddxartxa Gautama",
+          "Konfutsiy",
+          "Lao-szi",
+          "Zardusht"
+        ],
+        "correct": 0,
+        "explanation": "Siddxartxa Gautama — Budda, «nurlangan»."
+      },
+      {
+        "text": "Buddizmda qayta tug'ilishlar doirasi nima deb ataladi?",
+        "options": [
+          "Nirvana",
+          "Karma",
+          "Dxarma",
+          "Sansara"
+        ],
+        "correct": 3,
+        "explanation": "Sansara — tug'ilish va o'limning uzluksiz doirasi; nirvana — undan qutulish."
+      },
+      {
+        "text": "Dalay-lama qaysi buddaviy yo'nalishning rahbari?",
+        "options": [
+          "Teravada",
+          "Vajrayana (lamaizm)",
+          "Maxayana",
+          "Zen"
+        ],
+        "correct": 1,
+        "explanation": "Vajrayana Tibet va Mo'g'ulistonda tarqalgan."
+      },
+      {
+        "text": "Termiz yaqinidagi Fayoztepa va Qoratepa qaysi dinga oid yodgorliklar?",
+        "options": [
+          "Zardushtiylik",
+          "Xristianlik",
+          "Buddizm",
+          "Moniylik"
+        ],
+        "correct": 2,
+        "explanation": "Kushonlar davrida buddizm O'zbekiston janubida keng tarqalgan."
+      },
+      {
+        "text": "Xristianlik qayerda paydo bo'lgan?",
+        "options": [
+          "Falastinda",
+          "Rimda",
+          "Misrda",
+          "Yunonistonda"
+        ],
+        "correct": 0,
+        "explanation": "I asrda Rim imperiyasining sharqiy viloyati Falastinda."
+      },
+      {
+        "text": "Xristianlikka erkinlik bergan Milan edikti qaysi yili qabul qilingan?",
+        "options": [
+          "1054-yil",
+          "622-yil",
+          "1517-yil",
+          "313-yil"
+        ],
+        "correct": 3,
+        "explanation": "Imperator Konstantin 313-yilda Milan ediktini e'lon qilgan."
+      },
+      {
+        "text": "Protestantlikning paydo bo'lishi qaysi voqea bilan bog'liq?",
+        "options": [
+          "Buyuk bo'linish",
+          "Reformatsiya",
+          "Salib yurishlari",
+          "Milan edikti"
+        ],
+        "correct": 1,
+        "explanation": "Martin Lyuter 1517-yilda Reformatsiyani boshlagan."
+      },
+      {
+        "text": "Rim papasi qaysi yo'nalishning oliy rahbari?",
+        "options": [
+          "Pravoslaviye",
+          "Lyuteranlik",
+          "Katoliklik",
+          "Anglikanlik"
+        ],
+        "correct": 2,
+        "explanation": "Katolik cherkovi markazi — Vatikan."
+      },
+      {
+        "text": "Hijrat qaysi shaharlar o'rtasida bo'lgan?",
+        "options": [
+          "Makka — Madina",
+          "Makka — Quddus",
+          "Madina — Damashq",
+          "Bag'dod — Makka"
+        ],
+        "correct": 0,
+        "explanation": "622-yil Makkadan Madinaga ko'chish — hijriy taqvim boshlanishi."
+      },
+      {
+        "text": "Islomning ikkinchi asosiy manbasi?",
+        "options": [
+          "Ijmo",
+          "Qiyos",
+          "Fatvo",
+          "Sunnat (hadislar)"
+        ],
+        "correct": 3,
+        "explanation": "Qur'ondan keyingi manba — Payg'ambar sunnati."
+      },
+      {
+        "text": "Quyidagilardan qaysi biri islomning besh ustuniga kirmaydi?",
+        "options": [
+          "Namoz",
+          "Ijmo",
+          "Zakot",
+          "Haj"
+        ],
+        "correct": 1,
+        "explanation": "Ijmo — fiqh manbasi; besh ustun: kalima, namoz, ro'za, zakot, haj."
+      },
+      {
+        "text": "«Hidoya» asari muallifi?",
+        "options": [
+          "Imom al-Buxoriy",
+          "Imom at-Termiziy",
+          "Burhoniddin al-Marg'inoniy",
+          "Abu Mansur al-Moturidiy"
+        ],
+        "correct": 2,
+        "explanation": "«Hidoya» — hanafiy fiqhining mashhur asari."
+      },
+      {
+        "text": "Islomiy moliyada nima man etilgan?",
+        "options": [
+          "Ribo (foiz)",
+          "Savdo",
+          "Ijara",
+          "Sheriklik"
+        ],
+        "correct": 0,
+        "explanation": "Daromad savdo va risk taqsimotidan olinadi, foizdan emas."
+      },
+      {
+        "text": "Naqshbandiya tariqati asoschisi?",
+        "options": [
+          "Ahmad Yassaviy",
+          "Najmiddin Kubro",
+          "Xoja Ahror Valiy",
+          "Bahouddin Naqshband"
+        ],
+        "correct": 3,
+        "explanation": "Bahouddin Naqshband XIV asrda Buxoroda yashagan."
+      },
+      {
+        "text": "Tasavvuf bosqichlarining to'g'ri ketma-ketligi?",
+        "options": [
+          "Tariqat — shariat — haqiqat — ma'rifat",
+          "Shariat — tariqat — ma'rifat — haqiqat",
+          "Ma'rifat — shariat — tariqat — haqiqat",
+          "Haqiqat — ma'rifat — tariqat — shariat"
+        ],
+        "correct": 1,
+        "explanation": "Avval shariat, so'ng tariqat, ma'rifat va haqiqat."
+      },
+      {
+        "text": "Xorazmda yashagan va kubroviya tariqatiga asos solgan shayx?",
+        "options": [
+          "Abdulxoliq G'ijduvoniy",
+          "Ahmad Yassaviy",
+          "Najmiddin Kubro",
+          "Jaloliddin Rumiy"
+        ],
+        "correct": 2,
+        "explanation": "Najmiddin Kubro mo'g'ullarga qarshi kurashda shahid bo'lgan."
+      },
+      {
+        "text": "Terrorizmning maqsadi qaysi javobda to'g'ri ko'rsatilgan?",
+        "options": [
+          "Aholini qo'rqitish orqali siyosiy maqsadga erishish",
+          "Ilmiy bahs olib borish",
+          "Diniy marosimlarni saqlash",
+          "Qonuniy saylovda g'alaba qozonish"
+        ],
+        "correct": 0,
+        "explanation": "Terrorizm qo'rquv uyg'otish orqali bosim o'tkazadi."
+      },
+      {
+        "text": "Ekstremistik yollashning belgisi qaysi?",
+        "options": [
+          "Ochiq ilmiy konferensiyaga taklif",
+          "Universitet e'loni",
+          "Rasmiy imomning ma'ruzasi",
+          "Sir saqlash va oiladan ajratishga undash"
+        ],
+        "correct": 3,
+        "explanation": "Yashirinlik, oiladan ajratish va «faqat biz haqmiz» g'oyasi — xavf belgilari."
+      },
+      {
+        "text": "«Ma'rifat va diniy bag'rikenglik» BMT rezolyutsiyasi qaysi davlat tashabbusi?",
+        "options": [
+          "Qozog'iston",
+          "O'zbekiston",
+          "Turkiya",
+          "Saudiya Arabistoni"
+        ],
+        "correct": 1,
+        "explanation": "BMT Bosh Assambleyasi 2018-yilda qabul qilgan."
+      },
+      {
+        "text": "Dunyoviy davlat to'g'risidagi qaysi fikr to'g'ri?",
+        "options": [
+          "Davlat dinni taqiqlaydi",
+          "Davlat bitta dinni rasmiy qiladi",
+          "Davlat dinlarga betaraf, barcha dinlar teng",
+          "Diniy tashkilotlar davlat organlari hisoblanadi"
+        ],
+        "correct": 2,
+        "explanation": "Dunyoviylik — dinsizlik emas, balki betaraflik va tenglik."
+      },
+      {
+        "text": "O'zbekistonda nechta diniy konfessiya faoliyat yuritadi?",
+        "options": [
+          "16",
+          "5",
+          "9",
+          "25"
+        ],
+        "correct": 0,
+        "explanation": "16 ta konfessiyaga mansub diniy tashkilotlar faoliyat yuritadi."
+      }
+    ]
+  }
+]

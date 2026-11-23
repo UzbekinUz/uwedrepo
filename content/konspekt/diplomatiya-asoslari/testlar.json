@@ -1,0 +1,283 @@
+[
+  {
+    "title": "Diplomatiya asoslari: 25 savollik yakuniy mashq",
+    "description": "Barcha mavzular: diplomatiya va protokol, diplomatik xizmat, Vena konvensiyalari (1961, 1963), elchini tayinlash, yozishmalar, tashriflar, qabullar, ko'p tomonlama diplomatiya, Yangi O'zbekiston diplomatiyasi. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "Tashqi siyosat va diplomatiya o'rtasidagi munosabat qaysi javobda to'g'ri?",
+        "options": [
+          "Ular sinonim",
+          "Diplomatiya — maqsad, tashqi siyosat — vosita",
+          "Tashqi siyosat — maqsad, diplomatiya — uni amalga oshirish vositasi",
+          "Diplomatiya faqat urush davrida qo'llanadi"
+        ],
+        "correct": 2,
+        "explanation": "Tashqi siyosat «nima qilish kerak», diplomatiya «qanday qilish kerak» degan savolga javob beradi."
+      },
+      {
+        "text": "Doimiy elchixonalar birinchi bo'lib qayerda paydo bo'lgan?",
+        "options": [
+          "XV asr Italiya shahar-davlatlarida",
+          "Qadimgi Rimda",
+          "1815-yil Vena kongressidan keyin",
+          "BMT tashkil topgach"
+        ],
+        "correct": 0,
+        "explanation": "Venetsiya, Milan, Florensiya kabi shahar-davlatlar bir-biriga doimiy elchilar yubora boshlagan."
+      },
+      {
+        "text": "Diplomatik darajalar birinchi marta qaysi xalqaro forumda tartibga solingan?",
+        "options": [
+          "1648-yil Vestfal tinchligi",
+          "1919-yil Parij konferensiyasi",
+          "1945-yil San-Fransisko konferensiyasi",
+          "1815-yil Vena kongressi"
+        ],
+        "correct": 3,
+        "explanation": "1815-yil Vena kongressi elchilarning darajalari va ustuvorligini belgilagan."
+      },
+      {
+        "text": "Diplomatik protokolning asosiy maqsadi nima?",
+        "options": [
+          "Diplomatlarga soliq imtiyozlari berish",
+          "Munosabatlarni o'zaro hurmat, tartib va uyg'unlik asosida olib borishni ta'minlash",
+          "Faqat ziyofatlar menyusini tuzish",
+          "Shartnomalarni ratifikatsiya qilish"
+        ],
+        "correct": 1,
+        "explanation": "Protokol — xalqaro muloqotning tartibi: ustuvorlik, o'tirish, bayroqlar, murojaat va tashriflar qoidalari."
+      },
+      {
+        "text": "«Qanday kutib olinsang, shunday kutib olasan» qaysi protokol tamoyili?",
+        "options": [
+          "Suveren tenglik",
+          "Madaniy sezgirlik",
+          "O'zaro munosabat (reciprocity)",
+          "Maxfiylik"
+        ],
+        "correct": 2,
+        "explanation": "Reciprocity — davlatlar bir-biriga teng darajadagi munosabatni qo'llaydi."
+      },
+      {
+        "text": "Eng boshlang'ich diplomatik daraja qaysi?",
+        "options": [
+          "Attashe",
+          "Uchinchi kotib",
+          "Maslahatchi",
+          "Ikkinchi kotib"
+        ],
+        "correct": 0,
+        "explanation": "Diplomatik zinapoya attashedan boshlanadi: attashe → III, II, I kotib → maslahatchi → vakil → elchi."
+      },
+      {
+        "text": "1961-yilgi Vena konvensiyasining 14-moddasiga ko'ra ishlar vakili (charge d'affaires) kim huzurida akkreditatsiya qilinadi?",
+        "options": [
+          "Davlat rahbari",
+          "Parlament raisi",
+          "Bosh vazir",
+          "Tashqi ishlar vaziri"
+        ],
+        "correct": 3,
+        "explanation": "Elchilar va vakillar davlat rahbari huzurida, ishlar vakillari tashqi ishlar vaziri huzurida akkreditatsiya qilinadi."
+      },
+      {
+        "text": "Montevideo konvensiyasi (1933) bo'yicha davlat belgilariga nima kirmaydi?",
+        "options": [
+          "Doimiy aholi",
+          "BMT a'zoligi",
+          "Aniq hudud",
+          "Boshqa davlatlar bilan munosabatlarga kirisha olish qobiliyati"
+        ],
+        "correct": 1,
+        "explanation": "Davlat belgilari: aholi, hudud, hukumat va munosabatlarga kirisha olish. BMT a'zoligi shart emas."
+      },
+      {
+        "text": "Davlatni to'liq va yakuniy tan olish qanday ataladi?",
+        "options": [
+          "De-fakto",
+          "Ad hoc",
+          "De-yure",
+          "Persona grata"
+        ],
+        "correct": 2,
+        "explanation": "De-yure — to'liq va yakuniy; de-fakto — cheklangan va vaqtinchalik tan olish."
+      },
+      {
+        "text": "1961-yilgi Vena konvensiyasiga ko'ra diplomatik munosabatlar qanday o'rnatiladi?",
+        "options": [
+          "Davlatlarning o'zaro kelishuvi bilan",
+          "BMT Xavfsizlik Kengashi qarori bilan",
+          "Avtomatik ravishda tan olish bilan",
+          "Xalqaro sud qarori bilan"
+        ],
+        "correct": 0,
+        "explanation": "2-modda: diplomatik munosabatlar va doimiy vakolatxonalar o'zaro kelishuv asosida o'rnatiladi."
+      },
+      {
+        "text": "Qabul qiluvchi davlat elchi nomzodiga agreman bermasa, sababini aytishi shartmi?",
+        "options": [
+          "Ha, yozma ravishda",
+          "Faqat BMTga xabar beradi",
+          "Faqat 30 kun ichida aytadi",
+          "Yo'q, shart emas"
+        ],
+        "correct": 3,
+        "explanation": "4-modda: qabul qiluvchi davlat rad etish sabablarini ko'rsatishga majbur emas."
+      },
+      {
+        "text": "Diplomatni «persona non grata» deb e'lon qilish haqidagi qoida qaysi moddada?",
+        "options": [
+          "2-modda",
+          "9-modda",
+          "22-modda",
+          "41-modda"
+        ],
+        "correct": 1,
+        "explanation": "9-modda: qabul qiluvchi davlat istalgan vaqtda va sabab ko'rsatmasdan e'lon qilishi mumkin."
+      },
+      {
+        "text": "Diplomatik agentning immunitetidan kim voz kechishi mumkin?",
+        "options": [
+          "Diplomatning o'zi",
+          "Qabul qiluvchi davlat sudi",
+          "Yuboruvchi davlat",
+          "Diplomatik korpus doyeni"
+        ],
+        "correct": 2,
+        "explanation": "32-modda: immunitetdan faqat yuboruvchi davlat aniq va ochiq shaklda voz kechadi."
+      },
+      {
+        "text": "Konsullik munosabatlari to'g'risidagi Vena konvensiyasi qachon qabul qilingan?",
+        "options": [
+          "1963-yil",
+          "1961-yil",
+          "1969-yil",
+          "1975-yil"
+        ],
+        "correct": 0,
+        "explanation": "1963-yil 24-aprelda; 1961-yilgisi diplomatik munosabatlar haqida."
+      },
+      {
+        "text": "Konsulga faoliyat ko'rsatishga qabul qiluvchi davlat beradigan ruxsat nima deyiladi?",
+        "options": [
+          "Agreman",
+          "Ishonch yorlig'i",
+          "Konsullik patenti",
+          "Ekzekvatura"
+        ],
+        "correct": 3,
+        "explanation": "Patentni yuboruvchi davlat beradi, ekzekvaturani qabul qiluvchi davlat."
+      },
+      {
+        "text": "Diplomatik munosabatlar uzilsa, konsullik munosabatlari-chi?",
+        "options": [
+          "Avtomatik uziladi",
+          "Avtomatik uzilmaydi",
+          "Faqat BMT ruxsati bilan qoladi",
+          "Konsullik elchixonaga aylanadi"
+        ],
+        "correct": 1,
+        "explanation": "1963-yilgi konvensiyaning 2-moddasi: diplomatik munosabatlar uzilishi konsullik munosabatlarini ipso facto uzmaydi."
+      },
+      {
+        "text": "Fuqarosi xorijda pasportini yo'qotsa, unga qaytish uchun hujjat beradigan muassasa qaysi?",
+        "options": [
+          "Mezbon davlat politsiyasi",
+          "Xalqaro Qizil Xoch",
+          "Konsullik (yoki elchixonaning konsullik bo'limi)",
+          "Mezbon davlat Tashqi ishlar vazirligi"
+        ],
+        "correct": 2,
+        "explanation": "Pasport va yo'l hujjatlari berish — konsullik funksiyasi (1963-yil konvensiyasi, 5-modda)."
+      },
+      {
+        "text": "Elchining asl ishonch yorlig'i kimga topshiriladi?",
+        "options": [
+          "Qabul qiluvchi davlat rahbariga",
+          "Tashqi ishlar vaziriga",
+          "Parlament raisiga",
+          "Diplomatik korpus doyeniga"
+        ],
+        "correct": 0,
+        "explanation": "Vazirga faqat nusxasi topshiriladi, asl ishonch yorlig'i davlat rahbariga."
+      },
+      {
+        "text": "Diplomatik korpusning doyeni odatda kim bo'ladi?",
+        "options": [
+          "Eng yosh elchi",
+          "Mezbon davlat tashqi ishlar vaziri",
+          "Eng katta davlat elchisi",
+          "Eng uzoq vaqt akkreditatsiyada bo'lgan elchi"
+        ],
+        "correct": 3,
+        "explanation": "Ustuvorlik akkreditatsiya sanasiga ko'ra belgilanadi; ayrim mamlakatlarda doyen — papa nunsiysi."
+      },
+      {
+        "text": "Verbal nota qanday yoziladi?",
+        "options": [
+          "Birinchi shaxsda, imzo bilan",
+          "Uchinchi shaxsda, imzosiz, muhr bilan",
+          "Ikkinchi shaxsda, muhrsiz",
+          "Faqat og'zaki beriladi"
+        ],
+        "correct": 1,
+        "explanation": "Verbal nota — eng keng tarqalgan yozishma: uchinchi shaxsda, iltifot formulalari bilan, muhr qo'yiladi."
+      },
+      {
+        "text": "Bitta elchixona barcha diplomatik vakolatxonalarga yangi elchi kelgani haqida yuboradigan nota?",
+        "options": [
+          "Kollektiv nota",
+          "Identik nota",
+          "Sirkulyar nota",
+          "Shaxsiy nota"
+        ],
+        "correct": 2,
+        "explanation": "Sirkulyar nota bitta jo'natuvchidan ko'p manzilga yuboriladi."
+      },
+      {
+        "text": "Tashriflarning eng yuqori darajasi qaysi?",
+        "options": [
+          "Davlat tashrifi",
+          "Rasmiy tashrif",
+          "Ishchi tashrif",
+          "Xususiy tashrif"
+        ],
+        "correct": 0,
+        "explanation": "Davlat tashrifi faqat davlat rahbari darajasida, to'liq marosimlar bilan o'tadi."
+      },
+      {
+        "text": "Quyidagilardan qaysi biri tik turib o'tkaziladigan qabul?",
+        "options": [
+          "Kechki ovqat (dinner)",
+          "Rasmiy nonushta",
+          "Tushlik",
+          "Kokteyl"
+        ],
+        "correct": 3,
+        "explanation": "Kokteyl, a la furshet va «bir bokal shampan» — o'tirmasdan o'tkaziladigan qabullar."
+      },
+      {
+        "text": "Maxsus missiyalar to'g'risidagi konvensiya qachon qabul qilingan?",
+        "options": [
+          "1961-yil",
+          "1969-yil",
+          "1963-yil",
+          "1992-yil"
+        ],
+        "correct": 1,
+        "explanation": "1969-yil 8-dekabrda BMT Bosh Assambleyasi qabul qilgan."
+      },
+      {
+        "text": "O'zbekiston BMTga qachon a'zo bo'lgan?",
+        "options": [
+          "1991-yil 1-sentabr",
+          "1992-yil 8-dekabr",
+          "1992-yil 2-mart",
+          "1995-yil 12-dekabr"
+        ],
+        "correct": 2,
+        "explanation": "O'zbekiston 1992-yil 2-martda BMT a'zoligiga qabul qilingan."
+      }
+    ]
+  }
+]

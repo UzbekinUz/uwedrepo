@@ -1,0 +1,19 @@
+{
+  "subject": "6afb31393f5135aa6b4a5dda",
+  "name": "Iqtisodiyotda axborot texnologiyalari",
+  "description": "Hayotiy misol, sodda tushuntirish, R va SQL kod namunalari, test va mashqlar.",
+  "titles": [
+    "1-mavzu. Ma'lumotlar bazalari: asosiy tushunchalar va loyihalash",
+    "2-mavzu. MS Access: jadvallar, maydon turlari va bog'lanishlar",
+    "3-mavzu. MS Access so'rovlari va SQL asoslari",
+    "4-mavzu. MS Access: formalar yaratish",
+    "5-mavzu. MS Access: hisobotlar va makroslar",
+    "6-mavzu. R tili: kirish, o'zgaruvchilar, ma'lumot turlari va chiqarish",
+    "7-mavzu. R tili: operatorlar, shartlar va sikllar",
+    "8-mavzu. R tili: vektorlar, matritsalar va ro'yxatlar",
+    "9-mavzu. R tili: faktorlar, data frame va paketlar",
+    "10-mavzu. R tilida grafika: 2D va 3D",
+    "11-mavzu. Axborot xavfsizligi va kriptografiya asoslari",
+    "12-mavzu. Kiberxavfsizlik tuzilmasi va texnik vositalar"
+  ]
+}

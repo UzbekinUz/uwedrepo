@@ -1,0 +1,316 @@
+[
+  {
+    "title": "Akademik yozuv: 28 savollik yakuniy mashq",
+    "description": "Barcha mavzular: fan va ilmiy tadqiqot, akademik uslub va o'qish texnikasi, rasmiy xat va rezyume, referat va esse, manbalar va ilmiy nashrlar, maqola tahlili va taqriz, tadqiqot metodlari, kurs ishi, konferensiya va taqdimot, ilmiy loyiha. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "Ilmiy bilimning asosiy belgisi qaysi?",
+        "options": [
+          "Shaxsiy his-tuyg'u",
+          "Ko'pchilik fikri",
+          "Asoslanganlik va tekshiriluvchanlik",
+          "Badiiy obrazlilik"
+        ],
+        "correct": 2,
+        "explanation": "Ilmiy da'vo dalil bilan asoslanadi va boshqalar tomonidan tekshirilishi mumkin."
+      },
+      {
+        "text": "Aniq muammoni hal qilishga qaratilgan tadqiqot turi?",
+        "options": [
+          "Amaliy",
+          "Fundamental",
+          "Tavsifiy esse",
+          "Annotatsiya"
+        ],
+        "correct": 0,
+        "explanation": "Amaliy tadqiqot konkret muammo yechimiga yo'naltiriladi."
+      },
+      {
+        "text": "Akademik matnda qaysi ifoda joiz?",
+        "options": [
+          "«Hamma biladiki...»",
+          "«Natija dahshatli!»",
+          "«Bu prikol holat»",
+          "«Tahlil shuni ko'rsatadiki...»"
+        ],
+        "correct": 3,
+        "explanation": "Akademik uslub obyektiv, rasmiy va dalilga tayangan bo'ladi."
+      },
+      {
+        "text": "Umumiy mazmunni tez bilish uchun ko'z yugurtirib o'qish qanday ataladi?",
+        "options": [
+          "Scanning",
+          "Skimming",
+          "Tanqidiy o'qish",
+          "Konspektlash"
+        ],
+        "correct": 1,
+        "explanation": "Skimming — tezkor umumiy tanishuv; scanning — aniq ma'lumotni qidirish."
+      },
+      {
+        "text": "Kitobdagi atamalar va ularning sahifalarini alifbo tartibida beruvchi qism?",
+        "options": [
+          "Annotatsiya",
+          "Mundarija",
+          "Predmet ko'rsatkichi",
+          "Titul varag'i"
+        ],
+        "correct": 2,
+        "explanation": "Predmet ko'rsatkichi kerakli joyni tez topishga yordam beradi."
+      },
+      {
+        "text": "Rasmiy xatning asosiy tamoyili?",
+        "options": [
+          "Bitta xat — bitta masala",
+          "Imkon qadar uzun yozish",
+          "Hissiy bosim",
+          "Murojaatsiz yozish"
+        ],
+        "correct": 0,
+        "explanation": "Aniq va qisqa xat tez ko'rib chiqiladi."
+      },
+      {
+        "text": "Rezyumeda ta'lim va tajriba qanday tartibda beriladi?",
+        "options": [
+          "Alifbo tartibida",
+          "Eskidan yangiga",
+          "Ixtiyoriy",
+          "Teskari xronologik (yangidan eskiga)"
+        ],
+        "correct": 3,
+        "explanation": "Eng dolzarb ma'lumot birinchi ko'rinadi."
+      },
+      {
+        "text": "Motivatsion (cover) xatning vazifasi?",
+        "options": [
+          "Rezyumeni so'zma-so'z takrorlash",
+          "Nomzodning aniq lavozimga mosligini asoslash",
+          "Ish haqini talab qilish",
+          "Oila haqida yozish"
+        ],
+        "correct": 1,
+        "explanation": "Cover xat aniq tashkilot va lavozimga moslashtiriladi."
+      },
+      {
+        "text": "Manba mazmunini qisqa bayon qiluvchi reproduktiv referat turi?",
+        "options": [
+          "Referat-sharh",
+          "Referat-ma'ruza",
+          "Referat-konspekt",
+          "Analitik esse"
+        ],
+        "correct": 2,
+        "explanation": "Referat-konspekt manba mazmunini qisqa va tizimli beradi."
+      },
+      {
+        "text": "Esse kirish qismining eng muhim elementi?",
+        "options": [
+          "Tezis (asosiy fikr)",
+          "Adabiyotlar ro'yxati",
+          "Muallif biografiyasi",
+          "Jadval"
+        ],
+        "correct": 0,
+        "explanation": "Tezis essening yo'nalishini belgilaydi."
+      },
+      {
+        "text": "Esse xulosasida nima qilinmaydi?",
+        "options": [
+          "Tezisni yangi so'zlar bilan qaytarish",
+          "Asosiy fikrlarni umumlashtirish",
+          "Umumiy xulosa chiqarish",
+          "Yangi argument keltirish"
+        ],
+        "correct": 3,
+        "explanation": "Xulosa faqat aytilganlarni umumlashtiradi."
+      },
+      {
+        "text": "Pozitsiyani dalillar bilan himoya qiluvchi esse turi?",
+        "options": [
+          "Tavsifiy",
+          "Argumentativ",
+          "Refleksiv",
+          "Indikativ"
+        ],
+        "correct": 1,
+        "explanation": "Argumentativ esse aniq pozitsiyani asoslaydi."
+      },
+      {
+        "text": "Nufuzli xalqaro iqtibos va indeksatsiya bazasi?",
+        "options": [
+          "Vikipediya",
+          "Shaxsiy blog",
+          "Web of Science",
+          "Forum"
+        ],
+        "correct": 2,
+        "explanation": "Web of Science va Scopus jurnallarni sifat mezonlari bo'yicha tanlaydi."
+      },
+      {
+        "text": "Nima uchun Vikipediyaga ilmiy ishda havola berilmaydi?",
+        "options": [
+          "Muallif va taqriz yo'q, matnni istalgan kishi tahrirlaydi",
+          "U pullik",
+          "U faqat ingliz tilida",
+          "U juda eski"
+        ],
+        "correct": 0,
+        "explanation": "Vikipediyadan faqat birlamchi manbalarni topish uchun foydalanish mumkin."
+      },
+      {
+        "text": "Jeffri Bill ro'yxati nima?",
+        "options": [
+          "Eng yaxshi jurnallar reytingi",
+          "Nobel mukofoti sovrindorlari",
+          "Kutubxona katalogi",
+          "Sifatsiz «yirtqich» jurnal va nashriyotlar ro'yxati"
+        ],
+        "correct": 3,
+        "explanation": "Bunday nashrlar pul evaziga taqrizsiz chop etadi."
+      },
+      {
+        "text": "IMRAD tuzilishidagi «M» nimani anglatadi?",
+        "options": [
+          "Motivation",
+          "Methods (metodlar)",
+          "Monografiya",
+          "Mundarija"
+        ],
+        "correct": 1,
+        "explanation": "Introduction, Methods, Results and Discussion."
+      },
+      {
+        "text": "Bitta muammo bo'yicha chuqur, katta hajmli ilmiy asar?",
+        "options": [
+          "Tezis",
+          "Annotatsiya",
+          "Monografiya",
+          "Esse"
+        ],
+        "correct": 2,
+        "explanation": "Monografiya muammoni to'liq va keng yoritadi."
+      },
+      {
+        "text": "Boshqaning fikrini o'z so'zlari bilan, lekin havolasiz berish nima?",
+        "options": [
+          "Plagiat",
+          "Iqtibos",
+          "Annotatsiya",
+          "Konspekt"
+        ],
+        "correct": 0,
+        "explanation": "So'zlar o'zgarsa ham fikr muallifi ko'rsatilishi shart."
+      },
+      {
+        "text": "Ikki ko'rsatkich birga o'zgarishi biri ikkinchisining sababi ekanini isbotlaydimi?",
+        "options": [
+          "Ha, har doim",
+          "Faqat iqtisodiyotda isbotlaydi",
+          "Faqat katta tanlanmada isbotlaydi",
+          "Yo'q, korrelyatsiya sabab emas"
+        ],
+        "correct": 3,
+        "explanation": "Umumiy uchinchi omil bo'lishi mumkin (masalan, issiq havo)."
+      },
+      {
+        "text": "Taqriz qanday xulosa bilan tugaydi?",
+        "options": [
+          "Muallif biografiyasi",
+          "Chop etish bo'yicha tavsiya",
+          "Maqolaning to'liq matni",
+          "Faqat maqtov"
+        ],
+        "correct": 1,
+        "explanation": "«Tavsiya etiladi», «qayta ishlash bilan» yoki «tavsiya etilmaydi»."
+      },
+      {
+        "text": "Obyektning tadqiqot qaratilgan aniq jihati?",
+        "options": [
+          "Mavzu",
+          "Muammo",
+          "Predmet",
+          "Metodologiya"
+        ],
+        "correct": 2,
+        "explanation": "Predmet obyektga nisbatan torroq tushuncha."
+      },
+      {
+        "text": "Quyidagilardan qaysi biri empirik metod?",
+        "options": [
+          "So'rovnoma",
+          "Abstraktlash",
+          "Deduksiya",
+          "Umumlashtirish"
+        ],
+        "correct": 0,
+        "explanation": "Empirik metodlar bevosita ma'lumot yig'ishga asoslanadi."
+      },
+      {
+        "text": "Kurs ishida jadval nomi qayerda yoziladi?",
+        "options": [
+          "Jadval ostida",
+          "Sahifa oxirida",
+          "Faqat ilovada",
+          "Jadval ustida"
+        ],
+        "correct": 3,
+        "explanation": "Jadval nomi ustida, rasm nomi ostida yoziladi."
+      },
+      {
+        "text": "Kurs ishi xulosasi qanday bo'lishi kerak?",
+        "options": [
+          "Mavzu muhimligini takrorlash",
+          "Har bir vazifa bo'yicha natija va takliflar",
+          "Yangi nazariyani kiritish",
+          "Faqat adabiyotlarni sanash"
+        ],
+        "correct": 1,
+        "explanation": "Xulosa kirishdagi vazifalarga aniq javob beradi."
+      },
+      {
+        "text": "Davra suhbatini kim boshqaradi?",
+        "options": [
+          "Taqrizchi",
+          "Eng yosh ishtirokchi",
+          "Moderator",
+          "Tinglovchilar"
+        ],
+        "correct": 2,
+        "explanation": "Moderator so'z beradi, vaqtni nazorat qiladi va fikrlarni umumlashtiradi."
+      },
+      {
+        "text": "Taqdimot slaydlari uchun to'g'ri qoida?",
+        "options": [
+          "Bir slayd — bitta g'oya",
+          "Har bir slaydda to'liq matn",
+          "Kichik shrift",
+          "Manbalarni ko'rsatmaslik"
+        ],
+        "correct": 0,
+        "explanation": "Slayd qisqa va vizual bo'lishi kerak."
+      },
+      {
+        "text": "Ilmiy loyihaning kurs ishidan asosiy farqi?",
+        "options": [
+          "Gipoteza bo'lmaydi",
+          "Hajmi kichik",
+          "Faqat nazariy bo'ladi",
+          "Jamoa, byudjet, muddat va boshqaruvga ega"
+        ],
+        "correct": 3,
+        "explanation": "Loyiha resurslar va jamoa bilan boshqariladigan faoliyat."
+      },
+      {
+        "text": "Loyiha natijalari uchun SMART mezonidagi «T» nimani anglatadi?",
+        "options": [
+          "Texnologik",
+          "Muddatli (time-bound)",
+          "Tezkor",
+          "Taqrizlangan"
+        ],
+        "correct": 1,
+        "explanation": "Specific, Measurable, Achievable, Relevant, Time-bound."
+      }
+    ]
+  }
+]
