@@ -32,3 +32,12 @@ yangilash: `PUT /api/admin/materials/:id`.
   `POST /api/quizzes` uchun). Manba: Moodle'dagi ma'ruza rejalari (IMU_M1–M14, Umarova Sh.G.); 13-mavzu uchun Moodle'da fayl yo'q.
 - `hisoblash-2/` — Hisoblash 2 (XIM, 1-kurs, 2-semestr), 15 mavzu + `testlar.json` (5 ta mashq testi, 58 savol).
   Manba: Moodle «Calculus 2_2026» kursi bo'limlari (ko'p o'zgaruvchili funksiyalar, ikki karrali integral, DT, qatorlar).
+- 1-kurs gumanitar va umumkasbiy fanlar (har birida `manifest.json` — fan id, nomlar; `testlar.json` — yakuniy mashq testi).
+  Mavzular universitet kurs rejalari, yakuniy nazorat savollari va seminar topshiriqlariga moslab yozilgan:
+  - `diplomatiya-asoslari/` — Diplomatiya asoslari, 11 mavzu + 25 savollik test.
+  - `falsafa/` — Falsafa, 10 mavzu + 28 savollik test.
+  - `jamiyat-va-din/` — Jamiyat va din, 6 mavzu + 26 savollik test.
+  - `akademik-yozuv/` — Akademik yozuv, 10 mavzu + 28 savollik test.
+  - `iqtisodiyotda-axborot-texnologiyalari/` — Iqtisodiyotda axborot texnologiyalari (MS Access va SQL, R tili,
+    kiberxavfsizlik), 12 mavzu + 28 savollik test; R va SQL misollari ```` ``` ```` kod bloklarida.
+  - `davlat-va-huquq-nazariyasi/` — Davlat va huquq nazariyasi, 15 mavzu + 30 savollik test.
