@@ -20,6 +20,7 @@ import { Inline } from './MathText.jsx';
  *   test — «? savol», «- variant», «+ to'g'ri variant», «> izoh»
  *   mashq — «savol || javob» qatorlari (javob tugma bilan ochiladi)
  *   grafik — Plot.jsx dagi tavsif
+ *   ```r … ``` — kod bloki (R, SQL va h.k.): matn o'zgarishsiz, monospace shriftda ko'rsatiladi
  *   Bloklar ichma-ich bo'lishi mumkin (masalan, misol yechimi ichida grafik)
  * Qator ichida:
  *   **qalin**, `formula`, {surat|maxraj} — kasr (ichma-ich ham bo'ladi), ^{daraja} yoki x^2, _{indeks}, lim_{x→a}
@@ -70,6 +71,16 @@ function parse(src, ctx = { misol: 0 }) {
   while (i < lines.length) {
     const tr = lines[i].trim();
     if (!tr) { i++; continue; }
+    // ``` kod bloki: ichidagi qatorlar hech qanday belgilash qoidasiz, o'zgarishsiz ko'rsatiladi
+    if (tr.startsWith('```')) {
+      const lang = tr.slice(3).trim();
+      const body = []; i++;
+      while (i < lines.length && !lines[i].trim().startsWith('```')) { body.push(lines[i]); i++; }
+      i++;
+      const pad = Math.min(...body.filter((l) => l.trim()).map((l) => l.match(/^\s*/)[0].length), 99);
+      blocks.push({ k: 'code', lang, text: body.map((l) => l.slice(Math.min(pad, l.length))).join('\n').replace(/\s+$/, '') });
+      continue;
+    }
     // ::: konteyner
     const cm = /^:::\s*([a-z]+)\s*(.*)$/i.exec(tr);
     if (cm) {
@@ -147,7 +158,7 @@ function parse(src, ctx = { misol: 0 }) {
       continue;
     }
     const para = [];
-    while (i < lines.length && lines[i].trim() && !/^(#{2,3} |\$\$|>|\||[-•]\s|\d+[.)]\s|:::)/.test(lines[i].trim())) { para.push(lines[i].trim()); i++; }
+    while (i < lines.length && lines[i].trim() && !/^(#{2,3} |\$\$|>|\||[-•]\s|\d+[.)]\s|:::|```)/.test(lines[i].trim())) { para.push(lines[i].trim()); i++; }
     blocks.push({ k: 'p', text: para.join(' ') });
   }
   return blocks;
@@ -304,6 +315,12 @@ function Blocks({ blocks }) {
       case 'test': return <Test key={i} b={b} />;
       case 'mashq': return <Mashq key={i} b={b} />;
       case 'grafik': return <Plot key={i} spec={b.spec} />;
+      case 'code': return (
+        <div key={i} className="not-prose my-4 overflow-hidden rounded-xl bg-slate-900 ring-1 ring-slate-800">
+          {b.lang && <div className="border-b border-white/10 px-4 py-1.5 text-xs font-semibold uppercase tracking-wide text-slate-400">{b.lang}</div>}
+          <pre className="overflow-x-auto px-4 py-3 text-[0.9rem] leading-relaxed text-slate-100"><code>{b.text}</code></pre>
+        </div>
+      );
       case 'table': return (
         <div key={i} className="my-5 overflow-x-auto rounded-xl ring-1 ring-slate-200">
           <table className="w-full text-left text-[0.95rem]">
