@@ -1,0 +1,316 @@
+[
+  {
+    "title": "Iqtisodiyotda axborot texnologiyalari: 28 savollik yakuniy mashq",
+    "description": "Barcha mavzular: ma'lumotlar bazalari va MS Access (jadvallar, so'rovlar va SQL, formalar, hisobotlar va makroslar), R tili (o'zgaruvchilar, shartlar va sikllar, vektor, matritsa, ro'yxat, data frame, grafiklar), kriptografiya va kiberxavfsizlik. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "Ma'lumotlar bazasini yaratish va boshqarish uchun dasturiy vosita qanday ataladi?",
+        "options": [
+          "Operatsion tizim",
+          "Brauzer",
+          "MBBT",
+          "Kompilyator"
+        ],
+        "correct": 2,
+        "explanation": "MBBT — ma'lumotlar bazasini boshqarish tizimi (MS Access, MySQL, PostgreSQL)."
+      },
+      {
+        "text": "Relyatsion modelda ma'lumotlar qanday saqlanadi?",
+        "options": [
+          "O'zaro bog'langan jadvallarda",
+          "Daraxt ko'rinishida",
+          "Faqat matnli fayllarda",
+          "Grafiklarda"
+        ],
+        "correct": 0,
+        "explanation": "Relyatsion model E. Kodd tomonidan taklif qilingan."
+      },
+      {
+        "text": "Boshqa jadvalning birlamchi kalitiga havola qiluvchi maydon?",
+        "options": [
+          "Indeks",
+          "Hisoblanuvchi maydon",
+          "Niqob",
+          "Tashqi kalit"
+        ],
+        "correct": 3,
+        "explanation": "Tashqi kalit (Foreign Key) jadvallarni bog'laydi."
+      },
+      {
+        "text": "Ko'p talaba ko'p fanni o'qishi qanday bog'lanish va u qanday amalga oshiriladi?",
+        "options": [
+          "Birga-bir, to'g'ridan-to'g'ri",
+          "Ko'pga-ko'p, oraliq jadval orqali",
+          "Birga-ko'p, bitta jadvalda",
+          "Bog'lanish kerak emas"
+        ],
+        "correct": 1,
+        "explanation": "Oraliq jadval (masalan, Baholar) ikkita birga-ko'p bog'lanish hosil qiladi."
+      },
+      {
+        "text": "Normallashtirishning asosiy maqsadi?",
+        "options": [
+          "Jadvallarni kattalashtirish",
+          "Parollarni shifrlash",
+          "Takrorlanish va anomaliyalarni kamaytirish",
+          "Grafik chizish"
+        ],
+        "correct": 2,
+        "explanation": "To'g'ri bo'lingan jadvallarda ma'lumot bir joyda saqlanadi."
+      },
+      {
+        "text": "MS Access'da telefon raqami qaysi turda saqlanadi?",
+        "options": [
+          "Short Text",
+          "Number",
+          "Currency",
+          "AutoNumber"
+        ],
+        "correct": 0,
+        "explanation": "Telefon bilan hisob-kitob qilinmaydi, boshida 0 yoki + bo'lishi mumkin."
+      },
+      {
+        "text": "Mavjud bo'lmagan talabaga baho kiritishni taqiqlovchi sozlama?",
+        "options": [
+          "Kiritish niqobi",
+          "Standart qiymat",
+          "Format",
+          "Ma'lumotlar yaxlitligini ta'minlash"
+        ],
+        "correct": 3,
+        "explanation": "Referensial yaxlitlik tashqi kalit qiymatlarini nazorat qiladi."
+      },
+      {
+        "text": "Har safar ishga tushganda foydalanuvchidan shart qiymatini so'raydigan so'rov?",
+        "options": [
+          "Kesishma so'rov",
+          "Parametrli so'rov",
+          "O'chirish so'rovi",
+          "Jadval yaratish so'rovi"
+        ],
+        "correct": 1,
+        "explanation": "Parametr shart katagiga kvadrat qavsdagi savol bilan yoziladi."
+      },
+      {
+        "text": "SQL da guruhlar uchun shart qo'yuvchi kalit so'z?",
+        "options": [
+          "WHERE",
+          "ORDER BY",
+          "HAVING",
+          "FROM"
+        ],
+        "correct": 2,
+        "explanation": "WHERE — alohida yozuvlarga, HAVING — guruhlashdan keyin guruhlarga."
+      },
+      {
+        "text": "Barcha tovar narxini 10 % ga oshirish uchun qaysi so'rov turi?",
+        "options": [
+          "Yangilash (UPDATE)",
+          "Tanlash",
+          "Kesishma",
+          "Parametrli"
+        ],
+        "correct": 0,
+        "explanation": "UPDATE Tovarlar SET Narx = Narx * 1.1;"
+      },
+      {
+        "text": "Asosiy formada mijoz, ichida uning buyurtmalari ko'rinishi uchun nima ishlatiladi?",
+        "options": [
+          "Makros",
+          "Hisobot",
+          "Kesishma so'rov",
+          "Subforma"
+        ],
+        "correct": 3,
+        "explanation": "Subforma birga-ko'p bog'lanishni bir oynada ko'rsatadi."
+      },
+      {
+        "text": "Hisobotda har bir guruhning oraliq jami qaysi bo'limga joylashtiriladi?",
+        "options": [
+          "Sahifa sarlavhasi",
+          "Guruh eslatmasi",
+          "Hisobot sarlavhasi",
+          "Ma'lumotlar sohasi"
+        ],
+        "correct": 1,
+        "explanation": "Guruh eslatmasi har bir guruh yakunida chiqadi."
+      },
+      {
+        "text": "Access fayli ochilganda avtomatik bajariladigan makros nomi?",
+        "options": [
+          "OpenForm",
+          "Main",
+          "AutoExec",
+          "Start"
+        ],
+        "correct": 2,
+        "explanation": "AutoExec makrosi odatda bosh formani ochadi."
+      },
+      {
+        "text": "R da o'zgaruvchiga qiymat berishning tavsiya etilgan operatori?",
+        "options": [
+          "<-",
+          "==",
+          ":=",
+          "=>"
+        ],
+        "correct": 0,
+        "explanation": "== tenglikni tekshiradi; qiymat berish uchun <- ishlatiladi."
+      },
+      {
+        "text": "R da 17 %% 5 natijasi?",
+        "options": [
+          "3",
+          "3.4",
+          "85",
+          "2"
+        ],
+        "correct": 3,
+        "explanation": "%% — bo'lishdan qoldiq: 17 = 5 × 3 + 2."
+      },
+      {
+        "text": "R da yo'q (mavjud bo'lmagan) qiymat qanday belgilanadi?",
+        "options": [
+          "NULL",
+          "NA",
+          "Inf",
+          "FALSE"
+        ],
+        "correct": 1,
+        "explanation": "NA — Not Available."
+      },
+      {
+        "text": "Matnlarni ajratuvchisiz birlashtiruvchi R funksiyasi?",
+        "options": [
+          "paste()",
+          "cat()",
+          "paste0()",
+          "print()"
+        ],
+        "correct": 2,
+        "explanation": "paste0(\"ID-\", 101) natijasi \"ID-101\"."
+      },
+      {
+        "text": "R da siklni butunlay to'xtatuvchi buyruq?",
+        "options": [
+          "break",
+          "next",
+          "skip",
+          "exit"
+        ],
+        "correct": 0,
+        "explanation": "next — joriy qadamni o'tkazadi, break — siklni to'xtatadi."
+      },
+      {
+        "text": "Vektorning har bir elementiga shart qo'llovchi R funksiyasi?",
+        "options": [
+          "if",
+          "switch",
+          "while",
+          "ifelse"
+        ],
+        "correct": 3,
+        "explanation": "ifelse(shart, rost bo'lsa, yolg'on bo'lsa)."
+      },
+      {
+        "text": "R da x <- c(5, 8, 2) bo'lsa, x[-2] natijasi?",
+        "options": [
+          "8",
+          "5 2",
+          "5 8",
+          "xato"
+        ],
+        "correct": 1,
+        "explanation": "Manfiy indeks ko'rsatilgan elementni chiqarib tashlaydi."
+      },
+      {
+        "text": "R da matritsa ko'paytmasi operatori?",
+        "options": [
+          "*",
+          "%%",
+          "%*%",
+          "%/%"
+        ],
+        "correct": 2,
+        "explanation": "* — element bo'yicha, %*% — matritsa ko'paytmasi."
+      },
+      {
+        "text": "Turli turdagi obyektlarni bitta tuzilmada saqlovchi R tuzilmasi?",
+        "options": [
+          "Ro'yxat (list)",
+          "Vektor",
+          "Matritsa",
+          "Faktor"
+        ],
+        "correct": 0,
+        "explanation": "list() turli tur va uzunlikdagi elementlarni saqlaydi."
+      },
+      {
+        "text": "R da jadval ko'rinishidagi, har bir ustuni o'z turiga ega tuzilma?",
+        "options": [
+          "Matritsa",
+          "Massiv",
+          "Faktor",
+          "Data frame"
+        ],
+        "correct": 3,
+        "explanation": "Data frame — R dagi asosiy tahlil obyekti."
+      },
+      {
+        "text": "Taqsimot shaklini ko'rsatuvchi R grafik funksiyasi?",
+        "options": [
+          "barplot()",
+          "hist()",
+          "pie()",
+          "abline()"
+        ],
+        "correct": 1,
+        "explanation": "Gistogramma qiymatlarning oraliqlar bo'yicha chastotasini ko'rsatadi."
+      },
+      {
+        "text": "CIA uchligidagi «A» (Availability) nimani anglatadi?",
+        "options": [
+          "Autentifikatsiya",
+          "Avtorizatsiya",
+          "Foydalanuvchanlik",
+          "Audit"
+        ],
+        "correct": 2,
+        "explanation": "Tizim kerakli vaqtda ishlab turishi; DDoS uni buzadi."
+      },
+      {
+        "text": "Bitta kalit bilan shifrlanib, shu kalit bilan ochiladigan usul?",
+        "options": [
+          "Simmetrik shifrlash",
+          "Asimmetrik shifrlash",
+          "Xeshlash",
+          "Elektron imzo"
+        ],
+        "correct": 0,
+        "explanation": "AES, DES — simmetrik algoritmlar."
+      },
+      {
+        "text": "Asl matnni tiklab bo'lmaydigan, qat'iy uzunlikdagi «barmoq izi» beruvchi funksiya?",
+        "options": [
+          "RSA",
+          "VPN",
+          "Firewall",
+          "Xesh-funksiya"
+        ],
+        "correct": 3,
+        "explanation": "SHA-256 kabi xesh-funksiyalar parollarni saqlashda ishlatiladi."
+      },
+      {
+        "text": "Shubhali faollikni aniqlab, uni avtomatik bloklovchi tizim?",
+        "options": [
+          "IDS",
+          "IPS",
+          "SIEM",
+          "Proksi"
+        ],
+        "correct": 1,
+        "explanation": "IDS aniqlaydi va ogohlantiradi, IPS oldini oladi."
+      }
+    ]
+  }
+]
