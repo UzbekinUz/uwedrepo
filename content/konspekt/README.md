@@ -7,6 +7,8 @@ Yozish qoidalari `client/src/components/Notes.jsx` boshida: `## sarlavha`, `$$ f
 `{surat|maxraj}`, `x^2`, `a_{n}`, `lim_{x→0}`, jadvallar va interaktiv bloklar:
 `::: maqsad|hayot|oddiy|tushuncha|formula|teorema|eslatma|xato|xulosa`, `::: misol` (yechim `---` dan keyin),
 `::: test` (`? savol`, `- variant`, `+ to'g'ri`, `> izoh`), `::: mashq` (`savol || javob`), `::: grafik` (Plot.jsx).
+Dasturlash kodi (R, SQL va h.k.) uchun ```` ```r ```` … ```` ``` ```` kod bloki: ichidagi matn belgilash qoidalarisiz, o'zgarishsiz ko'rsatiladi
+(shuning uchun `{ }`, `^`, `_` kabi belgilar faqat kod blokida ishlatiladi).
 
 Matritsa va sistemalar (`MathText.jsx`, konspektlarda ham, testlarda ham ishlaydi):
 
