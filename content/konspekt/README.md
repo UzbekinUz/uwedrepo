@@ -28,3 +28,5 @@ yangilash: `PUT /api/admin/materials/:id`.
   (CALC_S1–S11, Thomas «Calculus» asosida) va ma'ruzalar (1-mavzu ketma-ketlik, 9-mavzu U. Dalabayev).
 - `miqdoriy-usullar/` — Iqtisodiyotda miqdoriy usullar (XIM, 2-kurs), 15 mavzu + `testlar.json` (5 ta mashq testi, 61 savol;
   `POST /api/quizzes` uchun). Manba: Moodle'dagi ma'ruza rejalari (IMU_M1–M14, Umarova Sh.G.); 13-mavzu uchun Moodle'da fayl yo'q.
+- `hisoblash-2/` — Hisoblash 2 (XIM, 1-kurs, 2-semestr), 15 mavzu + `testlar.json` (5 ta mashq testi, 58 savol).
+  Manba: Moodle «Calculus 2_2026» kursi bo'limlari (ko'p o'zgaruvchili funksiyalar, ikki karrali integral, DT, qatorlar).

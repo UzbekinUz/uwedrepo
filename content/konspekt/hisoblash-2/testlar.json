@@ -1,0 +1,90 @@
+[
+  {
+    "title": "Ko'p o'zgaruvchili funksiyalar: limit, hosilalar, ekstremum, Lagranj: 12 savol",
+    "description": "1–4-mavzular: aniqlanish sohasi, limit, xususiy hosilalar, gradient, differensial, ekstremum, Lagranj usuli, elastiklik. Har savolda izoh.",
+    "questions": [
+      {"text": "z = √(1 − x^2 − y^2) ning aniqlanish sohasi?", "options": ["x^2 + y^2 < 1", "x^2 + y^2 ≤ 1", "x^2 + y^2 ≥ 1", "butun tekislik"], "correct": 1, "explanation": "Ildiz ostidagi ifoda ≥ 0: x^2 + y^2 ≤ 1 — radiusi 1 bo'lgan doira, chegarasi bilan."},
+      {"text": "lim_{(x,y)→(0,0)} {2xy|x^2 + y^2} haqida to'g'ri gap?", "options": ["0 ga teng", "1 ga teng", "2 ga teng", "mavjud emas"], "correct": 3, "explanation": "y = kx bo'ylab {2k|1 + k^2}: k = 0 da 0, k = 1 da 1 — yo'nalishga bog'liq."},
+      {"text": "z = x^2y + y^3 bo'lsa, z'_{x} = ?", "options": ["2xy + 3y^2", "2xy", "x^2 + 3y^2", "2x"], "correct": 1, "explanation": "y — o'zgarmas: (x^2y)'_{x} = 2xy, (y^3)'_{x} = 0."},
+      {"text": "z = x^3y^2 uchun z''_{xy} = ?", "options": ["6xy^2", "2x^3", "3x^2y^2", "6x^2y"], "correct": 3, "explanation": "z'_{x} = 3x^2y^2, uning y bo'yicha hosilasi 6x^2y (z''_{yx} ham shu)."},
+      {"text": "f = x^2 + 3y^2, M(1; 1). grad f = ?", "options": ["(2; 6)", "(1; 6)", "(2; 3)", "(1; 3)"], "correct": 0, "explanation": "f'_{x} = 2x = 2, f'_{y} = 6y = 6."},
+      {"text": "f = 3x + 4y ning har qanday nuqtadagi eng katta o'sish tezligi?", "options": ["7", "5", "12", "1"], "correct": 1, "explanation": "grad f = (3; 4), ∣grad f∣ = √(9 + 16) = 5."},
+      {"text": "f = xy, M(1; 2), dx = 0,1, dy = −0,1. df = ?", "options": ["0,1", "0,3", "−0,1", "0"], "correct": 0, "explanation": "df = y·dx + x·dy = 2·0,1 + 1·(−0,1) = 0,1."},
+      {"text": "f = x^2 + y^2 − 2x + 4y ning statsionar nuqtasi?", "options": ["(0; 0)", "(2; −4)", "(1; −2)", "(−1; 2)"], "correct": 2, "explanation": "2x − 2 = 0, 2y + 4 = 0 ⇒ (1; −2)."},
+      {"text": "Statsionar nuqtada f''_{xx} = −4, f''_{xy} = 1, f''_{yy} = −2. Xulosa?", "options": ["minimum", "maksimum", "egar nuqta", "test javob bermaydi"], "correct": 1, "explanation": "Δ = (−4)(−2) − 1 = 7 > 0, A = −4 < 0 ⇒ maksimum."},
+      {"text": "f = x^2 − 4xy + y^2 ning (0; 0) nuqtasi...", "options": ["minimum", "maksimum", "egar nuqta", "statsionar emas"], "correct": 2, "explanation": "A = 2, B = −4, C = 2: Δ = 4 − 16 = −12 < 0."},
+      {"text": "U = xy, p_{x} = 5, p_{y} = 2, daromad 100. Optimal x?", "options": ["20", "50", "25", "10"], "correct": 3, "explanation": "MRS = y/x = 5/2 ⇒ y = 2,5x; 5x + 5x = 100 ⇒ x = 10, y = 25."},
+      {"text": "Q = 4K^{0,25}L^{0,75}. Kapital 10% oshsa, Q taxminan...", "options": ["10% oshadi", "2,5% oshadi", "7,5% oshadi", "25% oshadi"], "correct": 1, "explanation": "E_{K} = α = 0,25: 0,25·10% = 2,5%."}
+    ]
+  },
+  {
+    "title": "Ikki karrali integrallar va ularning tatbiqlari: 10 savol",
+    "description": "5–6-mavzular: takroriy integral, chegaralarni qo'yish, tartibni almashtirish, qutb koordinatalari, yuza, hajm, o'rtacha qiymat, massa va ehtimollik zichligi. Har savolda izoh.",
+    "questions": [
+      {"text": "∫_{0}^{1}∫_{0}^{1}(x + y)dydx = ?", "options": ["2", "{1|2}", "1", "{1|4}"], "correct": 2, "explanation": "∫_{0}^{1}(x + {1|2})dx = {1|2} + {1|2} = 1."},
+      {"text": "∫_{0}^{2}dx∫_{0}^{x} y dy = ?", "options": ["4", "2", "{4|3}", "{8|3}"], "correct": 2, "explanation": "Ichki: x^2/2; ∫_{0}^{2} x^2/2 dx = 8/6 = 4/3."},
+      {"text": "D: y = x^2 va y = 1 orasida. To'g'ri chegaralar?", "options": ["∫_{−1}^{1}dx∫_{x^2}^{1}dy", "∫_{0}^{1}dy∫_{0}^{1}dx", "∫_{0}^{1}dx∫_{x^2}^{1}dy", "∫_{−1}^{1}dx∫_{1}^{x^2}dy"], "correct": 0, "explanation": "Kesishish x = ±1; pastda parabola, yuqorida y = 1."},
+      {"text": "∫_{0}^{1}dx∫_{x}^{1}f dy tartibi almashtirilsa?", "options": ["∫_{0}^{1}dy∫_{y}^{1}f dx", "∫_{0}^{1}dy∫_{0}^{y}f dx", "∫_{0}^{y}dy∫_{0}^{1}f dx", "∫_{0}^{1}dy∫_{0}^{1}f dx"], "correct": 1, "explanation": "Uchburchak 0 ≤ x ≤ y ≤ 1: y ∈ [0; 1], x ∈ [0; y]."},
+      {"text": "x^2 + y^2 ≤ 9 doirada ∫∫dxdy (qutb koordinatalarida) = ?", "options": ["18π", "3π", "9π", "6π"], "correct": 2, "explanation": "∫_{0}^{2π}dφ∫_{0}^{3}r dr = 2π·9/2 = 9π — doira yuzasi."},
+      {"text": "y = x va y = x^3 orasidagi yuza (0 ≤ x ≤ 1)?", "options": ["{1|12}", "{1|4}", "{1|2}", "{1|3}"], "correct": 1, "explanation": "∫_{0}^{1}(x − x^3)dx = 1/2 − 1/4 = 1/4."},
+      {"text": "z = 2 tekislik ostidagi, D = [0; 1] × [0; 3] ustidagi hajm?", "options": ["5", "3", "6", "2"], "correct": 2, "explanation": "V = 2·yuza = 2·3 = 6."},
+      {"text": "f = x + y ning [0; 2] × [0; 2] dagi o'rtacha qiymati?", "options": ["2", "8", "1", "4"], "correct": 0, "explanation": "∫∫ = 8, yuza 4 ⇒ 8/4 = 2 (o'rta nuqtadagi qiymat bilan bir xil — chiziqli funksiya)."},
+      {"text": "f(x, y) = cxy, 0 ≤ x, y ≤ 1 — ehtimollik zichligi. c = ?", "options": ["{1|4}", "2", "1", "4"], "correct": 3, "explanation": "∫∫xy = 1/2·1/2 = 1/4 ⇒ c = 4."},
+      {"text": "Qutb koordinatalariga o'tishda dxdy nimaga almashtiriladi?", "options": ["sin φ dr dφ", "r^2 dr dφ", "dr dφ", "r dr dφ"], "correct": 3, "explanation": "Yakobian r ga teng."}
+    ]
+  },
+  {
+    "title": "Birinchi tartibli differensial tenglamalar: 12 savol",
+    "description": "7–8-mavzular: umumiy va xususiy yechim, Koshi masalasi, ajraladigan, bir jinsli, chiziqli, Bernulli va to'liq differensialli tenglamalar. Har savolda izoh.",
+    "questions": [
+      {"text": "y''' − y' = x tenglamaning tartibi?", "options": ["1", "2", "3", "0"], "correct": 2, "explanation": "Eng yuqori hosila uchinchi."},
+      {"text": "y = Ce^{2x} qaysi tenglamaning umumiy yechimi?", "options": ["y' = 2y", "y' = y + 2", "y' = 2x", "y' = y^2"], "correct": 0, "explanation": "y' = 2Ce^{2x} = 2y."},
+      {"text": "y' = 4y, y(0) = 3. y(x) = ?", "options": ["3e^{4x}", "e^{4x} + 3", "4e^{3x}", "3 + 4x"], "correct": 0, "explanation": "y = Ce^{4x}, C = y(0) = 3."},
+      {"text": "y' = {y|x}, y(2) = 6. y(5) = ?", "options": ["9", "30", "6", "15"], "correct": 3, "explanation": "y = Cx, C = 3 ⇒ y(5) = 15."},
+      {"text": "y' = x^2/y qanday tenglama?", "options": ["bir jinsli", "Bernulli", "ajraladigan", "chiziqli"], "correct": 2, "explanation": "y dy = x^2 dx."},
+      {"text": "y' = {y|x} + tg {y|x} qanday tenglama?", "options": ["ajraladigan emas", "bir jinsli", "chiziqli", "ikkinchi tartibli"], "correct": 1, "explanation": "O'ng tomon faqat y/x ga bog'liq; y = ux almashtirish."},
+      {"text": "y' + 2xy = x uchun integrallovchi ko'paytuvchi?", "options": ["e^{2x}", "e^{−x^2}", "e^{x^2}", "x^2"], "correct": 2, "explanation": "μ = e^{∫2x dx} = e^{x^2}."},
+      {"text": "y' + y = 3 ning umumiy yechimi?", "options": ["3 + Ce^{−x}", "3x + C", "Ce^{x} − 3", "3e^{−x}"], "correct": 0, "explanation": "Muvozanat y = 3, bir jinsli qism Ce^{−x}."},
+      {"text": "y' − {2|x}y = 0 ning umumiy yechimi?", "options": ["y = Cx^2", "y = Ce^{2x}", "y = 2x + C", "y = C/x^2"], "correct": 0, "explanation": "dy/y = 2dx/x ⇒ y = Cx^2."},
+      {"text": "y' + {y|x} = xy^{4} uchun almashtirish?", "options": ["z = y^{−3}", "z = y^{4}", "y = ux", "z = y^{3}"], "correct": 0, "explanation": "Bernulli, n = 4: z = y^{1−n} = y^{−3}."},
+      {"text": "(2x + y)dx + (x + 2y)dy = 0 ning umumiy integrali?", "options": ["2xy = C", "x^2 + xy + y^2 = C", "x^2 + y^2 = C", "x^2y + xy^2 = C"], "correct": 1, "explanation": "P'_{y} = 1 = Q'_{x}; U = x^2 + xy + y^2."},
+      {"text": "Omonat S' = 0,1S, S(0) = 100. S(10) taxminan?", "options": ["1000", "272", "200", "110"], "correct": 1, "explanation": "100e^{1} ≈ 271,8."}
+    ]
+  },
+  {
+    "title": "Yuqori tartibli DT, iqtisodiy modellar va sonli usullar: 12 savol",
+    "description": "9–12-mavzular: tartibni pasaytirish, Vronskiy, xarakteristik tenglama, maxsus o'ng tomon, rezonans, Evans va logistik modellar, Eyler va Runge–Kutta usullari. Har savolda izoh.",
+    "questions": [
+      {"text": "y'' = 2, y(0) = 1, y'(0) = 0. y(x) = ?", "options": ["x^2", "2x + 1", "2x^2 + 1", "x^2 + 1"], "correct": 3, "explanation": "y' = 2x + C_{1} = 2x, y = x^2 + C_{2} = x^2 + 1."},
+      {"text": "e^{x} va e^{3x} ning Vronskiy determinanti?", "options": ["e^{4x}", "2e^{4x}", "0", "3e^{4x}"], "correct": 1, "explanation": "e^{x}·3e^{3x} − e^{3x}·e^{x} = 2e^{4x} ≠ 0."},
+      {"text": "y'' − 3y' − 4y = 0 ning umumiy yechimi?", "options": ["C_{1}e^{4x} + C_{2}e^{−x}", "C_{1}e^{−4x} + C_{2}e^{x}", "C_{1}cos 2x + C_{2}sin 2x", "(C_{1} + C_{2}x)e^{4x}"], "correct": 0, "explanation": "r^2 − 3r − 4 = 0 ⇒ r = 4; −1."},
+      {"text": "y'' + 9y = 0 ning umumiy yechimi?", "options": ["C_{1}cos 3x + C_{2}sin 3x", "C_{1}e^{3x} + C_{2}e^{−3x}", "(C_{1} + C_{2}x)e^{3x}", "C_{1}cos 9x + C_{2}sin 9x"], "correct": 0, "explanation": "r = ±3i."},
+      {"text": "y'' − 2y' + y = 0 ning umumiy yechimi?", "options": ["C_{1}e^{x} + C_{2}e^{−x}", "(C_{1} + C_{2}x)e^{x}", "C_{1}e^{x}", "e^{x}(C_{1}cos x + C_{2}sin x)"], "correct": 1, "explanation": "(r − 1)^2 = 0 — karrali ildiz."},
+      {"text": "y'' + y = 5 ning xususiy yechimi?", "options": ["y^{*} = 5", "y^{*} = 5e^{x}", "y^{*} = 5x", "y^{*} = 5cos x"], "correct": 0, "explanation": "O'zgarmas: 0 + A = 5."},
+      {"text": "y'' − 4y' + 3y = e^{3x} uchun y^{*} shakli?", "options": ["A", "Ax^2e^{3x}", "Ae^{3x}", "Axe^{3x}"], "correct": 3, "explanation": "Ildizlar 1 va 3; 3 — oddiy ildiz (rezonans), s = 1."},
+      {"text": "D = 20 − 3p, S = 4 + p. Muvozanat narx?", "options": ["6", "5", "4", "8"], "correct": 2, "explanation": "20 − 3p = 4 + p ⇒ p = 4."},
+      {"text": "p(t) = 4 + 6e^{−t}. t → ∞ da narx?", "options": ["6", "10", "4", "0"], "correct": 2, "explanation": "e^{−t} → 0."},
+      {"text": "Logistik model: N = 800. Sotuv eng tez o'sadigan daraja?", "options": ["200", "400", "800", "0"], "correct": 1, "explanation": "y = N/2."},
+      {"text": "y' = y + x, y(0) = 1, h = 0,1. Eyler bo'yicha y_{1}?", "options": ["1,1", "1,11", "1,2", "1,01"], "correct": 0, "explanation": "y_{1} = 1 + 0,1·(1 + 0) = 1,1."},
+      {"text": "Qaysi usul 4-tartibli aniqlikka ega?", "options": ["Xoyn", "Runge–Kutta (RK4)", "Pikar", "Eyler"], "correct": 1, "explanation": "RK4 xatosi ~ h^4."}
+    ]
+  },
+  {
+    "title": "Sonli, funksional va darajali qatorlar, Teylor qatori: 12 savol",
+    "description": "13–15-mavzular: geometrik qator, zaruriy shart, taqqoslash, Dalamber, Koshi, Leybnits, yaqinlashish radiusi va sohasi, Makloren yoyilmalari va tatbiqlari. Har savolda izoh.",
+    "questions": [
+      {"text": "2 + 1 + {1|2} + {1|4} + … = ?", "options": ["2", "3", "uzoqlashadi", "4"], "correct": 3, "explanation": "a = 2, q = 1/2: 2/(1 − 1/2) = 4."},
+      {"text": "MPC = 0,9 bo'lsa, investitsiya multiplikatori?", "options": ["9", "1,9", "0,9", "10"], "correct": 3, "explanation": "1/(1 − 0,9) = 10."},
+      {"text": "Σ{n + 1|n} qatori...", "options": ["yig'indisi 1", "shartli yaqinlashadi", "uzoqlashadi", "yaqinlashadi"], "correct": 2, "explanation": "a_{n} → 1 ≠ 0 — zaruriy shart bajarilmaydi."},
+      {"text": "Qaysi qator yaqinlashadi?", "options": ["Σ{1|n^{1,5}}", "Σ{1|n}", "Σ1", "Σ{1|√n}"], "correct": 0, "explanation": "p = 1,5 > 1."},
+      {"text": "Σ{3^{n}|n!} uchun Dalamber limiti va xulosa?", "options": ["1, noma'lum", "∞, uzoqlashadi", "0, yaqinlashadi", "3, uzoqlashadi"], "correct": 2, "explanation": "3/(n + 1) → 0 < 1."},
+      {"text": "Σ{(−1)^{n+1}|n} qanday yaqinlashadi?", "options": ["absolyut", "shartli", "uzoqlashadi", "yig'indisi 1"], "correct": 1, "explanation": "Leybnits bo'yicha yaqinlashadi, modullar qatori (garmonik) uzoqlashadi. Yig'indisi ln 2."},
+      {"text": "Σ{x^{n}|2^{n}} ning yaqinlashish radiusi?", "options": ["{1|2}", "2", "∞", "1"], "correct": 1, "explanation": "Geometrik qator, ∣x/2∣ < 1."},
+      {"text": "Σ{x^{n}|n} ning yaqinlashish sohasi?", "options": ["(−1; 1]", "(−1; 1)", "[−1; 1)", "[−1; 1]"], "correct": 2, "explanation": "x = 1 — garmonik (uzoq.), x = −1 — Leybnits (yaq.)."},
+      {"text": "Σ{(x − 3)^{n}|n^{2}} ning yaqinlashish sohasi?", "options": ["[−1; 1]", "[2; 4)", "[2; 4]", "(2; 4)"], "correct": 2, "explanation": "Markaz 3, R = 1; chegaralarda Σ1/n^2 va Σ(−1)^{n}/n^2 — ikkalasi yaqinlashadi."},
+      {"text": "e^{x} Makloren qatorida x^4 oldidagi koeffitsiyent?", "options": ["{1|12}", "{1|24}", "{1|4}", "1"], "correct": 1, "explanation": "1/4! = 1/24."},
+      {"text": "lim_{x→0} {ln(1 + x) − x|x^2} = ?", "options": ["0", "−{1|2}", "1", "{1|2}"], "correct": 1, "explanation": "ln(1 + x) − x = −x^2/2 + x^3/3 − …"},
+      {"text": "√(1 + x) ≈ 1 + {x|2} formula bilan √1,04 ≈ ?", "options": ["1,2", "1,002", "1,04", "1,02"], "correct": 3, "explanation": "1 + 0,02 = 1,02 (aniq 1,0198)."}
+    ]
+  }
+]
