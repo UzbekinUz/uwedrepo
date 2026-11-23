@@ -1,0 +1,316 @@
+[
+  {
+    "title": "Falsafa: 28 savollik yakuniy mashq",
+    "description": "Barcha mavzular: falsafaning predmeti, antik va Sharq falsafasi, O'rta asrlar va Renessans, Yangi zamon, nemis klassik falsafasi, XX asr G'arb va Sharq falsafasi, jamiyat va tarix falsafasi, zamonaviy trendlar. Har savolda izoh.",
+    "questions": [
+      {
+        "text": "«Falsafa» atamasining lug'aviy ma'nosi nima?",
+        "options": [
+          "Olam haqidagi fan",
+          "Haqiqatni bilish san'ati",
+          "Donolikka muhabbat",
+          "To'g'ri fikrlash qoidasi"
+        ],
+        "correct": 2,
+        "explanation": "Yunoncha phileo — sevaman, sophia — donolik; atamani Pifagor qo'llagan deb hisoblanadi."
+      },
+      {
+        "text": "Falsafaning asosiy masalasi nima?",
+        "options": [
+          "Materiya va ong (borliq va tafakkur) munosabati",
+          "Baxtga erishish yo'li",
+          "Davlat va huquq munosabati",
+          "Til va mantiq munosabati"
+        ],
+        "correct": 0,
+        "explanation": "Asosiy masala ikki tomonli: nima birlamchi (ontologik) va olamni bilish mumkinmi (gnoseologik)."
+      },
+      {
+        "text": "Olamni to'liq bilish mumkin emas, degan qarash qanday ataladi?",
+        "options": [
+          "Materializm",
+          "Dualizm",
+          "Pozitivizm",
+          "Agnostitsizm"
+        ],
+        "correct": 3,
+        "explanation": "Agnostitsizm (Yum, Kant) bilishning chegarasi borligini ta'kidlaydi."
+      },
+      {
+        "text": "«Mavjud bo'lish — idrok qilinish demak» degan qarash qaysi yo'nalishga xos?",
+        "options": [
+          "Obyektiv idealizm",
+          "Subyektiv idealizm",
+          "Materializm",
+          "Dualizm"
+        ],
+        "correct": 1,
+        "explanation": "Berkli: olam inson sezgilarining majmui — subyektiv idealizm."
+      },
+      {
+        "text": "Olam atomlar va bo'shliqdan iborat deb ta'lim bergan antik faylasuf?",
+        "options": [
+          "Geraklit",
+          "Platon",
+          "Demokrit",
+          "Fales"
+        ],
+        "correct": 2,
+        "explanation": "Demokrit atomistik materializm asoschisi."
+      },
+      {
+        "text": "Suqrotning savol-javob orqali haqiqatni topish usuli qanday ataladi?",
+        "options": [
+          "Mayevtika",
+          "Sillogizm",
+          "Induksiya",
+          "Falsifikatsiya"
+        ],
+        "correct": 0,
+        "explanation": "Mayevtika — suhbatdoshni savollar orqali haqiqatga «tug'dirish» san'ati."
+      },
+      {
+        "text": "Platon ta'limotiga ko'ra haqiqiy borliq nima?",
+        "options": [
+          "Atomlar",
+          "Sezgilar",
+          "Mutlaq ruh",
+          "G'oyalar olami"
+        ],
+        "correct": 3,
+        "explanation": "Platon: moddiy narsalar g'oyalarning soyasi (g'or haqidagi rivoyat)."
+      },
+      {
+        "text": "Konfutsiychilikning markaziy g'oyasi qaysi?",
+        "options": [
+          "Nirvanaga erishish",
+          "Axloq, oila va davlat tartibi, insonparvarlik (jen)",
+          "Atomlar harakati",
+          "Ezgulik va yovuzlik kurashi"
+        ],
+        "correct": 1,
+        "explanation": "Konfutsiy jamiyat barqarorligini axloq, burch va ierarxiyaga tayangan holda tushuntirgan."
+      },
+      {
+        "text": "«Fozil odamlar shahri» asarining muallifi?",
+        "options": [
+          "Ibn Sino",
+          "Beruniy",
+          "Abu Nasr Forobiy",
+          "Al-Xorazmiy"
+        ],
+        "correct": 2,
+        "explanation": "Forobiy ideal jamiyat haqidagi ta'limotini shu asarda bayon qilgan."
+      },
+      {
+        "text": "O'rta asrlarda diniy aqidalarni mantiq yordamida asoslagan falsafa?",
+        "options": [
+          "Sxolastika",
+          "Gumanizm",
+          "Empirizm",
+          "Pozitivizm"
+        ],
+        "correct": 0,
+        "explanation": "Sxolastika (Foma Akvinskiy) aql va iymon uyg'unligini ilgari surgan."
+      },
+      {
+        "text": "Renessans davrining asosiy tamoyili qaysi?",
+        "options": [
+          "Teotsentrizm",
+          "Fatalizm",
+          "Asketizm",
+          "Antropotsentrizm va gumanizm"
+        ],
+        "correct": 3,
+        "explanation": "Uyg'onish davri insonni olam markaziga qo'ydi."
+      },
+      {
+        "text": "Bilimning manbai tajriba va sezgilar deb hisoblovchi yo'nalish?",
+        "options": [
+          "Ratsionalizm",
+          "Empirizm",
+          "Idealizm",
+          "Irratsionalizm"
+        ],
+        "correct": 1,
+        "explanation": "Empirizm (Bekon, Lokk) — induktiv usul, bilim tajribadan."
+      },
+      {
+        "text": "«Cogito ergo sum» kimning so'zi?",
+        "options": [
+          "Bekon",
+          "Spinoza",
+          "Dekart",
+          "Leybnis"
+        ],
+        "correct": 2,
+        "explanation": "Dekart: «Fikrlayapman, demak, mavjudman» — ratsionalizmning tayanch nuqtasi."
+      },
+      {
+        "text": "Inson ongini «toza taxta» (tabula rasa) deb atagan faylasuf?",
+        "options": [
+          "Jon Lokk",
+          "Tomas Gobbs",
+          "Rene Dekart",
+          "David Yum"
+        ],
+        "correct": 0,
+        "explanation": "Lokk: barcha g'oyalar tajriba orqali «yoziladi»."
+      },
+      {
+        "text": "Hokimiyatlar bo'linishi nazariyasini «Qonunlar ruhi» asarida asoslagan mutafakkir?",
+        "options": [
+          "Russo",
+          "Volter",
+          "Didro",
+          "Monteskye"
+        ],
+        "correct": 3,
+        "explanation": "Monteskye qonun chiqaruvchi, ijro etuvchi va sud hokimiyatlarini ajratishni taklif qilgan."
+      },
+      {
+        "text": "Kantning kategorik imperativi nimani talab qiladi?",
+        "options": [
+          "Foydali bo'lgan ishni qilishni",
+          "Xulq qoidasi umumiy qonun bo'la olishini",
+          "Davlat buyrug'iga bo'ysunishni",
+          "Ko'pchilikka ergashishni"
+        ],
+        "correct": 1,
+        "explanation": "«Shunday harakat qilki, xulqing qoidasi umumiy qonun bo'lishi mumkin bo'lsin.»"
+      },
+      {
+        "text": "Suv 100 °C da bug'ga aylanishi qaysi dialektik qonunga misol?",
+        "options": [
+          "Inkorni inkor",
+          "Qarama-qarshiliklar birligi va kurashi",
+          "Miqdor o'zgarishlarining sifat o'zgarishlariga o'tishi",
+          "Sabab va oqibat"
+        ],
+        "correct": 2,
+        "explanation": "Miqdor (harorat) me'yor chegarasiga yetgach, sifat (holat) o'zgaradi."
+      },
+      {
+        "text": "Gegel olam asosida nimani ko'rgan?",
+        "options": [
+          "Mutlaq g'oyani",
+          "Atomlarni",
+          "Yashash irodasini",
+          "Iqtisodiy munosabatlarni"
+        ],
+        "correct": 0,
+        "explanation": "Gegel — obyektiv idealist: Mutlaq g'oya tabiat va tarix orqali o'zini rivojlantiradi."
+      },
+      {
+        "text": "Marksizmga ko'ra jamiyatning ustqurmasini nima belgilaydi?",
+        "options": [
+          "Din",
+          "Buyuk shaxslar",
+          "Geografik muhit",
+          "Iqtisodiy bazis"
+        ],
+        "correct": 3,
+        "explanation": "«Borliq ongni belgilaydi»: ishlab chiqarish munosabatlari siyosat, huquq va mafkurani belgilaydi."
+      },
+      {
+        "text": "Popperning falsifikatsiya tamoyili nima?",
+        "options": [
+          "Nazariya ko'p marta tasdiqlansa — haqiqat",
+          "Ilmiy nazariyani rad etish imkoniyati bo'lishi kerak",
+          "Barcha nazariyalar teng",
+          "Haqiqat — amaliy foyda"
+        ],
+        "correct": 1,
+        "explanation": "Rad etib bo'lmaydigan da'vo ilmiy emas."
+      },
+      {
+        "text": "«Mavjudlik mohiyatdan oldin keladi» — qaysi oqimning g'oyasi?",
+        "options": [
+          "Pozitivizm",
+          "Pragmatizm",
+          "Ekzistensializm",
+          "Marksizm"
+        ],
+        "correct": 2,
+        "explanation": "Sartr: inson avval mavjud bo'ladi, keyin tanlovlari orqali o'zini yaratadi."
+      },
+      {
+        "text": "Gandining zo'ravonliksiz qarshilik ta'limoti qanday ataladi?",
+        "options": [
+          "Satyagraha",
+          "Karma",
+          "Dao",
+          "Asabiya"
+        ],
+        "correct": 0,
+        "explanation": "Satyagraha («haqiqatga sodiqlik») ahimsa — zo'ravonlik qilmaslik tamoyiliga asoslanadi."
+      },
+      {
+        "text": "Turkistonda yangi usul maktablari va milliy matbuot orqali jamiyatni yangilash harakati?",
+        "options": [
+          "Sufizm",
+          "Ma'rifatparvarlik",
+          "Pozitivizm",
+          "Jadidchilik"
+        ],
+        "correct": 3,
+        "explanation": "Jadidlar (Behbudiy, Avloniy, Fitrat, Munavvarqori) ilm-ma'rifat orqali taraqqiyotni ilgari surgan."
+      },
+      {
+        "text": "Postindustrial (axborot) jamiyatida asosiy boylik nima?",
+        "options": [
+          "Yer",
+          "Bilim va axborot",
+          "Sanoat kapitali",
+          "Xom ashyo"
+        ],
+        "correct": 1,
+        "explanation": "Bell va Toffler bo'yicha axborot jamiyatining asosiy resursi — bilim."
+      },
+      {
+        "text": "Ibn Xaldun ta'limotida davlatni tashkil etuvchi jamoaviy birdamlik nima deb ataladi?",
+        "options": [
+          "Xudi",
+          "Ahimsa",
+          "Asabiya",
+          "Jen"
+        ],
+        "correct": 2,
+        "explanation": "Asabiya kuchayganda davlat ko'tariladi, susayganda yemiriladi."
+      },
+      {
+        "text": "«Chaqiriq va javob» modeli bilan sivilizatsiyalar rivojini tushuntirgan olim?",
+        "options": [
+          "Toynbi",
+          "Shpengler",
+          "Fukuyama",
+          "Yaspers"
+        ],
+        "correct": 0,
+        "explanation": "Toynbi: chaqiriqqa munosib javob topgan sivilizatsiya rivojlanadi."
+      },
+      {
+        "text": "«Tarixning oxiri» konsepsiyasi muallifi?",
+        "options": [
+          "Xantington",
+          "Marks",
+          "Viko",
+          "Fukuyama"
+        ],
+        "correct": 3,
+        "explanation": "Fukuyama liberal demokratiyani mafkuraviy rivojning yakuniy nuqtasi deb atagan."
+      },
+      {
+        "text": "Sun'iy intellekt qarorlarida kamsitish bo'lmasligini ta'minlash qaysi muammo?",
+        "options": [
+          "Axborot pufagi",
+          "Algoritmik adolat",
+          "Transgumanizm",
+          "Simulyakr"
+        ],
+        "correct": 1,
+        "explanation": "Algoritm o'tmish ma'lumotlaridagi kamsitishni takrorlashi mumkin; shaffoflik va inson nazorati kerak."
+      }
+    ]
+  }
+]
