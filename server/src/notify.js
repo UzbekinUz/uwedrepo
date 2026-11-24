@@ -31,7 +31,8 @@ export async function notifyBooking(bookingId, kind) {
       confirmed: [b.student, `${tutorName} bronni tasdiqladi: ${what}.\nTo'lash uchun: ${o}/my`],
       rejected: [b.student, `${tutorName} bronni rad etdi (${what}).${b.refunded ? " To'lov qaytariladi." : ''}\nBoshqa repetitor tanlang: ${o}/tutors`],
       cancelled: [b.tutor?.user, `${studentName} bronni bekor qildi: ${what}.`],
-      paid: [b.tutor?.user, `To'lov qabul qilindi: ${studentName} — ${what}.\nDars vaqtida talaba bilan bog'laning: ${o}/tutor`],
+      paid: [b.tutor?.user, `To'lov qabul qilindi${b.paymentTest ? " (sinov rejimi: haqiqiy pul o'tkazilmadi)" : ''}: ${studentName} — ${what}.\nDars vaqtida talaba bilan bog'laning: ${o}/tutor`],
+      refunded: [b.student, `To'lov bekor qilindi va qaytarildi, bron bekor qilindi (${what}).\nBoshqa vaqt tanlash: ${o}/tutors`],
       completed: [b.student, `Dars o'tdi (${what}). Repetitorni baholang: ${o}/my`],
       'admin-cancelled': [b.student, `Administrator bronni bekor qildi (${what}).${b.refunded ? " To'lov qaytariladi." : ''}`],
     }[kind];

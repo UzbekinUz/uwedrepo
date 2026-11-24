@@ -100,6 +100,8 @@ const bookingSchema = new Schema(
     payout: Number,
     status: { type: String, enum: ['pending', 'confirmed', 'paid', 'completed', 'cancelled'], default: 'pending' },
     paymentMethod: { type: String, enum: ['click', 'payme', 'card', 'manual'] },
+    payment: ref('Payment'), // bronni yopgan to'lov tranzaksiyasi
+    paymentTest: { type: Boolean, default: false }, // sinov rejimidagi to'lov: haqiqiy pul o'tkazilmagan
     payoutPaid: { type: Boolean, default: false }, // repetitorga ulushi o'tkazib berilganmi
     payoutAt: Date,
     paidAt: Date,
@@ -114,6 +116,33 @@ bookingSchema.index(
   { tutor: 1, startsAt: 1 },
   { unique: true, name: 'tutor_slot_active', partialFilterExpression: { status: { $in: ['pending', 'confirmed', 'paid', 'completed'] } } }
 );
+
+// To'lov tranzaksiyasi: har bir «To'lash» bosilishi — alohida yozuv (Payme/Click tranzaksiyasi yoki sinov to'lovi)
+const paymentSchema = new Schema(
+  {
+    booking: ref('Booking', { required: true }),
+    student: ref('User', { required: true }),
+    provider: { type: String, enum: ['payme', 'click'], required: true },
+    mode: { type: String, enum: ['demo', 'live'], required: true }, // demo — haqiqiy pul yechilmaydi
+    amount: { type: Number, required: true }, // so'm
+    // created — talaba to'lov sahifasiga o'tdi; pending — provayder tranzaksiya ochdi; paid; cancelled
+    status: { type: String, enum: ['created', 'pending', 'paid', 'cancelled'], default: 'created' },
+    extId: String, // Payme tranzaksiya id si yoki Click click_trans_id
+    extTime: Number, // Payme: tranzaksiya yaratilgan vaqt (provayder vaqti, ms)
+    prepareId: Number, // Click: merchant_prepare_id
+    state: Number, // Payme holati: 1 yaratilgan, 2 bajarilgan, -1 / -2 bekor qilingan
+    createTime: Number,
+    performTime: Number,
+    cancelTime: Number,
+    reason: Number, // Payme bekor qilish sababi
+    refunded: { type: Boolean, default: false }, // bron bekor qilingani uchun pul qaytarilishi kerak
+    paidAt: Date,
+  },
+  { timestamps: true }
+);
+paymentSchema.index({ provider: 1, extId: 1 }, { unique: true, partialFilterExpression: { extId: { $type: 'string' } } });
+paymentSchema.index({ booking: 1, createdAt: -1 });
+paymentSchema.index({ provider: 1, createTime: 1 });
 
 const reviewSchema = new Schema(
   {
@@ -168,6 +197,7 @@ export const Exam = model('Exam', examSchema);
 export const Tutor = model('Tutor', tutorSchema);
 export const Material = model('Material', materialSchema);
 export const Booking = model('Booking', bookingSchema);
+export const Payment = model('Payment', paymentSchema);
 export const Review = model('Review', reviewSchema);
 export const Survey = model('Survey', surveySchema);
 export const Visit = model('Visit', visitSchema);

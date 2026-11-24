@@ -28,6 +28,19 @@ services:
         sync: false # testlardagi AI izohlari uchun (bo'sh bo'lsa AI tugmasi ko'rinmaydi)
       - key: JWT_SECRET
         generateValue: true # Render o'zi tasodifiy qiymat yaratadi
+      # --- To'lov: hozircha sinov rejimi (pul yechilmaydi). Merchant shartnomasidan keyin live va kalitlar ---
+      - key: PAYMENT_MODE
+        value: demo
+      - key: PAYME_MERCHANT_ID
+        sync: false
+      - key: PAYME_KEY
+        sync: false
+      - key: CLICK_SERVICE_ID
+        sync: false
+      - key: CLICK_MERCHANT_ID
+        sync: false
+      - key: CLICK_SECRET_KEY
+        sync: false
       # --- Qoidalar (keyin admin paneldan o'zgartiriladi) ---
       - key: COMMISSION_PERCENT
         value: 10

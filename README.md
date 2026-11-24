@@ -45,7 +45,7 @@ Qadamma-qadam qo'llanma: [DEPLOY.md](DEPLOY.md). `render.yaml` Blueprint ham tay
 
 `/admin` (faqat admin roli). 12 bo'lim: umumiy ko'rinish (pilotga tayyorlik ro'yxati, grafiklar, voronka), foydalanuvchilar (bloklash), repetitorlar (tasdiqlash yoki sabab bilan rad etish), bronlar (qo'lda to'lov), moliya (repetitorlarga hisob), sharhlar, kontent (fan, sana, material), Telegram e'lonlari, tadqiqot (so'rovnoma), sozlamalar (komissiya, chegirma, bekor qilish muddati, saytning yuqori xabari, parol), faoliyat jurnali va yo'riqnoma. Har bir bo'limning tepasida «bu bo'lim nima qiladi» izohi bor.
 
-Pilotda to'lov qo'lda: talaba repetitorga to'laydi, admin «Bronlar» bo'limida «Qo'lda to'langan» belgilaydi. Click/Payme ulangach `server/src/payments.js` almashtiriladi.
+To'lov: talaba «To'lash» → Payme yoki Click. Hozir **sinov rejimi** (`PAYMENT_MODE=demo`): talaba saytning o'z to'lov sahifasidan o'tadi, pul yechilmaydi, bron «To'langan (sinov)» bo'ladi. Admin kerak bo'lsa «Bronlar» bo'limida «Qo'lda to'langan» belgilashi ham mumkin. Haqiqiy rejim — pastdagi «To'lov» bo'limida.
 
 Havolalarga `?ref=nomi` qo'shsangiz (masalan `/?ref=0-9a-guruh`), tashrif manbasi (chat yoki kanal) adminda ko'rinadi.
 
@@ -69,7 +69,7 @@ server/src
   models/index.js     barcha Mongoose modellari
   routes/             auth, catalog (fan/nazorat/material), tutors, bookings, admin, public (so'rovnoma, tashrif)
   lib.js              bo'sh slotlar, narx/komissiya hisobi
-  payments.js         to'lov provayderi (hozir mock; Click/Payme shu yerga ulanadi)
+  payments/           to'lov: config (rejim, kalitlar), index (checkout, to'lovni yakunlash), payme.js (Merchant API), click.js (Shop API)
 client/src
   pages/              Home, Subjects, Tutors, TutorDetail, Calendar, Materials, MyLessons, TutorDashboard, Admin, Survey
   components/         Layout, Cards, PrefPicker, ui
@@ -84,6 +84,18 @@ client/src
 - Telegram kontaktlari faqat tasdiqlangan bronda ko'rinadi.
 - Yangi repetitor va materiallar admin tasdig'isiz ommaviy ko'rinmaydi.
 
-## Hozircha mock
+## To'lov (Payme, Click)
 
-To'lov (Click/Payme/karta) — **haqiqiy pul yechilmaydi**. Haqiqiy ulash uchun merchant shartnomasi kerak; `server/src/payments.js` ni almashtiring.
+Oqim: bron → repetitor tasdiqlaydi → talaba «To'lash» (Payme yoki Click) → `POST /api/bookings/:id/checkout` to'lov yozuvini (`Payment`) ochib, to'lov sahifasi manzilini qaytaradi → to'lov tasdiqlansa bron «To'langan» bo'ladi va repetitorga xabar boradi.
+
+- **Sinov rejimi** (standart, `PAYMENT_MODE` berilmagan yoki `demo`): manzil — saytning `/pay/:id` sahifasi. Unda «Sinov rejimi» belgisi turadi, karta ma'lumotlari so'ralmaydi, **haqiqiy pul yechilmaydi**; bron `paymentTest: true` bilan belgilanadi.
+- **Haqiqiy rejim** (`PAYMENT_MODE=live`): talaba Payme (`checkout.paycom.uz`) yoki Click (`my.click.uz`) sahifasiga o'tadi, to'lov natijasi provayder serveridan keladi:
+  - Payme Merchant API: `POST /api/payments/payme` (CheckPerformTransaction, CreateTransaction, PerformTransaction, CancelTransaction, CheckTransaction, GetStatement);
+  - Click Shop API: `POST /api/payments/click/prepare` va `/api/payments/click/complete` (MD5 imzo bilan).
+
+Haqiqiy rejimga o'tish:
+1. YaTT yoki MChJ nomidan Payme Business va/yoki Click bilan merchant shartnomasi tuzing (bank hisob raqami kerak). Saytda ommaviy oferta, to'lov va qaytarish qoidalari bo'lishi talab qilinadi.
+2. Admin panel → Sozlamalar → «Tizim holati»dagi manzillarni provayder kabinetiga kiriting.
+3. Render → Environment: `PAYME_MERCHANT_ID`, `PAYME_KEY` (fiskal chek uchun `PAYME_MXIK`, `PAYME_PACKAGE_CODE`, `PAYME_VAT_PERCENT`), `CLICK_SERVICE_ID`, `CLICK_MERCHANT_ID`, `CLICK_SECRET_KEY` va `PAYMENT_MODE=live`. Payme sinov muhiti uchun: `PAYME_TEST=1` va `PAYME_TEST_KEY`.
+
+Kalitlar faqat Render'da saqlanadi — repozitoriyga yoki chatga yozilmaydi. Haqiqiy rejimda kaliti kiritilmagan provayder talabaga ko'rinmaydi. To'langan bron bekor qilinsa, pul provayder kabinetidan qaytariladi (Payme o'zi `CancelTransaction` yuboradi va bron avtomatik bekor bo'ladi).

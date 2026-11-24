@@ -7,6 +7,27 @@ function Row({ label, ok, text }) {
   return <li className="flex flex-wrap items-center justify-between gap-2 py-2"><span className="font-medium">{label}</span><span className="flex items-center gap-2 text-sm text-slate-700">{text}<Chip tone={ok ? 'green' : 'amber'}>{ok ? 'Ulangan' : 'Ulanmagan'}</Chip></span></li>;
 }
 
+/** To'lov tizimi: provayderlar holati va ularning kabinetiga kiritiladigan manzillar */
+function Payment({ info }) {
+  if (!info) return null;
+  const copy = (v) => navigator.clipboard?.writeText(v);
+  const Url = ({ label, v }) => (
+    <div className="mt-1 flex flex-wrap items-center gap-2 text-sm"><span className="text-slate-600">{label}:</span><code className="break-all rounded bg-slate-100 px-2 py-0.5">{v}</code><button type="button" className="btn-ghost btn-sm" onClick={() => copy(v)}>Nusxa</button></div>
+  );
+  return (
+    <div className="mt-4 rounded-xl bg-white/60 p-4 ring-1 ring-slate-200">
+      <div className="flex flex-wrap items-center gap-2 font-semibold">Payme <Chip tone={info.payme.ready ? 'green' : 'amber'}>{info.payme.ready ? (info.payme.test ? 'Kalit kiritilgan (test muhiti)' : 'Kalit kiritilgan') : "Kalit yo'q"}</Chip>{info.payme.ready && !info.payme.fiscal && <Chip tone="amber">Fiskal chek (MXIK) yo'q</Chip>}</div>
+      <Url label="Merchant API manzili" v={info.payme.endpoint} />
+      <div className="mt-4 flex flex-wrap items-center gap-2 font-semibold">Click <Chip tone={info.click.ready ? 'green' : 'amber'}>{info.click.ready ? 'Kalit kiritilgan' : "Kalit yo'q"}</Chip></div>
+      <Url label="Prepare URL" v={info.click.prepare} />
+      <Url label="Complete URL" v={info.click.complete} />
+      <Hint className="mt-4" title="Haqiqiy to'lovga o'tish">
+        <p>Hozir talabalar Payme/Click tugmasi orqali to'lovni sinab ko'radi, lekin pul yechilmaydi. Merchant shartnomasi tuzilgach (YaTT yoki MChJ, bank hisob raqami): yuqoridagi manzillarni Payme va Click kabinetiga kiriting, so'ng Render → Environment bo'limiga <code>PAYME_MERCHANT_ID</code>, <code>PAYME_KEY</code>, <code>CLICK_SERVICE_ID</code>, <code>CLICK_MERCHANT_ID</code>, <code>CLICK_SECRET_KEY</code> va <code>PAYMENT_MODE=live</code> qo'shing. Kalitlarni hech kimga yubormang va kodga yozmang.</p>
+      </Hint>
+    </div>
+  );
+}
+
 function System() {
   const { data, loading } = useFetch('/admin/system');
   if (loading) return <Spinner />;
@@ -17,8 +38,9 @@ function System() {
         <Row label="Ma'lumotlar bazasi" ok={data.db} text="MongoDB" />
         <Row label="Telegram bot" ok={!!data.bot} text={data.bot ? `@${data.bot}` : "TELEGRAM_BOT_TOKEN yo'q"} />
         <Row label="AI izohlari (Claude)" ok={!!data.ai} text={data.ai || "ANTHROPIC_API_KEY yo'q"} />
-        <Row label="To'lov tizimi" ok={data.paymentMode !== 'mock'} text={data.paymentMode === 'mock' ? "Mock: pul yechilmaydi" : data.paymentMode} />
+        <Row label="To'lov tizimi" ok={data.payment?.mode === 'live'} text={data.payment?.mode === 'live' ? "Haqiqiy rejim" : "Sinov rejimi: pul yechilmaydi"} />
       </ul>
+      <Payment info={data.payment} />
       <p className="mt-3 text-sm text-slate-600">Rejim: <b>{data.env}</b> · Node {data.node} · server {data.uptimeHours} soat ishlayapti · havolalar uchun manzil: {data.clientOrigin}</p>
       {data.env === 'development' && <p className="mt-1 text-sm text-slate-600">Telegram xabarlaridagi havolalar to'g'ri ochilishi uchun deploydan keyin <code>CLIENT_ORIGIN</code> ni haqiqiy sayt manziliga o'zgartiring.</p>}
     </div>

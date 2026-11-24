@@ -8,6 +8,7 @@ import { config } from '../config.js';
 import { bot } from '../telegram.js';
 import { getSettings } from '../settings.js';
 import { FACULTIES, FORMATS, LANGUAGES, MATERIAL_TYPES, EXAM_TYPES, FACULTY_KEYS } from '../data/meta.js';
+import { providerStatus } from '../payments/config.js';
 
 const r = Router();
 
@@ -24,7 +25,7 @@ r.get('/meta', (_req, res) =>
     cancelHours: getSettings().cancelHours,
     registrationOpen: getSettings().registrationOpen,
     banner: getSettings().banner.active && getSettings().banner.text ? getSettings().banner : null,
-    paymentMode: process.env.PAYMENT_PROVIDER || 'mock',
+    payment: providerStatus(), // to'lov rejimi (demo/live) va talabaga ko'rinadigan usullar
     aiExplain: aiAvailable(),
   })
 );

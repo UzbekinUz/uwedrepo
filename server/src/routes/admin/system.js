@@ -8,6 +8,7 @@ import { getSettings, saveSettings } from '../../settings.js';
 import { bot, sendText } from '../../telegram.js';
 import { config } from '../../config.js';
 import { audit, pageOf, pageMeta } from './helpers.js';
+import { paymentSystemInfo } from '../../payments/index.js';
 
 const r = Router();
 
@@ -42,7 +43,7 @@ r.get('/system', wrap(async (_req, res) =>
     bot: bot.username || null,
     db: mongoose.connection.readyState === 1,
     env: config.isProd ? 'production' : 'development',
-    paymentMode: process.env.PAYMENT_PROVIDER || 'mock',
+    payment: paymentSystemInfo(),
     ai: config.anthropicKey ? config.anthropicModel : null,
     clientOrigin: config.clientOrigin,
     node: process.version,
