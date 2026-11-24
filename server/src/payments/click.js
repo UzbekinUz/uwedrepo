@@ -8,9 +8,9 @@
  */
 import crypto from 'node:crypto';
 import mongoose from 'mongoose';
-import { Booking, Payment } from '../models/index.js';
+import { Payment } from '../models/index.js';
 import { paymentConfig } from './config.js';
-import { markPaid } from './index.js';
+import { markPaid, payable } from './index.js';
 
 export const CLICK_ERR = {
   ok: [0, 'Success'],
@@ -64,8 +64,7 @@ export async function clickPrepare(req, res) {
   if (err) return reply(err);
   if (p.status === 'paid') return reply(CLICK_ERR.paid);
   if (p.status === 'cancelled') return reply(CLICK_ERR.cancelled);
-  const booking = await Booking.findById(p.booking);
-  if (!booking || booking.status !== 'confirmed') return reply(CLICK_ERR.order);
+  if (!(await payable(p))) return reply(CLICK_ERR.order);
   // Click oldingi urinish muvaffaqiyatsiz bo'lsa, yangi click_trans_id bilan qayta tayyorlashi mumkin
   const prepareId = p.prepareId || crypto.randomInt(1, 2_000_000_000);
   await Payment.updateOne({ _id: p._id, status: { $in: ['created', 'pending'] } }, { $set: { extId: String(q.click_trans_id), prepareId, status: 'pending', createTime: Date.now() } });
@@ -86,8 +85,7 @@ export async function clickComplete(req, res) {
     await cancel();
     return reply(CLICK_ERR.cancelled);
   }
-  const booking = await Booking.findById(p.booking);
-  if (!booking || booking.status !== 'confirmed') {
+  if (!(await payable(p))) {
     await cancel();
     return reply(CLICK_ERR.cancelled);
   }

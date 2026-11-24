@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
-import { User, Subject, Exam, Tutor, Material, Booking, Review, Survey, Visit } from '../../models/index.js';
+import { User, Subject, Exam, Tutor, Material, Booking, Review, Survey, Visit, Payment } from '../../models/index.js';
 import { wrap } from '../../middleware/util.js';
 import { config } from '../../config.js';
 import { bot } from '../../telegram.js';
@@ -123,9 +123,23 @@ r.get(
       ],
       topSubjects, noTutorSubjects, topTutors, sources, checklist: checks,
       pending: { materials: await Material.countDocuments({ status: 'pending' }) },
+      premium: await premiumStats(),
     });
   })
 );
+
+/** Premium: faol obunachilar va to'lovlar (sinov to'lovlari alohida) */
+async function premiumStats() {
+  const [active, pay] = await Promise.all([
+    User.countDocuments({ premiumUntil: { $gt: new Date() } }),
+    Payment.aggregate([
+      { $match: { kind: 'premium', status: 'paid' } },
+      { $group: { _id: '$mode', n: { $sum: 1 }, sum: { $sum: '$amount' } } },
+    ]),
+  ]);
+  const by = Object.fromEntries(pay.map((x) => [x._id, x]));
+  return { active, paid: by.live?.n || 0, revenue: by.live?.sum || 0, demoPaid: by.demo?.n || 0 };
+}
 
 /* ---------- Customer Development: so'rovnoma ---------- */
 r.get(

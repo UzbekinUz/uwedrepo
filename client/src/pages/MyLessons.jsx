@@ -68,7 +68,7 @@ function BookingCard({ b, reload }) {
       </div>
       <div className="mt-2 text-sm text-slate-600">
         {b.discount > 0 && <span className="text-slate-400 line-through">{money(b.price)} </span>}
-        <b>{money(b.total)}</b>{b.discount > 0 && <span className="ml-1 text-emerald-600">({t('talaba chegirmasi')} −{money(b.discount)})</span>}
+        <b>{money(b.total)}</b>{b.discount > 0 && <span className="ml-1 text-emerald-600">({b.premiumDiscount > 0 ? `★ ${t('Premium chegirmasi')}` : t('talaba chegirmasi')} −{money(b.discount)})</span>}
         {b.refunded && <span className="ml-2 chip bg-sky-100 text-sky-800">{t("To'lov qaytariladi")}</span>}
         {b.paymentTest && ['paid', 'completed'].includes(b.status) && <span className="ml-2 chip bg-amber-100 text-amber-800">{t("Sinov to'lovi")}</span>}
       </div>

@@ -28,6 +28,18 @@ r.put(
         aiEnabled: z.boolean().optional(),
         aiDailyLimit: z.number().int().min(0).max(100).optional(),
         telegramReminders: z.boolean().optional(),
+        premium: z
+          .object({
+            enabled: z.boolean(),
+            priceMonth: z.number().int().min(0).max(10_000_000),
+            priceSemester: z.number().int().min(0).max(10_000_000),
+            priceYear: z.number().int().min(0).max(10_000_000),
+            lessonDiscount: z.number().min(0).max(50),
+            aiDailyLimit: z.number().int().min(0).max(1000),
+            trialDays: z.number().int().min(0).max(60),
+            rewardDays: z.number().int().min(0).max(90),
+          })
+          .optional(),
       })
       .parse(req.body);
     const before = getSettings();

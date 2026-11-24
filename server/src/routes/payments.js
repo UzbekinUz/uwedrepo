@@ -30,7 +30,7 @@ async function own(req) {
 }
 
 const present = (p) => ({
-  _id: p._id, provider: p.provider, mode: p.mode, amount: p.amount, status: p.status, refunded: p.refunded,
+  _id: p._id, kind: p.kind, plan: p.plan, days: p.days, provider: p.provider, mode: p.mode, amount: p.amount, status: p.status, refunded: p.refunded,
   createdAt: p.createdAt, paidAt: p.paidAt, booking: p.booking,
 });
 

@@ -21,6 +21,15 @@ function LangSwitch() {
   );
 }
 
+/** Sarlavhadagi Premium havolasi: faol bo'lsa to'ldirilgan belgi */
+function PremiumLink({ premium, compact }) {
+  return (
+    <Link to="/premium" aria-label="Premium" className={`rounded-full px-3 py-1.5 text-xs font-bold transition ${premium ? 'bg-amber-400 text-amber-950 hover:bg-amber-300' : 'bg-amber-100 text-amber-900 hover:bg-amber-200'}`} title={premium ? t('Premium faol') : t('Premium imkoniyatlar')}>
+      ★{compact ? '' : ' Premium'}
+    </Link>
+  );
+}
+
 export default function Layout() {
   const { user, logout, meta } = useApp();
   const [open, setOpen] = useState(false);
@@ -30,13 +39,14 @@ export default function Layout() {
   const close = () => setOpen(false);
   const tutorLabel = user?.role === 'tutor' ? t('Repetitor paneli') : t("Repetitor bo'lish");
   const home = pathname === '/';
+  const premium = !!user?.premiumUntil && new Date(user.premiumUntil) > new Date();
 
   return (
     <div className="flex min-h-screen flex-col overflow-x-clip">
       {meta?.banner && (
-        <div role="status" className={`px-4 py-2 text-center text-sm font-medium ${meta.banner.kind === 'warn' ? 'bg-amber-100 text-amber-950' : 'bg-brand-100 text-slate-900'}`}>{meta.banner.text}</div>
+        <div role="status" className={`print:hidden px-4 py-2 text-center text-sm font-medium ${meta.banner.kind === 'warn' ? 'bg-amber-100 text-amber-950' : 'bg-brand-100 text-slate-900'}`}>{meta.banner.text}</div>
       )}
-      <header className="sticky top-0 z-30 bg-white">
+      <header className="sticky top-0 z-30 bg-white print:hidden">
         <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-4 sm:px-6">
           <Link to="/" className="flex items-center gap-2.5 text-xl font-extrabold tracking-tight text-field" onClick={close} aria-label="UWEDRepo">
             <img src="/logo-icon.png" width="36" height="36" alt="" className="h-9 w-9" />
@@ -46,6 +56,7 @@ export default function Layout() {
             {links.map(([to, label]) => <NavLink key={to} to={to} className={cls}>{t(label)}</NavLink>)}
           </nav>
           <div className="hidden items-center gap-2 md:flex">
+            <PremiumLink premium={premium} />
             <LangSwitch />
             {user ? (
               <>
@@ -62,6 +73,7 @@ export default function Layout() {
             )}
           </div>
           <div className="flex items-center gap-2 md:hidden">
+            <PremiumLink premium={premium} compact />
             <LangSwitch />
             <button className="rounded-full p-2 hover:bg-slate-100" onClick={() => setOpen(!open)} aria-label={t('Menyu')} aria-expanded={open}>
               <svg width="24" height="24" fill="none" stroke="currentColor" strokeWidth="2" aria-hidden="true"><path d={open ? 'M6 6l12 12M18 6L6 18' : 'M4 7h16M4 12h16M4 17h16'} /></svg>
@@ -89,7 +101,7 @@ export default function Layout() {
         <motion.div key={pathname} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.35, ease: 'easeOut' }}><Outlet /></motion.div>
       </main>
 
-      <footer className="mt-24 bg-field text-slate-300">
+      <footer className="mt-24 bg-field text-slate-300 print:hidden">
         <div className="mx-auto max-w-6xl px-4 pb-6 pt-16 sm:px-6">
           <div className="flex flex-wrap items-start justify-between gap-8">
             <p className="max-w-sm text-base text-slate-300">{t('UWED talabalari uchun repetitorlar, materiallar va nazorat sanalari — bir joyda.')}</p>
@@ -98,6 +110,7 @@ export default function Layout() {
               <Link to="/#qanday" className="hover:text-brand-300">{t('Qanday ishlaydi')}</Link>
               <Link to="/#savol" className="hover:text-brand-300">{t('Savol-javob')}</Link>
               <Link to="/survey" className="hover:text-brand-300">{t("So'rovnomada qatnashing")}</Link>
+              <Link to="/premium" className="hover:text-brand-300">Premium</Link>
             </nav>
           </div>
           <div className="select-none pt-14 text-[clamp(3.5rem,17vw,15rem)] font-extrabold leading-[0.85] tracking-[-0.05em] text-brand-600" aria-hidden="true"><span className="text-slate-300">UWED</span>Repo</div>

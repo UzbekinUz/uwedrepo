@@ -2,6 +2,9 @@ import { Booking, Payment } from '../models/index.js';
 import { config } from '../config.js';
 import { HttpError } from '../middleware/util.js';
 import { notifyBooking } from '../notify.js';
+import { notifyUser } from '../telegram.js';
+import { addPremiumDays, planOf } from '../premium.js';
+import { getSettings } from '../settings.js';
 import { paymentConfig, providerStatus, PROVIDER_NAME } from './config.js';
 
 export { paymentConfig, providerStatus, PROVIDER_NAME };
@@ -34,6 +37,25 @@ export async function startCheckout({ booking, provider, user }) {
   return { payment, url: checkoutUrl(payment) };
 }
 
+/** Premium obuna uchun «To'lash»: reja narxi bilan to'lov yozuvi */
+export async function startPremiumCheckout({ user, plan: planKey, provider }) {
+  const status = providerStatus();
+  if (!getSettings().premium.enabled) throw new HttpError(403, 'Premium obuna hozircha yopiq');
+  if (!status.providers.includes(provider)) throw new HttpError(503, `${PROVIDER_NAME[provider]} orqali to'lov hozircha ulanmagan`);
+  const plan = planOf(planKey);
+  if (!plan || !(plan.price > 0)) throw new HttpError(400, "Bunday reja yo'q");
+  await Payment.updateMany({ student: user._id, kind: 'premium', status: 'created' }, { $set: { status: 'cancelled', cancelTime: Date.now() } });
+  const payment = await Payment.create({ kind: 'premium', plan: plan.key, days: plan.days, student: user._id, provider, mode: status.mode, amount: plan.price });
+  return { payment, url: checkoutUrl(payment) };
+}
+
+/** To'lovni hali qabul qilish mumkinmi (bron hali «to'lov kutilmoqda»da / premium yoqilgan) */
+export async function payable(payment) {
+  if (payment.kind === 'premium') return true;
+  const b = await Booking.findById(payment.booking).select('status');
+  return b?.status === 'confirmed';
+}
+
 /**
  * To'lovni yakunlash (Payme PerformTransaction, Click complete yoki sinov tasdig'i).
  * Bron «to'lov kutilmoqda» holatidan «to'langan»ga atomik o'tadi: ikki marta bosilsa, ikkinchisi null qaytaradi.
@@ -46,6 +68,12 @@ export async function markPaid(paymentId, extra = {}) {
     { new: true }
   );
   if (!payment) return null;
+  if (payment.kind === 'premium') {
+    const user = await addPremiumDays(payment.student, payment.days);
+    const until = user?.premiumUntil ? new Date(user.premiumUntil).toLocaleDateString('ru-RU', { timeZone: 'Asia/Tashkent' }) : '';
+    notifyUser(payment.student, `UWEDRepo Premium faollashdi${payment.mode === 'demo' ? " (sinov to'lovi)" : ''}: ${until} gacha.`).catch(() => {});
+    return { payment, user };
+  }
   const booking = await Booking.findOneAndUpdate(
     { _id: payment.booking, status: 'confirmed' },
     { $set: { status: 'paid', paymentMethod: payment.provider, paidAt: now, payment: payment._id, paymentTest: payment.mode === 'demo' } },

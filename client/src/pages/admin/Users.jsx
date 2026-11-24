@@ -7,11 +7,13 @@ const ROLE = { student: ['slate', 'Talaba'], tutor: ['brand', 'Repetitor'], admi
 
 function Detail({ id, onChanged, meId }) {
   const { data, loading, error } = useFetch(`/admin/users/${id}`);
-  const { run, err, busy } = useAct();
+  const { run, err, msg, busy } = useAct();
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const { user: u, bookings, tutor, reviews } = data;
   const patch = (body, ok) => run(async () => { await api(`/admin/users/${id}`, { method: 'PATCH', body }); onChanged(); }, ok);
+  const premium = (days) => run(async () => { await api(`/admin/users/${id}/premium`, { method: 'POST', body: { days } }); onChanged(); }, days > 0 ? `${days} kun Premium berildi` : 'Premium olib tashlandi');
+  const prem = u.premiumUntil && new Date(u.premiumUntil) > new Date();
   return (
     <div className="space-y-4 bg-slate-50 p-4">
       <div className="grid gap-x-8 gap-y-1 text-sm sm:grid-cols-2">
@@ -20,6 +22,7 @@ function Detail({ id, onChanged, meId }) {
         <div><b>Email:</b> {u.email || '—'}</div>
         <div><b>Fakultet/kurs:</b> {u.faculty || '—'} {u.year ? `· ${u.year}-kurs` : ''}</div>
         <div><b>Ro'yxatdan o'tgan:</b> {dateTime(u.createdAt)}</div>
+        <div><b>Premium:</b> {prem ? `${dateTime(u.premiumUntil)} gacha` : "yo'q"}{u.premiumTrialUsed ? ' · bepul sinov ishlatilgan' : ''}</div>
         <div><b>Sharhlar:</b> {reviews} ta{tutor ? ` · repetitor anketasi: ${tutor.status}, ${money(tutor.pricePerHour)}/soat` : ''}</div>
       </div>
       {bookings.length > 0 && (
@@ -29,6 +32,12 @@ function Detail({ id, onChanged, meId }) {
         </div>
       )}
       <ErrorBox error={err} />
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-sm font-semibold">★ Premium:</span>
+        {[7, 30].map((d) => <button key={d} className="btn-ghost btn-sm" disabled={busy} onClick={() => premium(d)}>+{d} kun</button>)}
+        {prem && <button className="btn-ghost btn-sm text-red-600" disabled={busy} onClick={() => confirm('Premium olib tashlansinmi?') && premium(-3650)}>Olib tashlash</button>}
+        {msg && <span className="text-sm font-medium text-emerald-700">{msg}</span>}
+      </div>
       <div className="flex flex-wrap gap-2">
         {u.role !== 'admin' && <button className="btn-ghost btn-sm" disabled={busy} onClick={() => confirm(`${u.name} ga admin huquqi beriladi: u barcha ma'lumotni ko'radi va o'zgartiradi. Davom etasizmi?`) && patch({ role: 'admin' })}>Admin qilish</button>}
         {u.role === 'admin' && String(u._id) !== String(meId) && <button className="btn-ghost btn-sm" disabled={busy} onClick={() => confirm("Adminlik huquqi olinadi. Davom etasizmi?") && patch({ role: 'student' })}>Adminlikdan olish</button>}
@@ -62,7 +71,7 @@ export default function Users({ me }) {
             {list.data.items.map((u) => (
               <Fragment key={u._id}>
                 <tr>
-                  <td className="font-semibold">{u.name} {u.blocked && <Chip tone="red">Bloklangan</Chip>}</td>
+                  <td className="font-semibold">{u.name} {u.blocked && <Chip tone="red">Bloklangan</Chip>}{u.premiumUntil && new Date(u.premiumUntil) > new Date() && <Chip tone="amber">★ Premium</Chip>}</td>
                   <td><Chip tone={(ROLE[u.role] || ['slate'])[0]}>{(ROLE[u.role] || [null, u.role || '—'])[1]}</Chip></td>
                   <td className="text-slate-700">{u.telegram || u.email || '—'}{u.phone ? ` · ${u.phone}` : ''}</td>
                   <td>{u.bookings}</td>

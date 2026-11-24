@@ -84,6 +84,13 @@ client/src
 - Telegram kontaktlari faqat tasdiqlangan bronda ko'rinadi.
 - Yangi repetitor va materiallar admin tasdig'isiz ommaviy ko'rinmaydi.
 
+## Premium obuna
+
+Freemium: asosiy imkoniyatlar bepul, Premium — bir martalik to'lov (1 oy / semestr / yil), **avtomatik yechib olish yo'q**.
+Premiumda: AI izohlari limiti yuqori, «Mening xatolarim» (`/mistakes`), konspektni PDF qilib saqlash, repetitor darslariga chegirma (platforma komissiyasidan, repetitor ulushi o'zgarmaydi; birinchi dars chegirmasi bilan qo'shilmaydi), Premium belgisi.
+Bepul olish: bir martalik sinov (standart 7 kun) va tasdiqlangan material uchun mukofot (standart 7 kun). Admin istalgan foydalanuvchiga kun qo'sha oladi.
+Narxlar, chegirma, limitlar — Admin → Sozlamalar → «Premium obuna». API: `GET /api/premium`, `POST /api/premium/checkout`, `POST /api/premium/trial`; to'lov Payme/Click orqali (pastda).
+
 ## To'lov (Payme, Click)
 
 Oqim: bron → repetitor tasdiqlaydi → talaba «To'lash» (Payme yoki Click) → `POST /api/bookings/:id/checkout` to'lov yozuvini (`Payment`) ochib, to'lov sahifasi manzilini qaytaradi → to'lov tasdiqlansa bron «To'langan» bo'ladi va repetitorga xabar boradi.

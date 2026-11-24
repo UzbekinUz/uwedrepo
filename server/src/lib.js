@@ -31,12 +31,19 @@ export async function freeSlots(tutor, days = 14) {
   return out.sort();
 }
 
-export function priceBreakdown(price, firstLesson) {
+/**
+ * Narx hisobi. Birinchi dars chegirmasi narxdan (repetitor va platforma birga beradi);
+ * premium chegirmasi esa faqat platforma komissiyasidan beriladi — repetitor ulushi o'zgarmaydi.
+ * Ikki chegirma qo'shilmaydi: birinchi darsda faqat birinchi dars chegirmasi.
+ */
+export function priceBreakdown(price, firstLesson, premium = false) {
   const s = getSettings();
-  const discount = firstLesson ? Math.round((price * s.firstLessonDiscount) / 100) : 0;
-  const total = price - discount;
-  const commission = Math.round((total * s.commission) / 100);
-  return { price, discount, total, commission, payout: total - commission };
+  const first = firstLesson ? Math.round((price * s.firstLessonDiscount) / 100) : 0;
+  const base = price - first;
+  const fullCommission = Math.round((base * s.commission) / 100);
+  const premiumDiscount = premium && !firstLesson ? Math.min(Math.round((price * (s.premium?.lessonDiscount || 0)) / 100), fullCommission) : 0;
+  const total = base - premiumDiscount;
+  return { price, discount: first + premiumDiscount, premiumDiscount, total, commission: fullCommission - premiumDiscount, payout: base - fullCommission };
 }
 
 export async function refreshTutorRating(tutorId, Review) {

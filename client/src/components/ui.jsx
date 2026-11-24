@@ -33,7 +33,7 @@ export function HeroBg() {
 /** Sahifa sarlavhasi: bosh sahifadagidek to'q fonli to'liq kenglikdagi bant. back = { to, label } */
 export function PageTitle({ title, sub, children, back }) {
   return (
-    <section className="relative left-1/2 -mt-12 mb-10 w-screen -translate-x-1/2 overflow-hidden bg-field text-white sm:-mt-16">
+    <section className="relative left-1/2 -mt-12 mb-10 w-screen -translate-x-1/2 overflow-hidden bg-field text-white sm:-mt-16 print:hidden">
       <HeroBg />
       <div className="relative mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-4 px-4 py-10 sm:px-6 sm:py-14">
         <div className="max-w-3xl">

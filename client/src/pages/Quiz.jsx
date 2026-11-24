@@ -22,7 +22,7 @@ function Explain({ quizId, question, chosen, onUsed }) {
       const r = await api(`/quizzes/${quizId}/explain`, { method: 'POST', body: { questionId: question._id, chosen, lang: getLang() } });
       setState({ text: r.text, err: '', busy: false, left: r.left });
       onUsed?.();
-    } catch (e) { setState({ ...state, busy: false, err: e.message }); }
+    } catch (e) { setState({ ...state, busy: false, err: e.message, limit: e.status === 429 }); }
   };
   if (state.text) {
     return (
@@ -37,6 +37,7 @@ function Explain({ quizId, question, chosen, onUsed }) {
     <div className="space-y-2">
       <button type="button" className="btn-ghost btn-sm" onClick={ask} disabled={state.busy}>{state.busy ? t('AI yozmoqda…') : t("Nega noto'g'ri? AI izohi")}</button>
       <ErrorBox error={state.err} />
+      {state.limit && !(user.premiumUntil && new Date(user.premiumUntil) > new Date()) && <Link to="/premium" className="inline-block text-sm font-semibold text-amber-800 underline">★ {t("Premium bilan kuniga ko'proq AI izohi")}</Link>}
     </div>
   );
 }

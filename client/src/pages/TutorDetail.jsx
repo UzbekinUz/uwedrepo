@@ -39,6 +39,9 @@ function Booking({ tutor }) {
         <div className="text-4xl font-extrabold tracking-tight text-brand-700">{money(tutor.pricePerHour)} <span className="text-base font-medium text-slate-600">/ {t('soat')}</span></div>
         <p className="mt-1 flex items-center gap-1.5 text-sm font-medium text-brand-700">{t('Birinchi darsga {n}% talaba chegirmasi', { n: meta.firstLessonDiscount })}
           <InfoTip text={t("Chegirma faqat platformada hali to'langan darsingiz bo'lmasa qo'llanadi va bron yuborganingizda narxga avtomatik hisoblanadi.")} /></p>
+              {user?.premiumUntil && new Date(user.premiumUntil) > new Date()
+          ? <p className="mt-1 text-sm font-medium text-amber-800">★ {t('Premium: keyingi darslarga chegirma bron qilganda avtomatik hisoblanadi')}</p>
+          : <Link to="/premium" className="mt-1 inline-block text-sm font-medium text-amber-800 underline">★ {t('Premium bilan har bir darsga chegirma')}</Link>}
       </div>
       <label className="block">
         <span className="label">{t('Fan')}</span>

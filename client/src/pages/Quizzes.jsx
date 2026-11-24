@@ -16,7 +16,7 @@ const Pill = ({ on, onClick, children }) => (
 
 /** Barcha tasdiqlangan mashq testlari: tanlangan fakultet/kurs fanlari bo'yicha */
 export default function Quizzes() {
-  const { pref } = useApp();
+  const { pref, user } = useApp();
   useSeo("UWED mashq testlari: fanlar bo'yicha onlayn test", "UWED talabalari uchun fanlar bo'yicha mashq testlari: yeching, xatolaringiz izohini ko'ring va nazoratga tayyorlaning.");
   const [subject, setSubject] = useState('');
   const [all, setAll] = useState(false);
@@ -46,6 +46,15 @@ export default function Quizzes() {
           <Pill on={!subject} onClick={() => setSubject('')}>{t('Hammasi')}</Pill>
           {subjects.map((s) => <Pill key={s._id} on={subject === String(s._id)} onClick={() => setSubject(String(s._id))}>{s.name}</Pill>)}
         </div>
+      )}
+      {user && (
+        <Link to="/mistakes" className="card-link mb-6 flex items-center justify-between gap-3 p-5">
+          <div>
+            <div className="font-bold text-slate-900">★ {t('Mening xatolarim')}</div>
+            <div className="text-sm text-slate-600">{t("Barcha testlarda xato qilgan savollaringiz to'g'ri javob va izoh bilan")}</div>
+          </div>
+          <span className="shrink-0 text-sm font-semibold text-brand-700">{t('Ochish →')}</span>
+        </Link>
       )}
       <ErrorBox error={quizzes.error} />
       {quizzes.loading || mine.loading ? <Spinner /> : !list.length ? (

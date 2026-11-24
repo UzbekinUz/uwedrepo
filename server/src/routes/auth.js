@@ -8,6 +8,7 @@ import { getSettings } from '../settings.js';
 import { signToken, requireAuth } from '../middleware/auth.js';
 import { wrap, HttpError } from '../middleware/util.js';
 import { FACULTY_KEYS } from '../data/meta.js';
+import { isPremium } from '../premium.js';
 
 const r = Router();
 
@@ -26,6 +27,7 @@ const registerSchema = z.object({
 
 const publicUser = (u) => ({
   id: u._id,
+  premiumUntil: isPremium(u) ? u.premiumUntil : null,
   name: u.name,
   email: u.email,
   role: u.role,

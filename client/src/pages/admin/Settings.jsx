@@ -72,7 +72,8 @@ export default function Settings() {
   if (loading || !f) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
   const num = (k) => (e) => setF({ ...f, [k]: e.target.value === '' ? '' : Number(e.target.value) });
-  const save = (e) => { e.preventDefault(); run(async () => setF(await api('/admin/settings', { method: 'PUT', body: { ...f, commission: Number(f.commission), firstLessonDiscount: Number(f.firstLessonDiscount), cancelHours: Number(f.cancelHours), aiDailyLimit: Number(f.aiDailyLimit) } })), "Saqlandi: o'zgarish darhol kuchga kirdi"); };
+  const pnum = (k) => (e) => setF({ ...f, premium: { ...f.premium, [k]: e.target.value === '' ? '' : Number(e.target.value) } });
+  const save = (e) => { e.preventDefault(); run(async () => setF(await api('/admin/settings', { method: 'PUT', body: { ...f, commission: Number(f.commission), firstLessonDiscount: Number(f.firstLessonDiscount), cancelHours: Number(f.cancelHours), aiDailyLimit: Number(f.aiDailyLimit), premium: Object.fromEntries(Object.entries(f.premium).map(([k, v]) => [k, k === 'enabled' ? !!v : Number(v) || 0])) } })), "Saqlandi: o'zgarish darhol kuchga kirdi"); };
 
   return (
     <Section title="Sozlamalar"
@@ -108,6 +109,25 @@ export default function Settings() {
           <label className="flex items-center gap-3"><input type="checkbox" className="h-5 w-5" checked={f.aiEnabled !== false} onChange={(e) => setF({ ...f, aiEnabled: e.target.checked })} />AI izohlarini yoqish</label>
           <div className="max-w-xs"><FField label="Bitta talabaga kuniga, ta"><input className="input" type="number" min="0" max="100" value={f.aiDailyLimit ?? 10} onChange={num('aiDailyLimit')} /></FField></div>
         </div>
+
+        {f.premium && (
+          <div className="space-y-3">
+            <h3 className="text-xl font-extrabold">★ Premium obuna</h3>
+            <p className="text-sm text-slate-600">Talaba bir martalik to'lov bilan Premium oladi (avtomatik yechib olish yo'q). Premiumda: AI izohlari limiti yuqori, «Mening xatolarim», konspektni PDF qilib saqlash va darslarga chegirma. Narx o'zgarsa, allaqachon sotib olinganlar muddati o'zgarmaydi.</p>
+            <label className="flex items-center gap-3"><input type="checkbox" className="h-5 w-5" checked={f.premium.enabled !== false} onChange={(e) => setF({ ...f, premium: { ...f.premium, enabled: e.target.checked } })} />Premium sotuvini yoqish</label>
+            <div className="grid gap-4 sm:grid-cols-3">
+              <FField label="1 oy narxi, so'm"><input className="input" type="number" min="0" value={f.premium.priceMonth} onChange={pnum('priceMonth')} /></FField>
+              <FField label="Semestr (4 oy) narxi, so'm"><input className="input" type="number" min="0" value={f.premium.priceSemester} onChange={pnum('priceSemester')} /></FField>
+              <FField label="1 yil narxi, so'm"><input className="input" type="number" min="0" value={f.premium.priceYear} onChange={pnum('priceYear')} /></FField>
+            </div>
+            <div className="grid gap-4 sm:grid-cols-4">
+              <div><FField label="Dars chegirmasi, %"><input className="input" type="number" min="0" max="50" step="0.5" value={f.premium.lessonDiscount} onChange={pnum('lessonDiscount')} /></FField><p className="mt-1 text-xs text-slate-600">Platforma komissiyasidan beriladi, komissiyadan oshmaydi. Birinchi dars chegirmasi bilan qo'shilmaydi.</p></div>
+              <div><FField label="AI izohlari, kuniga"><input className="input" type="number" min="0" max="1000" value={f.premium.aiDailyLimit} onChange={pnum('aiDailyLimit')} /></FField></div>
+              <div><FField label="Bepul sinov, kun"><input className="input" type="number" min="0" max="60" value={f.premium.trialDays} onChange={pnum('trialDays')} /></FField><p className="mt-1 text-xs text-slate-600">0 — sinov o'chiq.</p></div>
+              <div><FField label="Material uchun mukofot, kun"><input className="input" type="number" min="0" max="90" value={f.premium.rewardDays} onChange={pnum('rewardDays')} /></FField><p className="mt-1 text-xs text-slate-600">Talaba yuklagan material tasdiqlanganda.</p></div>
+            </div>
+          </div>
+        )}
 
         <div className="space-y-2">
           <h3 className="text-xl font-extrabold">Telegram eslatmalari</h3>

@@ -16,6 +16,7 @@ import admin from './routes/admin/index.js';
 import pub from './routes/public.js';
 import quizzes from './routes/quizzes.js';
 import payments from './routes/payments.js';
+import premium from './routes/premium.js';
 import { parseErrorBody } from './payments/payme.js';
 import { createSeoRouter } from './seo.js';
 import { handleUpdate, webhookPath, webhookSecret } from './telegram.js';
@@ -72,6 +73,7 @@ app.get('/api/auth/telegram/status/:token', limiter(1500));
 app.use('/api/auth', auth);
 app.use('/api/bookings', bookings);
 app.use('/api/payments', payments);
+app.use('/api/premium', premium);
 app.use('/api/tutors', tutors);
 app.post('/api/quizzes/:id/explain', limiter(100)); // AI so'rovlari pulli: IP bo'yicha qo'shimcha cheklov
 app.use('/api/quizzes', quizzes);
