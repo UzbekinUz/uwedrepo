@@ -10,7 +10,8 @@ import mongoose from 'mongoose';
 import { Booking, Payment } from '../models/index.js';
 import { notifyBooking } from '../notify.js';
 import { paymentConfig } from './config.js';
-import { markPaid } from './index.js';
+import { markPaid, payable } from './index.js';
+import { removePremiumDays } from '../premium.js';
 
 export const TIMEOUT_MS = 12 * 3600e3; // Payme: 12 soatda bajarilmagan tranzaksiya bekor qilinadi
 
@@ -65,6 +66,7 @@ async function checkOrder(params) {
   if (!p) fail(ERR.order);
   if (!Number.isInteger(params.amount) || params.amount !== tiyin(p)) fail(ERR.amount);
   if (!['created', 'pending'].includes(p.status)) fail(ERR.orderClosed);
+  if (p.kind === 'premium') return { p, b: null };
   const b = await Booking.findById(p.booking).populate('subject', 'name');
   if (!b || b.status !== 'confirmed') fail(ERR.orderClosed);
   return { p, b };
@@ -77,7 +79,7 @@ function receiptDetail(p, b) {
   return {
     detail: {
       receipt_type: 0,
-      items: [{ title: `Repetitorlik darsi: ${b.subject?.name || 'fan'}`.slice(0, 128), price: tiyin(p), count: 1, code: c.mxik, package_code: c.packageCode, vat_percent: c.vat }],
+      items: [{ title: (p.kind === 'premium' ? `UWEDRepo Premium obunasi: ${p.days} kun` : `Repetitorlik darsi: ${b?.subject?.name || 'fan'}`).slice(0, 128), price: tiyin(p), count: 1, code: c.mxik, package_code: c.packageCode, vat_percent: c.vat }],
     },
   };
 }
@@ -127,8 +129,7 @@ const METHODS = {
       await expire(p);
       fail(ERR.cantPerform);
     }
-    const b = await Booking.findById(p.booking);
-    if (!b || b.status !== 'confirmed') fail(ERR.cantPerform); // bron bekor qilingan: Payme tranzaksiyani o'zi bekor qiladi
+    if (!(await payable(p))) fail(ERR.cantPerform); // bron bekor qilingan: Payme tranzaksiyani o'zi bekor qiladi
     await markPaid(p._id, { state: 2, performTime: Date.now() });
     const fresh = await Payment.findById(p._id);
     if (fresh.state !== 2) fail(ERR.cantPerform);
@@ -142,6 +143,10 @@ const METHODS = {
     const now = Date.now();
     if (p.state === 1) {
       await Payment.updateOne({ _id: p._id, state: 1 }, { $set: { state: -1, reason, cancelTime: now, status: 'cancelled' } });
+    } else if (p.state === 2 && p.kind === 'premium') {
+      // pul qaytarildi: sotib olingan premium kunlar olib tashlanadi
+      const done = await Payment.updateOne({ _id: p._id, state: 2 }, { $set: { state: -2, reason, cancelTime: now, status: 'cancelled', refunded: true } });
+      if (done.modifiedCount) await removePremiumDays(p.student, p.days);
     } else if (p.state === 2) {
       const b = await Booking.findById(p.booking);
       if (b?.status === 'completed') fail(ERR.cantCancel);

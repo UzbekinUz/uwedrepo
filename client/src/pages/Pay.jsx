@@ -6,9 +6,11 @@ import { Hint } from '../components/Motion.jsx';
 import { ErrorBox, PageTitle, Spinner } from '../components/ui.jsx';
 import { dateTime, money } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
+import { useApp } from '../context/App.jsx';
 
 const NAME = { payme: 'Payme', click: 'Click' };
 const OPEN = ['created', 'pending'];
+const PLAN_TITLE = { month: '1 oy', semester: 'Semestr (4 oy)', year: '1 yil' };
 
 function Line({ label, children, strong }) {
   return (
@@ -22,6 +24,16 @@ function Line({ label, children, strong }) {
 /** Bron va to'lov tafsilotlari (to'lovdan oldin ham, chekda ham) */
 function Summary({ p }) {
   const b = p.booking || {};
+  if (p.kind === 'premium') {
+    return (
+      <div className="divide-y divide-slate-100">
+        <Line label={t('Xizmat')}>★ UWEDRepo Premium</Line>
+        <Line label={t('Muddat')}>{t(PLAN_TITLE[p.plan] || p.plan)} ({t('{n} kun', { n: p.days })})</Line>
+        <Line label={t("To'lov usuli")}>{NAME[p.provider]}</Line>
+        <Line label={t('Jami')} strong>{money(p.amount)}</Line>
+      </div>
+    );
+  }
   return (
     <div className="divide-y divide-slate-100">
       <Line label={t('Xizmat')}>{t('Repetitorlik darsi')}</Line>
@@ -38,6 +50,7 @@ export default function Pay() {
   useSeo("To'lov", '', { noindex: true });
   const { id } = useParams();
   const navigate = useNavigate();
+  const { refreshUser } = useApp();
   const [p, setP] = useState(null);
   const [err, setErr] = useState('');
   const [busy, setBusy] = useState(false);
@@ -46,6 +59,8 @@ export default function Pay() {
     try { setP(await api(`/payments/${id}`)); } catch (e) { setErr(e.message); }
   };
   useEffect(() => { load(); }, [id]); // eslint-disable-line react-hooks/exhaustive-deps
+  // Premium to'langach sarlavhadagi belgi va imkoniyatlar darhol yangilansin
+  useEffect(() => { if (p?.kind === 'premium' && p.status === 'paid') refreshUser(); }, [p?.kind, p?.status]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Haqiqiy rejim: talaba Payme/Click sahifasidan qaytganda, provayder tasdig'i kelguncha holat tekshirib turiladi
   useEffect(() => {
@@ -82,7 +97,7 @@ export default function Pay() {
     setErr('');
     try {
       await api(`/payments/${id}/demo/cancel`, { method: 'POST' });
-      navigate('/my');
+      navigate(p?.kind === 'premium' ? '/premium' : '/my');
     } catch (e) {
       setErr(e.message);
     }
@@ -92,9 +107,10 @@ export default function Pay() {
   if (!p) return (<><PageTitle title={t("To'lov")} /><ErrorBox error={err} /><Link to="/my" className="btn-ghost mt-4">{t('Mening darslarim')}</Link></>);
 
   const demo = p.mode === 'demo';
+  const back = p.kind === 'premium' ? { to: '/premium', label: 'Premium' } : { to: '/my', label: t('Mening darslarim') };
   return (
     <div className="mx-auto max-w-xl">
-      <PageTitle title={t("To'lov")} sub={`${NAME[p.provider]} · ${money(p.amount)}`} back={{ to: '/my', label: t('Mening darslarim') }} />
+      <PageTitle title={t("To'lov")} sub={`${NAME[p.provider]} · ${money(p.amount)}`} back={back} />
 
       {demo && (
         <Hint kind="warn" title={t('Sinov rejimi')} className="mb-6">
@@ -108,7 +124,7 @@ export default function Pay() {
             <span className="flex h-12 w-12 items-center justify-center rounded-full bg-emerald-100 text-2xl text-emerald-700">✓</span>
             <div>
               <div className="text-xl font-extrabold text-slate-900">{t("To'lov qabul qilindi")}</div>
-              <div className="text-sm text-slate-500">{t('Repetitor xabardor qilindi. Dars vaqtida u bilan Telegram orqali bog\'laning.')}</div>
+              <div className="text-sm text-slate-500">{p.kind === 'premium' ? t('Premium faollashdi. Barcha imkoniyatlar ochildi.') : t('Repetitor xabardor qilindi. Dars vaqtida u bilan Telegram orqali bog\'laning.')}</div>
             </div>
           </div>
           <div className="mt-5 rounded-xl bg-slate-50 px-4">
@@ -118,14 +134,14 @@ export default function Pay() {
           </div>
           {demo && <p className="mt-4 chip bg-amber-100 text-amber-800">{t("Sinov to'lovi: pul yechilmagan")}</p>}
           {p.refunded && <p className="mt-4 chip bg-sky-100 text-sky-800">{t("To'lov qaytariladi")}</p>}
-          <Link to="/my" className="btn-primary mt-6 w-full justify-center">{t('Mening darslarim')}</Link>
+          <Link to={back.to} className="btn-primary mt-6 w-full justify-center">{back.label}</Link>
         </div>
       ) : p.status === 'cancelled' ? (
         <div className="card p-6">
           <div className="text-xl font-extrabold text-slate-900">{t("To'lov bekor qilindi")}</div>
-          <p className="mt-1 text-sm text-slate-600">{p.refunded ? t("Pul kartangizga qaytariladi.") : t("Kartangizdan pul yechilmadi. Bron hali ochiq bo'lsa, «Mening darslarim» sahifasidan qayta to'lashingiz mumkin.")}</p>
+          <p className="mt-1 text-sm text-slate-600">{p.refunded ? t("Pul kartangizga qaytariladi.") : p.kind === 'premium' ? t('Kartangizdan pul yechilmadi.') : t("Kartangizdan pul yechilmadi. Bron hali ochiq bo'lsa, «Mening darslarim» sahifasidan qayta to'lashingiz mumkin.")}</p>
           <div className="mt-4 rounded-xl bg-slate-50 px-4"><Summary p={p} /></div>
-          <Link to="/my" className="btn-primary mt-6 w-full justify-center">{t('Mening darslarim')}</Link>
+          <Link to={back.to} className="btn-primary mt-6 w-full justify-center">{back.label}</Link>
         </div>
       ) : demo ? (
         <div className="card p-6">
@@ -152,7 +168,7 @@ export default function Pay() {
           <p className="mt-2 text-sm text-slate-600">{t("{provider} to'lovni tasdiqlashi bilan bu sahifa o'zi yangilanadi. Agar to'lov sahifasini yopgan bo'lsangiz, «Mening darslarim»dan qayta «To'lash»ni bosing.", { provider: NAME[p.provider] })}</p>
           <div className="mt-4 rounded-xl bg-slate-50 px-4"><Summary p={p} /></div>
           <ErrorBox error={err} />
-          <Link to="/my" className="btn-ghost mt-6 w-full justify-center">{t('Mening darslarim')}</Link>
+          <Link to={back.to} className="btn-ghost mt-6 w-full justify-center">{back.label}</Link>
         </div>
       )}
     </div>

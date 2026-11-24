@@ -7,6 +7,9 @@ import { FACULTY_KEYS, EXAM_TYPES, MATERIAL_TYPES } from '../../data/meta.js';
 import { audit, toCsv, sendCsv } from './helpers.js';
 import { quizStats, pct } from '../../quizStats.js';
 import { notifyNewQuiz } from '../../reminders.js';
+import { getSettings } from '../../settings.js';
+import { addPremiumDays } from '../../premium.js';
+import { notifyUser } from '../../telegram.js';
 
 const r = Router();
 
@@ -160,6 +163,15 @@ r.patch('/materials/:id', wrap(async (req, res) => {
   const m = await Material.findByIdAndUpdate(req.params.id, { status }, { new: true });
   if (!m) throw new HttpError(404, 'Material topilmadi');
   audit(req, `material.${status}`, m.title);
+  // Talaba yuklagan material birinchi marta tasdiqlansa — muallifga bepul premium kunlar
+  const days = getSettings().premium.rewardDays;
+  if (status === 'approved' && m.author && days > 0 && String(m.author) !== String(req.user._id)) {
+    const rewarded = await Material.findOneAndUpdate({ _id: m._id, premiumRewarded: { $ne: true } }, { $set: { premiumRewarded: true } });
+    if (rewarded) {
+      await addPremiumDays(m.author, days);
+      notifyUser(m.author, `«${m.title}» materialingiz tasdiqlandi. Rahmat! Sizga ${days} kunlik UWEDRepo Premium berildi.`).catch(() => {});
+    }
+  }
   res.json(m);
 }));
 r.delete('/materials/:id', wrap(async (req, res) => {

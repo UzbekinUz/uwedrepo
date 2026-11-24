@@ -9,6 +9,7 @@ import { notifyAdmins } from '../notify.js';
 import { config } from '../config.js';
 import { quizStats } from '../quizStats.js';
 import { notifyNewQuiz } from '../reminders.js';
+import { aiLimitFor, isPremium } from '../premium.js';
 
 const r = Router();
 
@@ -95,6 +96,29 @@ r.get(
   })
 );
 
+// «Mening xatolarim» (Premium): har bir testning oxirgi urinishidagi xato javoblar — to'g'ri javob va izoh bilan
+r.get(
+  '/mistakes',
+  requireAuth,
+  wrap(async (req, res) => {
+    const attempts = await QuizAttempt.find({ student: req.user._id }).sort({ createdAt: -1 }).limit(100).lean();
+    const latest = new Map();
+    for (const a of attempts) if (!latest.has(String(a.quiz))) latest.set(String(a.quiz), a);
+    const quizzes = await Quiz.find({ _id: { $in: [...latest.keys()] }, status: 'approved' }).populate('subject', 'name').lean();
+    const items = [];
+    for (const q of quizzes) {
+      const a = latest.get(String(q._id));
+      q.questions.forEach((x, i) => {
+        const chosen = a.answers?.[i] ?? -1;
+        if (chosen !== x.correct) items.push({ quiz: { _id: q._id, title: q.title }, subject: q.subject?.name, attemptAt: a.createdAt, question: x._id, text: x.text, options: x.options, chosen, correct: x.correct, explanation: x.explanation });
+      });
+    }
+    items.sort((x, y) => new Date(y.attemptAt) - new Date(x.attemptAt));
+    if (!isPremium(req.user)) return res.json({ locked: true, count: items.length, items: [] });
+    res.json({ locked: false, count: items.length, items: items.slice(0, 300) });
+  })
+);
+
 r.get(
   '/:id',
   optionalAuth,
@@ -170,7 +194,7 @@ r.post(
       throw new HttpError(403, "Bugun shu fandan nazorat bor: AI izohlari ertaga qayta yoqiladi");
     }
 
-    const limit = getSettings().aiDailyLimit ?? 10;
+    const limit = aiLimitFor(req.user);
     const usage = await AiUsage.findOne({ user: req.user._id, day: today }).lean();
     const used = usage?.count || 0;
 
@@ -178,7 +202,7 @@ r.post(
     const cached = await AiExplain.findOne({ question: question._id, chosen, lang }).lean();
     if (cached) return res.json({ text: cached.text, cached: true, left: Math.max(0, limit - used) });
 
-    if (used >= limit) throw new HttpError(429, `Bugungi AI izohlari limiti tugadi (${limit} ta). Ertaga yana urinib ko'ring yoki repetitordan so'rang.`);
+    if (used >= limit) throw new HttpError(429, `Bugungi AI izohlari limiti tugadi (${limit} ta). Ertaga yana urinib ko'ring${isPremium(req.user) ? '' : ' yoki Premium bilan limitni oshiring'}.`);
     let text;
     try {
       text = await explainMistake({ subject: q.subject.name, question, chosen, lang });

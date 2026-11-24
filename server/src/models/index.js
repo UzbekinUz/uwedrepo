@@ -17,6 +17,8 @@ const userSchema = new Schema(
     faculty: { type: String, enum: FACULTY_KEYS },
     year: { type: Number, min: 1, max: 4 },
     telegram: { type: String, trim: true, maxlength: 64 },
+    premiumUntil: Date, // Premium obuna shu vaqtgacha faol
+    premiumTrialUsed: { type: Boolean, default: false }, // 7 kunlik bepul sinov bir marta beriladi
   },
   { timestamps: true }
 );
@@ -82,6 +84,7 @@ const materialSchema = new Schema(
     description: { type: String, default: '', maxlength: 500 },
     author: ref('User'),
     status: { type: String, enum: ['pending', 'approved'], default: 'pending' },
+    premiumRewarded: { type: Boolean, default: false }, // muallifga tasdiqlangani uchun premium kunlar berilgan
   },
   { timestamps: true }
 );
@@ -95,6 +98,7 @@ const bookingSchema = new Schema(
     durationMin: { type: Number, default: 60 },
     price: Number,
     discount: { type: Number, default: 0 },
+    premiumDiscount: { type: Number, default: 0 }, // shundan premium chegirmasi (platforma komissiyasidan)
     total: Number,
     commission: Number,
     payout: Number,
@@ -120,8 +124,11 @@ bookingSchema.index(
 // To'lov tranzaksiyasi: har bir «To'lash» bosilishi — alohida yozuv (Payme/Click tranzaksiyasi yoki sinov to'lovi)
 const paymentSchema = new Schema(
   {
-    booking: ref('Booking', { required: true }),
-    student: ref('User', { required: true }),
+    kind: { type: String, enum: ['booking', 'premium'], default: 'booking' },
+    booking: ref('Booking'), // kind=booking
+    plan: String, // kind=premium: month | semester | year
+    days: Number, // kind=premium: necha kunlik obuna
+    student: ref('User', { required: true }), // to'lovchi
     provider: { type: String, enum: ['payme', 'click'], required: true },
     mode: { type: String, enum: ['demo', 'live'], required: true }, // demo — haqiqiy pul yechilmaydi
     amount: { type: Number, required: true }, // so'm
@@ -142,6 +149,7 @@ const paymentSchema = new Schema(
 );
 paymentSchema.index({ provider: 1, extId: 1 }, { unique: true, partialFilterExpression: { extId: { $type: 'string' } } });
 paymentSchema.index({ booking: 1, createdAt: -1 });
+paymentSchema.index({ student: 1, kind: 1, createdAt: -1 });
 paymentSchema.index({ provider: 1, createTime: 1 });
 
 const reviewSchema = new Schema(
@@ -214,6 +222,16 @@ const settingsSchema = new Schema({
   aiEnabled: Boolean, // testlardagi "Nega noto'g'ri?" AI izohi
   aiDailyLimit: Number, // bitta talabaga kuniga nechta AI izoh
   telegramReminders: Boolean, // nazorat eslatmalari va yangi test xabarlari
+  premium: {
+    enabled: Boolean,
+    priceMonth: Number,
+    priceSemester: Number,
+    priceYear: Number,
+    lessonDiscount: Number, // premium talabaga dars chegirmasi, % (platforma komissiyasidan)
+    aiDailyLimit: Number,
+    trialDays: Number,
+    rewardDays: Number, // tasdiqlangan material uchun beriladigan kunlar
+  },
 });
 
 // Admin harakatlari jurnali

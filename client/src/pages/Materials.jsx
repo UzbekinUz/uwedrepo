@@ -33,6 +33,7 @@ export default function Materials() {
       <div className="mb-8 grid gap-4 md:grid-cols-2">
         <Hint title={t('Materiallar qanday tekshiriladi')}>
           <p>{t("Siz yuborgan havola avval adminga tushadi. Tekshirilgach hamma ko'radi; tasdiqlanmaguncha ro'yxatda chiqmaydi.")}</p>
+          <p className="mt-2 font-semibold">{t("★ Materialingiz tasdiqlansa, sizga bepul Premium kunlar beriladi.")}</p>
         </Hint>
         <Hint kind="warn" title={t('Nimani ulashish mumkin')}>
           <p>{t("Faqat o'zingiz tayyorlagan yoki tarqatishga ruxsat berilgan materiallarni yuboring. Parol yoki shaxsiy ma'lumot bor fayllarni ulashmang.")}</p>

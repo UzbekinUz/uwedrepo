@@ -5,6 +5,7 @@ import { requireAuth } from '../middleware/auth.js';
 import { wrap, HttpError } from '../middleware/util.js';
 import { freeSlots, priceBreakdown, refreshTutorRating } from '../lib.js';
 import { startCheckout, onBookingCancelled } from '../payments/index.js';
+import { isPremium } from '../premium.js';
 import { getSettings } from '../settings.js';
 import { notifyBooking } from '../notify.js';
 
@@ -46,7 +47,7 @@ r.post(
     if (!slots.includes(iso)) throw new HttpError(409, 'Bu vaqt band yoki mavjud emas — boshqa vaqt tanlang');
 
     const prior = await Booking.exists({ student: req.user._id, status: { $in: ['paid', 'completed'] } });
-    const money = priceBreakdown(tutor.pricePerHour, !prior);
+    const money = priceBreakdown(tutor.pricePerHour, !prior, isPremium(req.user));
     let booking;
     try {
       booking = await Booking.create({ student: req.user._id, tutor: tutor._id, subject, startsAt: iso, note, ...money });

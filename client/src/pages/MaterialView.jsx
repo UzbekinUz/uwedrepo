@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useApp } from '../context/App.jsx';
 import { ErrorBox, PageTitle, Spinner, useFetch } from '../components/ui.jsx';
 import Notes, { headings, noteStats } from '../components/Notes.jsx';
 import { Icon } from '../components/Motion.jsx';
@@ -37,6 +38,9 @@ function useActive(ids) {
 /** Saytning o'zida o'qiladigan konspekt (mavzu tushunchasi, misollar, test) */
 export default function MaterialView() {
   const { id } = useParams();
+  const { user } = useApp();
+  const navigate = useNavigate();
+  const premium = !!user?.premiumUntil && new Date(user.premiumUntil) > new Date();
   const { data: m, loading, error } = useFetch(`/materials/${id}`, [id]);
   const subj = m?.subject?.name;
   useSeo(m && `${m.title}${subj ? `: ${subj}` : ''} konspekti`, m && (m.description || `${subj ? `${subj} fanidan ` : ''}${m.title} mavzusi bo'yicha UWED talabalari uchun konspekt, misollar va formulalar.`));
@@ -60,10 +64,12 @@ export default function MaterialView() {
   const doneCount = sib.filter((x) => done.has(x._id)).length;
   const toggle = () => { const s = new Set(done); if (s.has(m._id)) s.delete(m._id); else s.add(m._id); writeDone(s); setDone(s); };
   const short = (title) => title.replace(/^\d+-mavzu\.\s*/, '');
+  // PDF: brauzerning «PDF sifatida saqlash / chop etish» oynasi (Premium); sahifa bezaklari chop etishda yashiriladi
+  const savePdf = () => (premium ? window.print() : navigate('/premium?from=pdf'));
 
   return (
     <>
-      <ReadingBar />
+      <div className="print:hidden"><ReadingBar /></div>
       <PageTitle back={subjectId ? { to: `/subjects/${subjectId}`, label: m.subject.name } : { to: '/materials', label: t('Materiallar') }} title={short(m.title)}>
         <div className="flex w-full flex-wrap gap-2 text-sm font-semibold">
           {m.order > 0 && <span className="rounded-full bg-brand-300 px-3 py-1 text-slate-900">{m.order}-mavzu</span>}
@@ -71,12 +77,15 @@ export default function MaterialView() {
           {stats.examples > 0 && <span className="rounded-full bg-white/10 px-3 py-1 text-white">{stats.examples} ta misol</span>}
           {stats.questions > 0 && <span className="rounded-full bg-white/10 px-3 py-1 text-white">{stats.questions} ta test savoli</span>}
           {isDone && <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-400/20 px-3 py-1 text-emerald-200"><Icon name="check" size={16} /> O'zlashtirilgan</span>}
+          <button type="button" onClick={savePdf} className="inline-flex items-center gap-1.5 rounded-full bg-amber-300 px-3 py-1 text-amber-950 hover:bg-amber-200" title={premium ? t('Konspektni PDF qilib saqlash yoki chop etish') : t('Premium imkoniyati')}>
+            ⬇ PDF{!premium && ' · ★'}
+          </button>
         </div>
       </PageTitle>
 
       {/* Telefonda: mavzular qatori */}
       {sib.length > 1 && (
-        <div className="no-scrollbar -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 lg:hidden">
+        <div className="no-scrollbar -mx-4 mb-6 flex gap-2 overflow-x-auto px-4 lg:hidden print:hidden">
           {sib.map((x) => (
             <Link key={x._id} to={`/materials/${x._id}`}
               className={`shrink-0 rounded-full px-3.5 py-1.5 text-sm font-semibold transition ${x._id === m._id ? 'bg-slate-900 text-white' : 'bg-white text-slate-700 ring-1 ring-slate-200'}`}>
@@ -88,12 +97,13 @@ export default function MaterialView() {
 
       <div className="grid grid-cols-1 gap-8 lg:grid-cols-[minmax(0,1fr)_17rem]">
         <div className="min-w-0">
-          <article className="rounded-3xl bg-white px-4 py-6 shadow-sm ring-1 ring-slate-200 sm:px-10 sm:py-10">
+          <h1 className="mb-4 hidden text-2xl font-extrabold print:block">{m.title}</h1>
+          <article className="rounded-3xl bg-white px-4 py-6 shadow-sm ring-1 ring-slate-200 sm:px-10 sm:py-10 print:p-0 print:shadow-none print:ring-0">
             <Notes text={m.body} />
           </article>
 
           {/* Yakun: o'zlashtirish, keyingi qadam */}
-          <div className="mt-8 rounded-3xl bg-field p-6 text-white sm:p-8">
+          <div className="mt-8 rounded-3xl bg-field p-6 text-white sm:p-8 print:hidden">
             <h2 className="text-2xl font-extrabold">{isDone ? 'Zo\'r! Mavzu o\'zlashtirilgan' : 'Mavzuni o\'zlashtirdingizmi?'}</h2>
             <p className="mt-2 text-slate-300">
               {isDone ? 'Keyingi mavzuga o\'ting yoki fandan mashq testini yechib, bilimingizni mustahkamlang.' : 'Misollarni o\'zingiz yechib, testdan o\'tgan bo\'lsangiz — belgilab qo\'ying. Jarayoningiz shu qurilmada saqlanadi.'}
@@ -111,7 +121,7 @@ export default function MaterialView() {
           </div>
 
           {(prev || next) && (
-            <div className="mt-6 grid gap-3 sm:grid-cols-2">
+            <div className="mt-6 grid gap-3 sm:grid-cols-2 print:hidden">
               {prev ? (
                 <Link to={`/materials/${prev._id}`} className="card-link p-4">
                   <div className="text-xs font-semibold uppercase tracking-wide text-slate-500">← Oldingi mavzu</div>
@@ -129,7 +139,7 @@ export default function MaterialView() {
         </div>
 
         {/* Kompyuterda: mundarija va mavzular */}
-        <aside className="hidden min-w-0 lg:block">
+        <aside className="hidden min-w-0 lg:block print:hidden">
           <div className="sticky top-24 space-y-4">
             {toc.length > 1 && (
               <nav className="rounded-2xl bg-white p-4 ring-1 ring-slate-200" aria-label="Bu sahifada">

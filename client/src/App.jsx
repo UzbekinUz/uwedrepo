@@ -17,6 +17,8 @@ import { Login, Register } from './pages/Auth.jsx';
 import MyLessons from './pages/MyLessons.jsx';
 import TutorDashboard from './pages/TutorDashboard.jsx';
 import Pay from './pages/Pay.jsx';
+import Premium from './pages/Premium.jsx';
+import Mistakes from './pages/Mistakes.jsx';
 // Admin kodi faqat adminlar ochganda yuklanadi (ommaviy sahifa yengil qoladi)
 const Admin = lazy(() => import('./pages/admin/index.jsx'));
 import Survey from './pages/Survey.jsx';
@@ -69,6 +71,8 @@ export default function App() {
           <Route path="my" element={<Guard><MyLessons /></Guard>} />
           <Route path="tutor" element={<Guard><TutorDashboard /></Guard>} />
           <Route path="pay/:id" element={<Guard><Pay /></Guard>} />
+          <Route path="premium" element={<Premium />} />
+          <Route path="mistakes" element={<Guard><Mistakes /></Guard>} />
           <Route path="admin" element={<Guard role="admin"><Suspense fallback={<Spinner />}><Admin /></Suspense></Guard>} />
           <Route path="*" element={<div className="py-20 text-center text-slate-500">{t('Sahifa topilmadi')}</div>} />
         </Route>

@@ -7,6 +7,7 @@ import { notifyUser } from '../../telegram.js';
 import { config } from '../../config.js';
 import { audit, pageOf, pageMeta, toCsv, sendCsv } from './helpers.js';
 import { tutorSchema } from '../tutors.js';
+import { addPremiumDays, removePremiumDays } from '../../premium.js';
 
 const r = Router();
 
@@ -31,6 +32,20 @@ r.get(
     const counts = await Booking.aggregate([{ $match: { student: { $in: items.map((u) => u._id) } } }, { $group: { _id: '$student', n: { $sum: 1 } } }]);
     const map = new Map(counts.map((c) => [String(c._id), c.n]));
     res.json({ items: items.map((u) => ({ ...u, bookings: map.get(String(u._id)) || 0 })), ...pageMeta(total, page, limit) });
+  })
+);
+
+// Premium kunlarini qo'lda berish yoki olib tashlash (masalan, aksiya, kompensatsiya, xato to'lov)
+r.post(
+  '/users/:id/premium',
+  wrap(async (req, res) => {
+    const { days } = z.object({ days: z.number().int().min(-3650).max(3650).refine((d) => d !== 0) }).parse(req.body);
+    const user = await User.findById(req.params.id);
+    if (!user) throw new HttpError(404, 'Foydalanuvchi topilmadi');
+    const updated = days > 0 ? await addPremiumDays(user._id, days) : (await removePremiumDays(user._id, -days), await User.findById(user._id));
+    audit(req, 'user.premium', `${user.name} (${user._id})`, { days });
+    if (days > 0) notifyUser(user, `Sizga ${days} kunlik UWEDRepo Premium berildi.`).catch(() => {});
+    res.json({ ok: true, premiumUntil: updated?.premiumUntil || null });
   })
 );
 

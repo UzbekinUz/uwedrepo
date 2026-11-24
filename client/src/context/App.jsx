@@ -52,6 +52,11 @@ export function AppProvider({ children }) {
     if (u.faculty && !read('pref')) { const p = { faculty: u.faculty, year: u.year }; write('pref', p); setPref(p); }
   }, []);
   const logout = useCallback(() => { setToken(null); setUser(null); }, []);
+  // To'lov yoki premium o'zgargandan keyin foydalanuvchi ma'lumotini qayta yuklash
+  const refreshUser = useCallback(async () => {
+    if (!getToken()) return null;
+    try { const u = (await api('/auth/me')).user; setUser(u); return u; } catch { return null; }
+  }, []);
   const savePref = useCallback(async (p) => {
     write('pref', p); setPref(p);
     if (getToken()) api('/auth/me', { method: 'PATCH', body: p }).then((r) => setUser(r.user)).catch(() => {});
@@ -60,6 +65,6 @@ export function AppProvider({ children }) {
   const [lang, setLangState] = useState(getLang());
   const changeLang = useCallback((l) => { setLang(l); setLangState(l); }, []);
 
-  const value = { user, meta, ready, pref: effective, login, logout, savePref, lang, changeLang };
+  const value = { user, meta, ready, pref: effective, login, logout, refreshUser, savePref, lang, changeLang };
   return <Ctx.Provider value={value}>{children}</Ctx.Provider>;
 }

@@ -622,3 +622,102 @@ test("matnli konspekt: faqat admin yozadi, ro'yxatda matnsiz, alohida sahifada t
   assert.match((await api('GET', `/materials/${n2.j._id}`)).j.body, /Yangilangan/);
   assert.equal((await api('GET', '/materials/notanid')).s, 400);
 });
+
+test('premium: rejalar, bepul sinov, sotib olish, uzaytirish, dars chegirmasi, xatolarim, mukofot, admin, Payme', async () => {
+  const day = (d) => ({ day: d, from: '10:00', to: '20:00' });
+  await M.Tutor.updateOne({ _id: fx.tutor._id }, { $set: { pricePerHour: 100000, status: 'approved', availability: [0, 1, 2, 3, 4, 5, 6].map(day) } });
+  const u = await M.User.create({ name: 'Premium talaba', telegramId: '2001' });
+  const tok = signToken(u);
+
+  const guest = (await api('GET', '/premium')).j;
+  assert.deepEqual(guest.plans.map((p) => p.key), ['month', 'semester', 'year']);
+  assert.equal(guest.plans[0].price, 19000);
+  assert.equal(guest.active, false);
+
+  // «Mening xatolarim»: bepul foydalanuvchiga faqat soni ko'rinadi
+  const qz = await api('POST', '/quizzes', { subject: String(fx.subject._id), title: 'Premium sinov testi', questions: [{ text: '2+2?', options: ['3', '4'], correct: 1, explanation: "To'rt" }, { text: '1+1?', options: ['2', '5'], correct: 0 }] }, fx.t.admin);
+  assert.equal(qz.s, 201);
+  await api('POST', `/quizzes/${qz.j._id}/attempt`, { answers: [0, 0] }, tok);
+  const locked = (await api('GET', '/quizzes/mistakes', null, tok)).j;
+  assert.equal(locked.locked, true);
+  assert.equal(locked.count, 1);
+  assert.equal(locked.items.length, 0);
+
+  // Bepul sinov — bir marta
+  const tr = await api('POST', '/premium/trial', null, tok);
+  assert.equal(tr.s, 200);
+  assert.equal(tr.j.active, true);
+  assert.equal((await api('POST', '/premium/trial', null, tok)).s, 409);
+  const open = (await api('GET', '/quizzes/mistakes', null, tok)).j;
+  assert.equal(open.locked, false);
+  assert.equal(open.items[0].correct, 1);
+  assert.equal(open.items[0].explanation, "To'rt");
+  assert.ok((await api('GET', '/auth/me', null, tok)).j.user.premiumUntil);
+
+  // Sotib olish (sinov rejimi): faol muddat oxiridan uzayadi
+  const before = (await M.User.findById(u._id)).premiumUntil.getTime();
+  const co = await api('POST', '/premium/checkout', { plan: 'month', provider: 'payme' }, tok);
+  assert.equal(co.s, 201);
+  assert.equal(co.j.url, `/pay/${co.j.payment}`);
+  const pv = (await api('GET', `/payments/${co.j.payment}`, null, tok)).j;
+  assert.equal(pv.kind, 'premium');
+  assert.equal(pv.amount, 19000);
+  assert.equal(pv.days, 30);
+  assert.equal((await api('POST', `/payments/${co.j.payment}/demo/confirm`, null, tok)).s, 200);
+  const after = (await M.User.findById(u._id)).premiumUntil.getTime();
+  assert.ok(Math.abs(after - before - 30 * 86400e3) < 5000, "faol muddatga 30 kun qo'shildi");
+  assert.equal((await api('POST', `/payments/${co.j.payment}/demo/confirm`, null, tok)).s, 409);
+  assert.equal((await api('POST', '/premium/checkout', { plan: 'abadiy', provider: 'payme' }, tok)).s, 400);
+  assert.equal((await api('GET', '/premium', null, tok)).j.history.length, 1);
+
+  // Dars chegirmasi: birinchi darsda qo'shilmaydi, keyingisida platforma komissiyasidan
+  const meta = (await api('GET', '/meta')).j;
+  const b1 = (await book(tok, await slot(0))).j;
+  assert.equal(b1.premiumDiscount, 0, "birinchi darsda chegirmalar qo'shilmaydi");
+  await M.Booking.updateOne({ _id: b1._id }, { $set: { status: 'completed' } });
+  const b2 = (await book(tok, await slot(0))).j;
+  const fullCom = Math.round((100000 * meta.commission) / 100);
+  const pd = Math.min(5000, fullCom);
+  assert.equal(b2.premiumDiscount, pd);
+  assert.equal(b2.total, 100000 - pd);
+  assert.equal(b2.payout, 100000 - fullCom, "repetitor ulushi o'zgarmaydi");
+  assert.equal(b2.commission, fullCom - pd);
+
+  // Tasdiqlangan material muallifiga mukofot — bir marta
+  const mat = await M.Material.create({ subject: fx.subject._id, title: 'Talaba konspekti', type: 'konspekt', body: 'matn', author: fx.studentB._id, status: 'pending' });
+  assert.equal((await api('PATCH', `/admin/materials/${mat._id}`, { status: 'approved' }, fx.t.admin)).s, 200);
+  const rewarded = (await M.User.findById(fx.studentB._id)).premiumUntil;
+  assert.ok(rewarded.getTime() > Date.now() + 6 * 86400e3);
+  await api('PATCH', `/admin/materials/${mat._id}`, { status: 'pending' }, fx.t.admin);
+  await api('PATCH', `/admin/materials/${mat._id}`, { status: 'approved' }, fx.t.admin);
+  assert.equal((await M.User.findById(fx.studentB._id)).premiumUntil.getTime(), rewarded.getTime(), 'mukofot bir marta');
+
+  // Admin kunlarni qo'lda boshqaradi
+  assert.equal((await api('POST', `/admin/users/${u._id}/premium`, { days: 10 }, fx.t.a)).s, 403);
+  assert.equal((await api('POST', `/admin/users/${u._id}/premium`, { days: -1000 }, fx.t.admin)).s, 200);
+  assert.equal((await api('GET', '/premium', null, tok)).j.active, false);
+  assert.equal((await api('GET', '/quizzes/mistakes', null, tok)).j.locked, true);
+
+  // Haqiqiy rejim: Payme orqali yillik obuna va qaytarish
+  const env = { PAYMENT_MODE: 'live', PAYME_MERCHANT_ID: 'mid-prem', PAYME_KEY: 'prem-kalit' };
+  Object.assign(process.env, env);
+  const rpc = (method, params) =>
+    fetch(`${base}/payments/payme`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${Buffer.from(`Paycom:${env.PAYME_KEY}`).toString('base64')}` },
+      body: JSON.stringify({ id: 1, method, params }),
+    }).then((r) => r.json());
+  try {
+    const c2 = (await api('POST', '/premium/checkout', { plan: 'year', provider: 'payme' }, tok)).j;
+    const order_id = String(c2.payment);
+    const amount = 149000 * 100;
+    assert.equal((await rpc('CheckPerformTransaction', { amount, account: { order_id } })).result.allow, true);
+    assert.equal((await rpc('CreateTransaction', { id: 'prem-1', time: Date.now(), amount, account: { order_id } })).result.state, 1);
+    assert.equal((await rpc('PerformTransaction', { id: 'prem-1' })).result.state, 2);
+    assert.ok((await M.User.findById(u._id)).premiumUntil.getTime() > Date.now() + 364 * 86400e3);
+    assert.equal((await rpc('CancelTransaction', { id: 'prem-1', reason: 5 })).result.state, -2);
+    assert.ok((await M.User.findById(u._id)).premiumUntil.getTime() < Date.now() + 86400e3, 'qaytarilgan kunlar olib tashlandi');
+  } finally {
+    for (const k of Object.keys(env)) delete process.env[k];
+  }
+});

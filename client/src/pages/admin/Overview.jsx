@@ -52,6 +52,7 @@ export default function Overview({ go }) {
         <Stat label="Tasdiqlangan repetitorlar" value={s.tutorsApproved} hint={`kutilmoqda: ${s.tutorsPending} · maqsad 8–10`} warn={s.tutorsApproved < 8} />
         <Stat label="O'rtacha baho" value={s.avgRating ?? '—'} hint={`${s.reviews} ta sharh · maqsad 4+`} tip="Yashirilgan sharhlar hisobga olinmaydi." />
         <Stat label="Aylanma / komissiya" value={money(s.gross)} hint={`komissiya: ${money(s.commission)}`} tip="To'langan va o'tgan darslar summasi. Qaytarilgan to'lovlar ham shu yerga kiradi, aniq hisob uchun «Moliya» bo'limiga qarang." />
+        {data.premium && <Stat label="Premium obunachilar" value={data.premium.active} hint={`to'lovlar: ${data.premium.paid} · ${money(data.premium.revenue)}${data.premium.demoPaid ? ` · sinov: ${data.premium.demoPaid}` : ''}`} tip="Hozir premiumi faol foydalanuvchilar (sotib olgan, sinov yoki material uchun mukofot olgan). Pul summasiga faqat haqiqiy to'lovlar kiradi." />}
       </StatGrid>
 
       <div className="grid gap-3 lg:grid-cols-3">
