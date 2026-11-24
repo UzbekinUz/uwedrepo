@@ -15,6 +15,8 @@ import bookings from './routes/bookings.js';
 import admin from './routes/admin/index.js';
 import pub from './routes/public.js';
 import quizzes from './routes/quizzes.js';
+import payments from './routes/payments.js';
+import { parseErrorBody } from './payments/payme.js';
 import { createSeoRouter } from './seo.js';
 import { handleUpdate, webhookPath, webhookSecret } from './telegram.js';
 
@@ -46,6 +48,8 @@ app.use(
 );
 app.use(cors({ origin: config.clientOrigin }));
 app.use(express.json({ limit: '100kb' }));
+// Payme JSON-RPC: buzilgan JSON ham HTTP 200 va JSON-RPC xatosi (-32700) bilan javob olishi kerak
+app.use('/api/payments/payme', (err, _req, res, next) => (err?.type === 'entity.parse.failed' ? res.status(200).json(parseErrorBody) : next(err)));
 
 const limiter = (max) => rateLimit({ windowMs: 15 * 60e3, max, standardHeaders: true, legacyHeaders: false, message: { error: "Juda ko'p so'rov, birozdan keyin urinib ko'ring" } });
 
@@ -67,6 +71,7 @@ app.post(['/api/auth/telegram/start', '/api/auth/telegram/verify'], limiter(300)
 app.get('/api/auth/telegram/status/:token', limiter(1500));
 app.use('/api/auth', auth);
 app.use('/api/bookings', bookings);
+app.use('/api/payments', payments);
 app.use('/api/tutors', tutors);
 app.post('/api/quizzes/:id/explain', limiter(100)); // AI so'rovlari pulli: IP bo'yicha qo'shimcha cheklov
 app.use('/api/quizzes', quizzes);

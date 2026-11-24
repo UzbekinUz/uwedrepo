@@ -109,9 +109,23 @@ test("bir vaqtdagi ikki bron: faqat bittasi o'tadi", async () => {
 test("to'liq oqim: bron, tasdiq, to'lov (ikki marta bosish), admin 'dars o'tdi', hisob, o'tkazish", async () => {
   const b = (await book(fx.t.a, await slot(5))).j;
   assert.equal(b.discount, 20000, 'birinchi dars chegirmasi 20%');
+  assert.equal((await api('POST', `/bookings/${b._id}/checkout`, { provider: 'click' }, fx.t.a)).s, 409, 'tasdiqlanmagan bron uchun to\'lov yo\'q');
   assert.equal((await api('PATCH', `/bookings/${b._id}/confirm`, null, fx.t.tutor)).s, 200);
-  const [p1, p2] = await Promise.all([api('POST', `/bookings/${b._id}/pay`, { method: 'click' }, fx.t.a), api('POST', `/bookings/${b._id}/pay`, { method: 'click' }, fx.t.a)]);
+  const co = await api('POST', `/bookings/${b._id}/checkout`, { provider: 'click' }, fx.t.a);
+  assert.equal(co.s, 201);
+  assert.equal(co.j.mode, 'demo', 'kalitlarsiz — sinov rejimi');
+  assert.equal(co.j.url, `/pay/${co.j.payment}`);
+  assert.equal((await api('GET', `/payments/${co.j.payment}`, null, fx.t.b)).s, 404, "boshqa talaba to'lovni ko'rmaydi");
+  const view = await api('GET', `/payments/${co.j.payment}`, null, fx.t.a);
+  assert.equal(view.j.amount, 80000);
+  assert.equal(view.j.booking.subject.name, 'Fan');
+  const [p1, p2] = await Promise.all([api('POST', `/payments/${co.j.payment}/demo/confirm`, null, fx.t.a), api('POST', `/payments/${co.j.payment}/demo/confirm`, null, fx.t.a)]);
   assert.deepEqual([p1.s, p2.s].sort(), [200, 409], "ikki marta to'lab bo'lmaydi");
+  const paid = await M.Booking.findById(b._id);
+  assert.equal(paid.status, 'paid');
+  assert.equal(paid.paymentMethod, 'click');
+  assert.equal(paid.paymentTest, true, "sinov to'lovi belgilanadi");
+  assert.equal((await api('POST', `/bookings/${b._id}/checkout`, { provider: 'payme' }, fx.t.a)).s, 409, "to'langan bron qayta to'lanmaydi");
   assert.equal((await api('POST', `/admin/bookings/${b._id}/complete`, null, fx.t.admin)).s, 200);
 
   const pay = (await api('GET', '/admin/payouts', null, fx.t.admin)).j.find((x) => x.name === 'Repetitor');
@@ -122,6 +136,166 @@ test("to'liq oqim: bron, tasdiq, to'lov (ikki marta bosish), admin 'dars o'tdi',
   assert.equal(fin.totals.owed, 0);
   assert.equal(fin.totals.paidOut, 72000);
   fx.completed = b;
+});
+
+test("sinov to'lovi: bekor qilish; bron rad etilsa ochiq to'lov yopiladi", async () => {
+  const meta = (await api('GET', '/meta')).j;
+  assert.equal(meta.payment.mode, 'demo');
+  assert.deepEqual(meta.payment.providers, ['payme', 'click']);
+  const b = (await book(fx.t.a, await slot(16))).j;
+  await api('PATCH', `/bookings/${b._id}/confirm`, null, fx.t.tutor);
+  const co = (await api('POST', `/bookings/${b._id}/checkout`, { provider: 'payme' }, fx.t.a)).j;
+  assert.equal((await api('POST', `/payments/${co.payment}/demo/cancel`, null, fx.t.a)).j.status, 'cancelled');
+  assert.equal((await api('POST', `/payments/${co.payment}/demo/confirm`, null, fx.t.a)).s, 409, "bekor qilingan to'lov tasdiqlanmaydi");
+  const co2 = (await api('POST', `/bookings/${b._id}/checkout`, { provider: 'click' }, fx.t.a)).j;
+  assert.equal((await api('PATCH', `/bookings/${b._id}/reject`, null, fx.t.tutor)).s, 200);
+  assert.equal((await M.Payment.findById(co2.payment)).status, 'cancelled');
+  assert.equal((await api('POST', `/payments/${co2.payment}/demo/confirm`, null, fx.t.a)).s, 409);
+  assert.equal((await M.Booking.findById(b._id)).status, 'cancelled');
+});
+
+test("Payme Merchant API: tekshiruv, yaratish, bajarish, hisobot, qaytarish, muddat o'tishi", async () => {
+  const env = { PAYMENT_MODE: 'live', PAYME_MERCHANT_ID: 'mid-test', PAYME_KEY: 'sinov:kalit#1?&', PAYME_MXIK: '10305001001000000', PAYME_PACKAGE_CODE: '1501876' };
+  Object.assign(process.env, env);
+  const rpc = (method, params, key = env.PAYME_KEY) =>
+    fetch(`${base}/payments/payme`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', Authorization: `Basic ${Buffer.from(`Paycom:${key}`).toString('base64')}` },
+      body: JSON.stringify({ id: 7, method, params }),
+    }).then(async (r) => ({ s: r.status, j: await r.json() }));
+  try {
+    const b = (await book(fx.t.a, await slot(10))).j;
+    await api('PATCH', `/bookings/${b._id}/confirm`, null, fx.t.tutor);
+    assert.equal((await api('POST', `/bookings/${b._id}/checkout`, { provider: 'click' }, fx.t.a)).s, 503, 'Click kaliti yo\'q');
+    const co = await api('POST', `/bookings/${b._id}/checkout`, { provider: 'payme' }, fx.t.a);
+    assert.equal(co.s, 201);
+    assert.equal(co.j.mode, 'live');
+    assert.ok(co.j.url.startsWith('https://checkout.paycom.uz/'));
+    const order_id = String(co.j.payment);
+    const amount = b.total * 100;
+    const decoded = Buffer.from(co.j.url.split('/').pop(), 'base64').toString();
+    assert.ok(decoded.startsWith(`m=mid-test;ac.order_id=${order_id};a=${amount};`), decoded);
+
+    const bad = await rpc('CheckPerformTransaction', { amount, account: { order_id } }, 'notogri');
+    assert.equal(bad.s, 200);
+    assert.equal(bad.j.error.code, -32504);
+    assert.equal(bad.j.id, 7);
+    const broken = await fetch(`${base}/payments/payme`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{buzilgan' });
+    assert.equal(broken.status, 200);
+    assert.equal((await broken.json()).error.code, -32700);
+    assert.equal((await rpc('Yoq', {})).j.error.code, -32601);
+    assert.equal((await rpc('CheckPerformTransaction', { amount: amount + 100, account: { order_id } })).j.error.code, -31001);
+    const missing = await rpc('CheckPerformTransaction', { amount, account: { order_id: '000000000000000000000000' } });
+    assert.equal(missing.j.error.code, -31050);
+    assert.equal(missing.j.error.data, 'order_id');
+    const check = await rpc('CheckPerformTransaction', { amount, account: { order_id } });
+    assert.equal(check.j.result.allow, true);
+    assert.equal(check.j.result.detail.items[0].code, env.PAYME_MXIK);
+    assert.equal(check.j.result.detail.items[0].price, amount);
+
+    const t0 = Date.now();
+    const cr = await rpc('CreateTransaction', { id: 'payme-tx-1', time: t0, amount, account: { order_id } });
+    assert.equal(cr.j.result.state, 1);
+    assert.equal(cr.j.result.transaction, order_id);
+    const again = await rpc('CreateTransaction', { id: 'payme-tx-1', time: t0, amount, account: { order_id } });
+    assert.equal(again.j.result.create_time, cr.j.result.create_time, 'takroriy yaratish — o\'sha javob');
+    assert.equal((await rpc('CreateTransaction', { id: 'payme-tx-2', time: t0, amount, account: { order_id } })).j.error.code, -31052, 'buyurtma band');
+    assert.equal((await rpc('CheckPerformTransaction', { amount, account: { order_id } })).j.error.code, -31052);
+
+    const pf = await rpc('PerformTransaction', { id: 'payme-tx-1' });
+    assert.equal(pf.j.result.state, 2);
+    assert.equal((await rpc('PerformTransaction', { id: 'payme-tx-1' })).j.result.perform_time, pf.j.result.perform_time);
+    assert.equal((await rpc('PerformTransaction', { id: 'yoq' })).j.error.code, -31003);
+    const bk = await M.Booking.findById(b._id);
+    assert.equal(bk.status, 'paid');
+    assert.equal(bk.paymentMethod, 'payme');
+    assert.equal(bk.paymentTest, false);
+    assert.equal((await api('POST', `/payments/${order_id}/demo/confirm`, null, fx.t.a)).s, 409, 'haqiqiy to\'lovda sinov tasdig\'i yo\'q');
+
+    const ct = await rpc('CheckTransaction', { id: 'payme-tx-1' });
+    assert.equal(ct.j.result.state, 2);
+    assert.equal(ct.j.result.cancel_time, 0);
+    const stm = await rpc('GetStatement', { from: t0 - 1000, to: Date.now() + 1000 });
+    assert.ok(stm.j.result.transactions.some((x) => x.id === 'payme-tx-1' && x.amount === amount && x.account.order_id === order_id));
+
+    const cn = await rpc('CancelTransaction', { id: 'payme-tx-1', reason: 5 });
+    assert.equal(cn.j.result.state, -2);
+    const after = await M.Booking.findById(b._id);
+    assert.equal(after.status, 'cancelled');
+    assert.equal(after.refunded, true);
+    assert.equal((await rpc('CheckTransaction', { id: 'payme-tx-1' })).j.result.reason, 5);
+    assert.equal((await rpc('CancelTransaction', { id: 'payme-tx-1', reason: 5 })).j.result.cancel_time, cn.j.result.cancel_time, 'takroriy bekor qilish');
+
+    // 12 soatda bajarilmagan tranzaksiya bekor qilinadi
+    const b2 = (await book(fx.t.a, await slot(12))).j;
+    await api('PATCH', `/bookings/${b2._id}/confirm`, null, fx.t.tutor);
+    const co2 = (await api('POST', `/bookings/${b2._id}/checkout`, { provider: 'payme' }, fx.t.a)).j;
+    await rpc('CreateTransaction', { id: 'payme-tx-3', time: Date.now(), amount: b2.total * 100, account: { order_id: String(co2.payment) } });
+    await M.Payment.updateOne({ extId: 'payme-tx-3' }, { $set: { createTime: Date.now() - 13 * 3600e3 } });
+    assert.equal((await rpc('PerformTransaction', { id: 'payme-tx-3' })).j.error.code, -31008);
+    const exp = (await rpc('CheckTransaction', { id: 'payme-tx-3' })).j.result;
+    assert.equal(exp.state, -1);
+    assert.equal(exp.reason, 4);
+    assert.equal((await M.Booking.findById(b2._id)).status, 'confirmed', "bron ochiq qoladi: talaba qayta to'lashi mumkin");
+  } finally {
+    for (const k of Object.keys(env)) delete process.env[k];
+  }
+});
+
+test('Click Shop API: imzo, summa, prepare/complete, takroriy so\'rov', async () => {
+  const env = { PAYMENT_MODE: 'live', CLICK_SERVICE_ID: '777', CLICK_MERCHANT_ID: '888', CLICK_SECRET_KEY: 'click-sinov-siri' };
+  Object.assign(process.env, env);
+  const crypto = await import('node:crypto');
+  const md5 = (x) => crypto.createHash('md5').update(x).digest('hex');
+  const sign = (x, prep = '') => md5(`${x.click_trans_id}${x.service_id}${env.CLICK_SECRET_KEY}${x.merchant_trans_id}${prep}${x.amount}${x.action}${x.sign_time}`);
+  const post = (path, form) =>
+    fetch(`${base}/payments/click/${path}`, { method: 'POST', headers: { 'Content-Type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams(form).toString() }).then((r) => r.json());
+  try {
+    const b = (await book(fx.t.b, await slot(14))).j;
+    await api('PATCH', `/bookings/${b._id}/confirm`, null, fx.t.tutor);
+    assert.equal((await api('POST', `/bookings/${b._id}/checkout`, { provider: 'payme' }, fx.t.b)).s, 503, 'Payme kaliti yo\'q');
+    const co = (await api('POST', `/bookings/${b._id}/checkout`, { provider: 'click' }, fx.t.b)).j;
+    const url = new URL(co.url);
+    assert.equal(url.host, 'my.click.uz');
+    assert.equal(url.searchParams.get('service_id'), '777');
+    assert.equal(url.searchParams.get('transaction_param'), String(co.payment));
+
+    const f = { click_trans_id: '5551', service_id: '777', click_paydoc_id: '1', merchant_trans_id: String(co.payment), amount: `${b.total}.00`, action: '0', error: '0', error_note: 'Success', sign_time: '2026-11-24 10:00:00' };
+    assert.equal((await post('prepare', { ...f, sign_string: 'notogri' })).error, -1);
+    const low = { ...f, amount: '1.00' };
+    assert.equal((await post('prepare', { ...low, sign_string: sign(low) })).error, -2);
+    const nobody = { ...f, merchant_trans_id: '000000000000000000000000' };
+    assert.equal((await post('prepare', { ...nobody, sign_string: sign(nobody) })).error, -5);
+    const prep = await post('prepare', { ...f, sign_string: sign(f) });
+    assert.equal(prep.error, 0);
+    assert.equal(prep.click_trans_id, 5551);
+    assert.ok(prep.merchant_prepare_id > 0);
+
+    const c = { ...f, action: '1', merchant_prepare_id: String(prep.merchant_prepare_id) };
+    const wrong = { ...c, merchant_prepare_id: '1' };
+    assert.equal((await post('complete', { ...wrong, sign_string: sign(wrong, '1') })).error, -6);
+    const done = await post('complete', { ...c, sign_string: sign(c, c.merchant_prepare_id) });
+    assert.equal(done.error, 0);
+    assert.equal(done.merchant_confirm_id, prep.merchant_prepare_id);
+    assert.equal((await post('complete', { ...c, sign_string: sign(c, c.merchant_prepare_id) })).error, -4, 'takroriy complete');
+    const bk = await M.Booking.findById(b._id);
+    assert.equal(bk.status, 'paid');
+    assert.equal(bk.paymentMethod, 'click');
+    assert.equal(bk.paymentTest, false);
+
+    // Click to'lov amalga oshmaganini xabar qilsa — to'lov bekor, bron ochiq qoladi
+    const b2 = (await book(fx.t.b, await slot(18))).j;
+    await api('PATCH', `/bookings/${b2._id}/confirm`, null, fx.t.tutor);
+    const co2 = (await api('POST', `/bookings/${b2._id}/checkout`, { provider: 'click' }, fx.t.b)).j;
+    const f2 = { ...f, click_trans_id: '5552', merchant_trans_id: String(co2.payment), amount: `${b2.total}` };
+    const prep2 = await post('prepare', { ...f2, sign_string: sign(f2) });
+    const c2 = { ...f2, action: '1', error: '-5017', merchant_prepare_id: String(prep2.merchant_prepare_id) };
+    assert.equal((await post('complete', { ...c2, sign_string: sign(c2, c2.merchant_prepare_id) })).error, -9);
+    assert.equal((await M.Payment.findById(co2.payment)).status, 'cancelled');
+    assert.equal((await M.Booking.findById(b2._id)).status, 'confirmed');
+  } finally {
+    for (const k of Object.keys(env)) delete process.env[k];
+  }
 });
 
 test('sharh: yashirilsa reyting qayta hisoblanadi', async () => {

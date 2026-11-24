@@ -4,7 +4,7 @@ import { Booking, Tutor, Review } from '../models/index.js';
 import { requireAuth } from '../middleware/auth.js';
 import { wrap, HttpError } from '../middleware/util.js';
 import { freeSlots, priceBreakdown, refreshTutorRating } from '../lib.js';
-import { pay } from '../payments.js';
+import { startCheckout, onBookingCancelled } from '../payments/index.js';
 import { getSettings } from '../settings.js';
 import { notifyBooking } from '../notify.js';
 
@@ -117,30 +117,21 @@ r.patch(
     const updated = await Booking.findOneAndUpdate({ _id: booking._id, status: booking.status }, { $set: { status: to, ...(refunded && { refunded: true }) } }, { new: true });
     if (!updated) throw new HttpError(409, "Bron holati allaqachon o'zgargan, sahifani yangilang");
     if (to === 'completed') await Tutor.findByIdAndUpdate(booking.tutor, { $inc: { lessonsCount: 1 } });
+    if (to === 'cancelled') await onBookingCancelled(updated);
     notifyBooking(updated._id, { confirm: 'confirmed', reject: 'rejected', complete: 'completed', cancel: 'cancelled' }[req.params.action]);
     res.json(updated);
   })
 );
 
+// «To'lash»: to'lov yozuvi ochiladi va provayder sahifasi manzili qaytariladi (sinov rejimida — saytning o'z sahifasi)
 r.post(
-  '/:id/pay',
+  '/:id/checkout',
   wrap(async (req, res) => {
-    const { method } = z.object({ method: z.enum(['click', 'payme', 'card']) }).parse(req.body);
-    // avval holatni "to'langan"ga atomik o'tkazamiz (ikki marta bosilsa, ikkinchisi rad etiladi), keyin provayderni chaqiramiz
-    const booking = await Booking.findOneAndUpdate(
-      { _id: req.params.id, student: req.user._id, status: 'confirmed' },
-      { $set: { status: 'paid', paymentMethod: method, paidAt: new Date() } },
-      { new: true }
-    );
-    if (!booking) throw new HttpError(409, "To'lov faqat repetitor tasdiqlagandan keyin, va faqat bir marta");
-    try {
-      await pay({ booking, method });
-    } catch (e) {
-      await Booking.updateOne({ _id: booking._id }, { $set: { status: 'confirmed' }, $unset: { paymentMethod: 1, paidAt: 1 } });
-      throw e;
-    }
-    notifyBooking(booking._id, 'paid');
-    res.json(booking);
+    const { provider } = z.object({ provider: z.enum(['payme', 'click']) }).parse(req.body);
+    const booking = await Booking.findOne({ _id: req.params.id, student: req.user._id });
+    if (!booking) throw new HttpError(404, 'Bron topilmadi');
+    const { payment, url } = await startCheckout({ booking, provider, user: req.user });
+    res.status(201).json({ payment: payment._id, mode: payment.mode, url });
   })
 );
 

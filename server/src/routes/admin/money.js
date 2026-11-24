@@ -3,6 +3,7 @@ import { z } from 'zod';
 import { User, Tutor, Booking } from '../../models/index.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
 import { notifyBooking } from '../../notify.js';
+import { onBookingCancelled } from '../../payments/index.js';
 import { audit, pageOf, pageMeta, toCsv, sendCsv } from './helpers.js';
 
 const r = Router();
@@ -58,6 +59,7 @@ r.post(
     if (rule.refundIfPaid && booking.status === 'paid') set.refunded = true;
     const updated = await Booking.findOneAndUpdate({ _id: booking._id, status: booking.status }, { $set: set }, { new: true });
     if (!updated) throw new HttpError(409, "Bron holati allaqachon o'zgargan");
+    if (rule.to === 'cancelled') await onBookingCancelled(updated);
     if (rule.lesson) await Tutor.findByIdAndUpdate(booking.tutor, { $inc: { lessonsCount: 1 } });
     audit(req, `booking.${req.params.action}`, booking._id, { from: booking.status, total: booking.total });
     notifyBooking(updated._id, rule.notify);

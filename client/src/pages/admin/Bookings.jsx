@@ -42,7 +42,7 @@ export default function Bookings() {
                 <td>{b.tutor?.user?.name}<div className="text-xs text-slate-500">{b.tutor?.user?.telegram}</div></td>
                 <td>{b.subject?.name}</td>
                 <td className="whitespace-nowrap"><b>{money(b.total)}</b>{b.discount > 0 && <div className="text-xs text-emerald-700">chegirma −{money(b.discount)}</div>}<div className="text-xs text-slate-500">komissiya {money(b.commission)}</div></td>
-                <td><StatusChip s={b.status} />{b.paymentMethod && <div className="mt-1 text-xs text-slate-600">{PAY[b.paymentMethod]}</div>}{b.refunded && <div className="mt-1"><Chip tone="blue">Qaytariladi</Chip></div>}{b.payoutPaid && <div className="mt-1"><Chip tone="green">Repetitorga berilgan</Chip></div>}</td>
+                <td><StatusChip s={b.status} />{b.paymentMethod && <div className="mt-1 text-xs text-slate-600">{PAY[b.paymentMethod]}{b.paymentTest && ' · sinov'}</div>}{b.paymentTest && <div className="mt-1"><Chip tone="amber">Sinov to'lovi</Chip></div>}{b.refunded && <div className="mt-1"><Chip tone="blue">Qaytariladi</Chip></div>}{b.payoutPaid && <div className="mt-1"><Chip tone="green">Repetitorga berilgan</Chip></div>}</td>
                 <td>
                   <div className="flex flex-wrap gap-1.5">
                     {b.status === 'confirmed' && <button className="btn-primary btn-sm" disabled={busy} onClick={() => act(b, 'mark-paid', `${money(b.total)} to'lov qabul qilingani tasdiqlansinmi?`)}>Qo'lda to'langan</button>}

@@ -6,6 +6,7 @@ import { config } from '../../config.js';
 import { bot } from '../../telegram.js';
 import { FACULTIES } from '../../data/meta.js';
 import { toCsv, sendCsv } from './helpers.js';
+import { paymentConfig } from '../../payments/config.js';
 
 const r = Router();
 const TZ = 'Asia/Tashkent';
@@ -74,7 +75,7 @@ async function checklist() {
     { key: 'tutors', done: tutorsApproved >= 8, label: 'Kamida 8 ta tasdiqlangan repetitor', hint: `Hozir: ${tutorsApproved}. Hisobotdagi pilot maqsadi — 8–10 ta.`, tab: 'tutors' },
     { key: 'materials', done: materials >= 10, label: 'Kamida 10 ta material', hint: `Hozir: ${materials}.`, tab: 'content' },
     { key: 'survey', done: surveyN >= 30, label: 'Kamida 30 ta so’rovnoma javobi', hint: `Hozir: ${surveyN}. /survey havolasini guruh chatlariga tarqating.`, tab: 'research' },
-    { key: 'payment', done: (process.env.PAYMENT_PROVIDER || 'mock') !== 'mock', label: "Haqiqiy to'lov tizimi ulangan", hint: "Hozir mock: pul yechilmaydi. Pilot uchun «Bronlar» bo'limida «Qo'lda to'langan» belgisidan foydalaning.", tab: 'bookings', optional: true },
+    { key: 'payment', done: paymentConfig().mode === 'live', label: "Haqiqiy to'lov tizimi ulangan", hint: "Hozir sinov rejimi: talabalar Payme/Click tugmasi orqali to'lovni sinab ko'radi, lekin pul yechilmaydi. Merchant shartnomasi tuzilgach Render'da PAYMENT_MODE=live va Payme/Click kalitlarini kiriting (Sozlamalar → Tizim holati).", tab: 'settings', optional: true },
   ];
   return items;
 }

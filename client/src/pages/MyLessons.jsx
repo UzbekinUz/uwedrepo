@@ -1,13 +1,14 @@
 import { useState } from 'react';
 import { useSeo } from '../lib/seo.js';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { api } from '../api.js';
 import { Hint } from '../components/Motion.jsx';
 import { ErrorBox, Empty, PageTitle, Spinner, Tabs, useFetch } from '../components/ui.jsx';
 import { STATUS, dateTime, money, tgLink } from '../lib/format.js';
 import { t } from '../lib/i18n.js';
+import { useApp } from '../context/App.jsx';
 
-const METHODS = [['click', 'Click'], ['payme', 'Payme'], ['card', 'Bank kartasi']];
+const PROVIDER = { payme: 'Payme', click: 'Click' };
 
 function Review({ booking, onDone }) {
   const [rating, setRating] = useState(5);
@@ -34,6 +35,23 @@ function BookingCard({ b, reload }) {
   const [reviewOpen, setReviewOpen] = useState(false);
   const [err, setErr] = useState('');
   const act = async (fn) => { setErr(''); try { await fn(); reload(); } catch (e) { setErr(e.message); } };
+  const { meta } = useApp();
+  const navigate = useNavigate();
+  const payment = meta?.payment || { mode: 'demo', providers: ['payme', 'click'] };
+  const [paying, setPaying] = useState(false);
+  // «To'lash»: to'lov yozuvi ochiladi; sinov rejimida saytning o'z sahifasiga, haqiqiy rejimda Payme/Click sahifasiga o'tiladi
+  const checkout = async (provider) => {
+    setErr('');
+    setPaying(true);
+    try {
+      const r = await api(`/bookings/${b._id}/checkout`, { method: 'POST', body: { provider } });
+      if (r.url.startsWith('/')) navigate(r.url);
+      else window.location.assign(r.url);
+    } catch (e) {
+      setErr(e.message);
+      setPaying(false);
+    }
+  };
   const st = STATUS[b.status];
   const handle = b.tutor?.user?.telegram || b.tutor?.telegram;
   const phone = b.tutor?.user?.phone;
@@ -52,12 +70,14 @@ function BookingCard({ b, reload }) {
         {b.discount > 0 && <span className="text-slate-400 line-through">{money(b.price)} </span>}
         <b>{money(b.total)}</b>{b.discount > 0 && <span className="ml-1 text-emerald-600">({t('talaba chegirmasi')} −{money(b.discount)})</span>}
         {b.refunded && <span className="ml-2 chip bg-sky-100 text-sky-800">{t("To'lov qaytariladi")}</span>}
+        {b.paymentTest && ['paid', 'completed'].includes(b.status) && <span className="ml-2 chip bg-amber-100 text-amber-800">{t("Sinov to'lovi")}</span>}
       </div>
       <ErrorBox error={err} />
       <div className="mt-3 flex flex-wrap gap-2">
         {b.status === 'confirmed' && <button className="btn-primary btn-sm" onClick={() => setPayOpen(!payOpen)}>{t("To'lash")}</button>}
         {['confirmed', 'paid'].includes(b.status) && tgLink(handle, msg) && <a className="btn-ghost btn-sm" target="_blank" rel="noopener noreferrer" href={tgLink(handle, msg)}>{t('Telegramda yozish')}</a>}
         {['confirmed', 'paid'].includes(b.status) && !tgLink(handle, msg) && phone && <a className="btn-ghost btn-sm" href={`tel:${phone}`}>{phone}</a>}
+        {b.payment && ['paid', 'completed'].includes(b.status) && <Link className="btn-ghost btn-sm" to={`/pay/${b.payment}`}>{t("To'lov cheki")}</Link>}
         {b.status === 'completed' && !b.reviewed && <button className="btn-ghost btn-sm" onClick={() => setReviewOpen(!reviewOpen)}>{t('Baho berish')}</button>}
         {b.status === 'completed' && b.reviewed && <span className="text-sm text-slate-500">{t('Baho berilgan')} ✓</span>}
         {['pending', 'confirmed', 'paid'].includes(b.status) && <button className="btn-ghost btn-sm text-red-600" onClick={() => confirm(t('Bronni bekor qilasizmi?')) && act(() => api(`/bookings/${b._id}/cancel`, { method: 'PATCH' }))}>{t('Bekor qilish')}</button>}
@@ -65,8 +85,9 @@ function BookingCard({ b, reload }) {
       {payOpen && (
         <div className="mt-3 rounded-lg bg-slate-50 p-3">
           <div className="mb-2 text-sm font-medium">{t("To'lov usuli:")}</div>
-          <div className="flex flex-wrap gap-2">{METHODS.map(([k, l]) => <button key={k} className="btn-ghost btn-sm" onClick={() => act(() => api(`/bookings/${b._id}/pay`, { method: 'POST', body: { method: k } }))}>{t(l)} · {money(b.total)}</button>)}</div>
-          <Hint kind="warn" className="mt-3"><p>{t("Pilot rejimi: haqiqiy pul yechilmaydi.")}</p></Hint>
+          <div className="flex flex-wrap gap-2">{payment.providers.map((k) => <button key={k} className="btn-ghost btn-sm" disabled={paying} onClick={() => checkout(k)}>{PROVIDER[k]} · {money(b.total)}</button>)}</div>
+          {!payment.providers.length && <p className="text-sm text-slate-600">{t("To'lov tizimi vaqtincha ishlamayapti. Keyinroq urinib ko'ring.")}</p>}
+          {payment.mode === 'demo' && <Hint kind="warn" className="mt-3"><p>{t("Sinov rejimi: to'lov sahifasi ishlaydi, lekin haqiqiy pul yechilmaydi.")}</p></Hint>}
         </div>
       )}
       {reviewOpen && <Review booking={b} onDone={() => { setReviewOpen(false); reload(); }} />}

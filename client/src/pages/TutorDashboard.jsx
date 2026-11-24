@@ -125,7 +125,7 @@ function Incoming() {
       {data?.map((b) => (
         <div key={b._id} className="card flex flex-wrap items-center justify-between gap-3 p-4">
           <div>
-            <div className="font-semibold">{b.student?.name} <span className={`chip ml-1 ${STATUS[b.status].cls}`}>{STATUS[b.status].label}</span></div>
+            <div className="font-semibold">{b.student?.name} <span className={`chip ml-1 ${STATUS[b.status].cls}`}>{STATUS[b.status].label}</span>{b.paymentTest && ['paid', 'completed'].includes(b.status) && <span className="chip ml-1 bg-amber-100 text-amber-800">{t("Sinov to'lovi: pul o'tkazilmagan")}</span>}</div>
             <div className="text-sm text-slate-500">{b.subject?.name} · {dateTime(b.startsAt)} · {t('sizga:')} {money(b.payout)}</div>
             {b.note && <div className="text-sm text-slate-500">“{b.note}”</div>}
             {b.student?.telegram && <a className="text-xs text-brand-600 underline" target="_blank" rel="noopener noreferrer" href={tgLink(b.student.telegram)}>Telegram: {b.student.telegram}</a>}
