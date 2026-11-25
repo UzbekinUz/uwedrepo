@@ -1,0 +1,173 @@
+[
+  {
+    "title": "Integrallar: umumiy test (15 savol)",
+    "description": "Oddiy integrallar, bo'laklab integrallash, ko'paytuvchilarga ajratish va oddiy kasrlarga yoyish. 1–5 oson, 6–10 o'rta, 11–15 qiyin. Har savolda yechim.",
+    "questions": [
+      {
+        "text": "∫(3x² + 2x) dx = ?  · oson",
+        "options": [
+          "6x + 2 + C",
+          "x³ + x² + C",
+          "x³ + 2x² + C",
+          "3x³ + x² + C"
+        ],
+        "correct": 1,
+        "explanation": "∫xⁿdx = {xⁿ⁺¹|n + 1}: ∫3x²dx = x³, ∫2x dx = x². Javob: x³ + x² + C."
+      },
+      {
+        "text": "∫({1|x} + eˣ) dx = ?  · oson",
+        "options": [
+          "−{1|x²} + eˣ + C",
+          "ln x − eˣ + C",
+          "ln|x| + eˣ + C",
+          "x·eˣ + ln x + C"
+        ],
+        "correct": 2,
+        "explanation": "∫{1|x}dx = ln|x|, ∫eˣdx = eˣ."
+      },
+      {
+        "text": "∫ sin 2x dx = ?  · oson",
+        "options": [
+          "{cos 2x|2} + C",
+          "−2cos 2x + C",
+          "−cos 2x + C",
+          "−{cos 2x|2} + C"
+        ],
+        "correct": 3,
+        "explanation": "Ichki funksiya 2x bo'lgani uchun natija 2 ga bo'linadi: −{cos 2x|2} + C."
+      },
+      {
+        "text": "∫ √x dx = ?  · oson",
+        "options": [
+          "{2|3}·x√x + C",
+          "{3|2}·x√x + C",
+          "{1|2√x} + C",
+          "{2|3}√x + C"
+        ],
+        "correct": 0,
+        "explanation": "√x = x^{1/2}, ∫x^{1/2}dx = {x^{3/2}|3/2} = {2|3}x√x."
+      },
+      {
+        "text": "∫ x·eˣ dx = ?  (bo'laklab) · oson",
+        "options": [
+          "(x + 1)eˣ + C",
+          "{x²eˣ|2} + C",
+          "(x − 2)eˣ + C",
+          "(x − 1)eˣ + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x, dv = eˣdx ⇒ x·eˣ − ∫eˣdx = (x − 1)eˣ + C."
+      },
+      {
+        "text": "∫ x·cos x dx = ?  (bo'laklab) · o'rta",
+        "options": [
+          "x sin x − cos x + C",
+          "x sin x + cos x + C",
+          "−x sin x + cos x + C",
+          "x sin x + sin x + C"
+        ],
+        "correct": 1,
+        "explanation": "u = x, dv = cos x dx ⇒ x sin x − ∫sin x dx = x sin x + cos x + C."
+      },
+      {
+        "text": "∫ x·ln x dx = ?  (bo'laklab) · o'rta",
+        "options": [
+          "{x²|2}ln x − {x²|2} + C",
+          "{x²|2}ln x + {x²|4} + C",
+          "{x²|2}ln x − {x²|4} + C",
+          "x² ln x − {x²|4} + C"
+        ],
+        "correct": 2,
+        "explanation": "u = ln x, dv = x dx ⇒ {x²|2}ln x − ∫{x|2}dx = {x²|2}ln x − {x²|4} + C."
+      },
+      {
+        "text": "∫ {x² − 4|x − 2} dx = ?  (ko'paytuvchilarga ajratish) · o'rta",
+        "options": [
+          "{x²|2} − 2x + C",
+          "{x²|2} + 2x + C",
+          "x² − 4x + C",
+          "{x²|2} + 2 + C"
+        ],
+        "correct": 1,
+        "explanation": "x² − 4 = (x − 2)(x + 2); qisqartirsak x + 2 qoladi: ∫(x + 2)dx = {x²|2} + 2x + C."
+      },
+      {
+        "text": "∫ {dx|x² − 1} = ?  (ko'paytuvchilarga ajratish) · o'rta",
+        "options": [
+          "{1|2} ln|{x − 1|x + 1}| + C",
+          "{1|2} ln|{x + 1|x − 1}| + C",
+          "{1|2} ln|x² − 1| + C",
+          "arctg x + C"
+        ],
+        "correct": 0,
+        "explanation": "{1|x² − 1} = {1|2}({1|x − 1} − {1|x + 1}), integrali {1|2} ln|{x − 1|x + 1}| + C."
+      },
+      {
+        "text": "∫ x·e^{x²} dx = ?  · o'rta",
+        "options": [
+          "e^{x²} + C",
+          "2e^{x²} + C",
+          "{x²e^{x²}|2} + C",
+          "{e^{x²}|2} + C"
+        ],
+        "correct": 3,
+        "explanation": "t = x² ⇒ dt = 2x dx ⇒ {1|2}∫eᵗdt = {e^{x²}|2} + C."
+      },
+      {
+        "text": "∫ e^{3x}·cos 2x dx = ?  (aylanma bo'laklash) · qiyin",
+        "options": [
+          "{e^{3x}(3cos 2x − 2sin 2x)|13} + C",
+          "{e^{3x}(2cos 2x + 3sin 2x)|13} + C",
+          "{e^{3x}(3cos 2x + 2sin 2x)|13} + C",
+          "{e^{3x}(3cos 2x + 2sin 2x)|5} + C"
+        ],
+        "correct": 2,
+        "explanation": "∫e^{ax}cos bx dx = {e^{ax}(a cos bx + b sin bx)|a² + b²}; a = 3, b = 2 ⇒ maxraj 9 + 4 = 13."
+      },
+      {
+        "text": "∫ {x + 5|x² − x − 2} dx = ?  (oddiy kasrlarga yoyish) · qiyin",
+        "options": [
+          "{4|3}ln|x − 2| − {7|3}ln|x + 1| + C",
+          "{7|3}ln|x − 2| + {4|3}ln|x + 1| + C",
+          "{7|3}ln|x − 2| − {4|3}ln|x + 1| + C",
+          "ln|x² − x − 2| + C"
+        ],
+        "correct": 2,
+        "explanation": "x² − x − 2 = (x − 2)(x + 1); {x + 5|(x − 2)(x + 1)} = {7/3|x − 2} − {4/3|x + 1}."
+      },
+      {
+        "text": "∫ {x³|x² + 1} dx = ?  · qiyin",
+        "options": [
+          "{x²|2} + {1|2} ln(x² + 1) + C",
+          "{x²|2} − ln(x² + 1) + C",
+          "{x²|2} − arctg x + C",
+          "{x²|2} − {1|2} ln(x² + 1) + C"
+        ],
+        "correct": 3,
+        "explanation": "{x³|x² + 1} = x − {x|x² + 1}; ∫x dx = {x²|2}, ∫{x|x² + 1}dx = {1|2} ln(x² + 1)."
+      },
+      {
+        "text": "∫ x·√(x + 1) dx = ?  · qiyin",
+        "options": [
+          "{2|5}(x + 1)^{5/2} + {2|3}(x + 1)^{3/2} + C",
+          "{2|3}(x + 1)^{5/2} − {2|5}(x + 1)^{3/2} + C",
+          "{2|5}(x + 1)^{5/2} − {2|3}(x + 1)^{3/2} + C",
+          "{2|5}(x + 1)^{5/2} − {2|3}(x + 1)^{1/2} + C"
+        ],
+        "correct": 2,
+        "explanation": "t = x + 1, x = t − 1: ∫(t − 1)√t dt = {2|5}t^{5/2} − {2|3}t^{3/2} + C."
+      },
+      {
+        "text": "∫ x²·e^{2x} dx = ?  (bo'laklab) · qiyin",
+        "options": [
+          "({x²|2} + {x|2} + {1|4})e^{2x} + C",
+          "(x² − x + {1|2})e^{2x} + C",
+          "({x²|2} − x + {1|2})e^{2x} + C",
+          "({x²|2} − {x|2} + {1|4})e^{2x} + C"
+        ],
+        "correct": 3,
+        "explanation": "Ikki marta bo'laklash: {x²e^{2x}|2} − ∫x·e^{2x}dx = ({x²|2} − {x|2} + {1|4})e^{2x} + C."
+      }
+    ]
+  }
+]
