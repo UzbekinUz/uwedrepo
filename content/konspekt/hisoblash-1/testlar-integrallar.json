@@ -169,5 +169,341 @@
         "explanation": "Ikki marta bo'laklash: {x²e^{2x}|2} − ∫x·e^{2x}dx = ({x²|2} − {x|2} + {1|4})e^{2x} + C."
       }
     ]
+  },
+  {
+    "title": "Bo'laklab integrallash: 30 ta misol (test)",
+    "description": "30 ta savol: ko'phad × eˣ/sin/cos, logarifmlar, teskari trigonometrik va «aylanma» integrallar. Har savolda 4 variant va qisqa yechim.",
+    "questions": [
+      {
+        "text": "∫ x·eˣ dx = ?  · oson",
+        "options": [
+          "{x²eˣ|2} + C",
+          "(x − 1)eˣ + C",
+          "x·eˣ + C",
+          "(x + 1)eˣ + C"
+        ],
+        "correct": 1,
+        "explanation": "u = x, dv = eˣdx ⇒ x·eˣ − ∫eˣdx = (x − 1)eˣ + C."
+      },
+      {
+        "text": "∫ x·sin x dx = ?  · oson",
+        "options": [
+          "x sin x + cos x + C",
+          "x cos x − sin x + C",
+          "−x cos x + sin x + C",
+          "−x cos x − sin x + C"
+        ],
+        "correct": 2,
+        "explanation": "u = x, v = −cos x ⇒ −x cos x + ∫cos x dx = −x cos x + sin x + C."
+      },
+      {
+        "text": "∫ x·cos x dx = ?  · oson",
+        "options": [
+          "x sin x − cos x + C",
+          "−x sin x + cos x + C",
+          "x sin x + cos x + C",
+          "x cos x + sin x + C"
+        ],
+        "correct": 2,
+        "explanation": "u = x, v = sin x ⇒ x sin x − ∫sin x dx = x sin x + cos x + C."
+      },
+      {
+        "text": "∫ x·e⁻ˣ dx = ?  · oson",
+        "options": [
+          "−(x − 1)e⁻ˣ + C",
+          "(x − 1)e⁻ˣ + C",
+          "(x + 1)e⁻ˣ + C",
+          "−(x + 1)e⁻ˣ + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x, v = −e⁻ˣ ⇒ −x·e⁻ˣ + ∫e⁻ˣdx = −x·e⁻ˣ − e⁻ˣ."
+      },
+      {
+        "text": "∫ x·e²ˣ dx = ?  · oson",
+        "options": [
+          "{e²ˣ(2x + 1)|4} + C",
+          "{e²ˣ(x − 1)|2} + C",
+          "e²ˣ(2x − 1) + C",
+          "{e²ˣ(2x − 1)|4} + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x, v = {e²ˣ|2} ⇒ {x·e²ˣ|2} − {e²ˣ|4}."
+      },
+      {
+        "text": "∫ x·sin 2x dx = ?  · o'rta",
+        "options": [
+          "−x cos 2x + {sin 2x|2} + C",
+          "−{x cos 2x|2} + {sin 2x|4} + C",
+          "{x cos 2x|2} − {sin 2x|4} + C",
+          "−{x cos 2x|2} + {sin 2x|2} + C"
+        ],
+        "correct": 1,
+        "explanation": "u = x, v = −{cos 2x|2} ⇒ −{x cos 2x|2} + {1|2}∫cos 2x dx."
+      },
+      {
+        "text": "∫ x·cos 3x dx = ?  · o'rta",
+        "options": [
+          "{x sin 3x|3} − {cos 3x|9} + C",
+          "3x sin 3x + cos 3x + C",
+          "{x sin 3x|3} + {cos 3x|3} + C",
+          "{x sin 3x|3} + {cos 3x|9} + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x, v = {sin 3x|3} ⇒ {x sin 3x|3} − {1|3}∫sin 3x dx."
+      },
+      {
+        "text": "∫ x·sin x·cos x dx = ?  · o'rta",
+        "options": [
+          "−{x cos 2x|4} − {sin 2x|8} + C",
+          "−{x cos 2x|2} + {sin 2x|4} + C",
+          "−{x cos 2x|4} + {sin 2x|8} + C",
+          "{x sin²x|2} + C"
+        ],
+        "correct": 2,
+        "explanation": "sin x·cos x = {sin 2x|2}, demak {1|2}∫x sin 2x dx = {1|2}(−{x cos 2x|2} + {sin 2x|4})."
+      },
+      {
+        "text": "∫ x²·eˣ dx = ?  · o'rta",
+        "options": [
+          "(x² − 2x)eˣ + C",
+          "(x² − 2x + 2)eˣ + C",
+          "(x² − 2x − 2)eˣ + C",
+          "(x² + 2x + 2)eˣ + C"
+        ],
+        "correct": 1,
+        "explanation": "u = x² ⇒ x²eˣ − 2∫x·eˣdx = x²eˣ − 2(x − 1)eˣ."
+      },
+      {
+        "text": "∫ x²·e⁻ˣ dx = ?  · o'rta",
+        "options": [
+          "−(x² + 2x + 2)e⁻ˣ + C",
+          "(x² − 2x + 2)e⁻ˣ + C",
+          "−(x² − 2x + 2)e⁻ˣ + C",
+          "−(x² + 2x)e⁻ˣ + C"
+        ],
+        "correct": 0,
+        "explanation": "u = x², v = −e⁻ˣ ⇒ −x²e⁻ˣ + 2∫x·e⁻ˣdx = −x²e⁻ˣ − 2(x + 1)e⁻ˣ."
+      },
+      {
+        "text": "∫ x²·sin x dx = ?  · o'rta",
+        "options": [
+          "x² cos x − 2x sin x + 2cos x + C",
+          "−x² cos x − 2x sin x + 2cos x + C",
+          "−x² cos x + 2x sin x − 2cos x + C",
+          "−x² cos x + 2x sin x + 2cos x + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x² ⇒ −x² cos x + 2∫x cos x dx = −x² cos x + 2(x sin x + cos x)."
+      },
+      {
+        "text": "∫ x²·cos x dx = ?  · o'rta",
+        "options": [
+          "x² sin x − 2x cos x + 2sin x + C",
+          "−x² sin x + 2x cos x − 2sin x + C",
+          "x² sin x + 2x cos x + 2sin x + C",
+          "x² sin x + 2x cos x − 2sin x + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x² ⇒ x² sin x − 2∫x sin x dx = x² sin x − 2(−x cos x + sin x)."
+      },
+      {
+        "text": "∫ x³·eˣ dx = ?  · qiyin",
+        "options": [
+          "(x³ − 3x² + 6x + 6)eˣ + C",
+          "(x³ − 3x² − 6x − 6)eˣ + C",
+          "(x³ + 3x² + 6x + 6)eˣ + C",
+          "(x³ − 3x² + 6x − 6)eˣ + C"
+        ],
+        "correct": 3,
+        "explanation": "u = x³ ⇒ x³eˣ − 3∫x²eˣdx = x³eˣ − 3(x² − 2x + 2)eˣ."
+      },
+      {
+        "text": "∫ ln x dx = ?  · oson",
+        "options": [
+          "x ln x + x + C",
+          "x ln x − x + C",
+          "{ln²x|2} + C",
+          "{1|x} + C"
+        ],
+        "correct": 1,
+        "explanation": "u = ln x, v = x ⇒ x ln x − ∫dx = x ln x − x + C."
+      },
+      {
+        "text": "∫ x·ln x dx = ?  · oson",
+        "options": [
+          "{x²|2}ln x − {x²|4} + C",
+          "{x²|2}ln x + {x²|4} + C",
+          "{x²|2}ln x − {x²|2} + C",
+          "x² ln x − {x²|4} + C"
+        ],
+        "correct": 0,
+        "explanation": "u = ln x, v = {x²|2} ⇒ {x²|2}ln x − ∫{x|2}dx."
+      },
+      {
+        "text": "∫ x²·ln x dx = ?  · oson",
+        "options": [
+          "{x³|3}ln x + {x³|9} + C",
+          "{x³|3}ln x − {x³|3} + C",
+          "{x³|3}ln x − {x³|9} + C",
+          "x³ ln x − {x³|9} + C"
+        ],
+        "correct": 2,
+        "explanation": "u = ln x, v = {x³|3} ⇒ {x³|3}ln x − ∫{x²|3}dx."
+      },
+      {
+        "text": "∫ x³·ln x dx = ?  · oson",
+        "options": [
+          "{x⁴|4}ln x + {x⁴|16} + C",
+          "{x⁴|4}ln x − {x⁴|4} + C",
+          "{x⁴|4}ln x − {x⁴|16} + C",
+          "{x⁴|4}ln x − {x³|12} + C"
+        ],
+        "correct": 2,
+        "explanation": "u = ln x, v = {x⁴|4} ⇒ {x⁴|4}ln x − ∫{x³|4}dx."
+      },
+      {
+        "text": "∫ ln²x dx = ?  · o'rta",
+        "options": [
+          "x ln²x − 2x ln x + 2x + C",
+          "x ln²x + 2x ln x + 2x + C",
+          "{ln³x|3} + C",
+          "x ln²x − 2x ln x − 2x + C"
+        ],
+        "correct": 0,
+        "explanation": "u = ln²x, du = {2ln x|x}dx ⇒ x ln²x − 2∫ln x dx = x ln²x − 2(x ln x − x)."
+      },
+      {
+        "text": "∫ {ln x|x²} dx = ?  · o'rta",
+        "options": [
+          "−{ln x + 1|x} + C",
+          "−{ln x − 1|x} + C",
+          "{ln x + 1|x} + C",
+          "{1 − ln x|x} + C"
+        ],
+        "correct": 0,
+        "explanation": "u = ln x, v = −{1|x} ⇒ −{ln x|x} + ∫{dx|x²} = −{ln x|x} − {1|x}."
+      },
+      {
+        "text": "∫ ln(x² + 1) dx = ?  · qiyin",
+        "options": [
+          "x ln(x² + 1) − 2x + 2arctg x + C",
+          "x ln(x² + 1) − 2x − 2arctg x + C",
+          "x ln(x² + 1) − 2arctg x + C",
+          "x ln(x² + 1) + 2x − 2arctg x + C"
+        ],
+        "correct": 0,
+        "explanation": "u = ln(x² + 1), v = x ⇒ x ln(x² + 1) − ∫{2x²|x² + 1}dx, ∫{2x²|x² + 1}dx = 2x − 2arctg x."
+      },
+      {
+        "text": "∫ arctg x dx = ?  · o'rta",
+        "options": [
+          "x arctg x + {1|2}ln(1 + x²) + C",
+          "x arctg x − {1|2}ln(1 + x²) + C",
+          "{1|1 + x²} + C",
+          "x arctg x − ln(1 + x²) + C"
+        ],
+        "correct": 1,
+        "explanation": "u = arctg x, v = x ⇒ x arctg x − ∫{x|1 + x²}dx = x arctg x − {1|2}ln(1 + x²)."
+      },
+      {
+        "text": "∫ arcsin x dx = ?  · o'rta",
+        "options": [
+          "x arcsin x + √(1 − x²) + C",
+          "x arcsin x − √(1 − x²) + C",
+          "x arccos x + √(1 − x²) + C",
+          "x arcsin x + {1|√(1 − x²)} + C"
+        ],
+        "correct": 0,
+        "explanation": "u = arcsin x, v = x ⇒ x arcsin x − ∫{x|√(1 − x²)}dx, ∫{x|√(1 − x²)}dx = −√(1 − x²)."
+      },
+      {
+        "text": "∫ arccos x dx = ?  · o'rta",
+        "options": [
+          "x arcsin x − √(1 − x²) + C",
+          "x arccos x + √(1 − x²) + C",
+          "x arccos x − √(1 − x²) + C",
+          "x arccos x − {1|√(1 − x²)} + C"
+        ],
+        "correct": 2,
+        "explanation": "u = arccos x, du = −{dx|√(1 − x²)} ⇒ x arccos x + ∫{x|√(1 − x²)}dx = x arccos x − √(1 − x²)."
+      },
+      {
+        "text": "∫ x·arctg x dx = ?  · qiyin",
+        "options": [
+          "{x² + 1|2}·arctg x − {x|2} + C",
+          "{x² + 1|2}·arctg x + {x|2} + C",
+          "{x²|2}·arctg x − {x|2} + C",
+          "{x² − 1|2}·arctg x − {x|2} + C"
+        ],
+        "correct": 0,
+        "explanation": "u = arctg x, v = {x²|2} ⇒ {x²|2}arctg x − {1|2}(x − arctg x)."
+      },
+      {
+        "text": "∫ eˣ·sin x dx = ?  · qiyin",
+        "options": [
+          "eˣ(sin x − cos x) + C",
+          "{eˣ(cos x − sin x)|2} + C",
+          "{eˣ(sin x − cos x)|2} + C",
+          "{eˣ(sin x + cos x)|2} + C"
+        ],
+        "correct": 2,
+        "explanation": "Ikki marta bo'laklash: I = eˣ sin x − eˣ cos x − I ⇒ 2I = eˣ(sin x − cos x)."
+      },
+      {
+        "text": "∫ eˣ·cos x dx = ?  · qiyin",
+        "options": [
+          "{eˣ(sin x + cos x)|2} + C",
+          "eˣ(sin x + cos x) + C",
+          "{eˣ(sin x − cos x)|2} + C",
+          "{eˣ(cos x − sin x)|2} + C"
+        ],
+        "correct": 0,
+        "explanation": "Ikki marta bo'laklash: J = eˣ cos x + eˣ sin x − J ⇒ 2J = eˣ(sin x + cos x)."
+      },
+      {
+        "text": "∫ e²ˣ·sin 3x dx = ?  · qiyin",
+        "options": [
+          "{e²ˣ(2sin 3x − 3cos 3x)|5} + C",
+          "{e²ˣ(3sin 3x − 2cos 3x)|13} + C",
+          "{e²ˣ(2sin 3x + 3cos 3x)|13} + C",
+          "{e²ˣ(2sin 3x − 3cos 3x)|13} + C"
+        ],
+        "correct": 3,
+        "explanation": "∫e^{ax}sin bx dx = {e^{ax}(a sin bx − b cos bx)|a² + b²}; a = 2, b = 3 ⇒ maxraj 13."
+      },
+      {
+        "text": "∫ sec³x dx = ?  · qiyin",
+        "options": [
+          "{1|2}(sec x·tg x − ln|sec x + tg x|) + C",
+          "{1|2}(sec x·tg x + ln|sec x + tg x|) + C",
+          "{sec⁴x|4} + C",
+          "sec x·tg x + ln|sec x + tg x| + C"
+        ],
+        "correct": 1,
+        "explanation": "u = sec x, dv = sec²x dx ⇒ 2I = sec x·tg x + ln|sec x + tg x|."
+      },
+      {
+        "text": "∫ x·sec²x dx = ?  · o'rta",
+        "options": [
+          "x tg x − ln|cos x| + C",
+          "x tg x + ln|cos x| + C",
+          "x tg x + ln|sin x| + C",
+          "{x²|2}tg x + C"
+        ],
+        "correct": 1,
+        "explanation": "u = x, v = tg x ⇒ x tg x − ∫tg x dx, ∫tg x dx = −ln|cos x|."
+      },
+      {
+        "text": "∫ e^{√x} dx = ?  · qiyin",
+        "options": [
+          "2(√x + 1)e^{√x} + C",
+          "2(√x − 1)e^{√x} + C",
+          "(√x − 1)e^{√x} + C",
+          "2√x·e^{√x} + C"
+        ],
+        "correct": 1,
+        "explanation": "t = √x, dx = 2t dt ⇒ 2∫t·eᵗdt = 2(t − 1)eᵗ."
+      }
+    ]
   }
 ]
