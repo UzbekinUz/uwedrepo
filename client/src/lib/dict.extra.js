@@ -1,6 +1,9 @@
 // Bosh sahifa, tushuntirish va ogohlantirish bloklari: kalit — o'zbekcha, qiymat — [ruscha, inglizcha]
 export const extra = {
   // Umumiy
+  "Saytdan foydalanish uchun ro'yxatdan o'ting": ['Зарегистрируйтесь, чтобы пользоваться сайтом', 'Sign up to use the site'],
+  "Ro'yxatdan o'tish bepul va 1 daqiqa oladi. Akkauntingiz bo'lsa, «Kirish» ni bosing.": ['Регистрация бесплатна и занимает 1 минуту. Если у вас есть аккаунт, нажмите «Войти».', 'Sign-up is free and takes 1 minute. If you already have an account, click “Log in”.'],
+  "Hammasi bitta akkauntda: fanlar, nazorat sanalari, repetitorlar, materiallar va testlar.": ['Всё в одном аккаунте: предметы, даты контрольных, репетиторы, материалы и тесты.', 'Everything in one account: subjects, exam dates, tutors, materials and quizzes.'],
   'Qanday ishlaydi': ['Как это работает', 'How it works'],
   'Savol-javob': ['Вопросы и ответы', 'FAQ'],
   Izoh: ['Пояснение', 'Note'],

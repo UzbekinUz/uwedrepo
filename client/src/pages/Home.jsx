@@ -221,7 +221,7 @@ export default function Home() {
       {/* 3. Sayt nima qila oladi */}
       <section className={`${wrap} mt-24 sm:mt-32`} id="imkoniyatlar">
         <Reveal><h2 className={`${h2} max-w-3xl`}>{t('UWEDRepo sizga nimalarni beradi')}</h2></Reveal>
-        <Reveal delay={0.05}><p className="mt-4 max-w-2xl text-lg text-slate-600">{t("Ro'yxatdan o'tmasdan ham fanlar, nazorat sanalari va repetitorlarni ko'rishingiz mumkin. Bron va baho uchun kirish kerak.")}</p></Reveal>
+        <Reveal delay={0.05}><p className="mt-4 max-w-2xl text-lg text-slate-600">{t("Hammasi bitta akkauntda: fanlar, nazorat sanalari, repetitorlar, materiallar va testlar.")}</p></Reveal>
         <Stagger className="mt-12 grid gap-4 md:grid-cols-2">
           {features().map((f, i) => (
             <Item key={f.title}>
