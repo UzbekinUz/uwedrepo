@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { Quiz, QuizAttempt, Subject, Tutor, Exam, AiExplain, AiUsage } from '../models/index.js';
+import { Quiz, QuizAttempt, QuizSession, Subject, Tutor, Exam, AiExplain, AiUsage } from '../models/index.js';
 import { optionalAuth, requireAuth } from '../middleware/auth.js';
 import { wrap, HttpError } from '../middleware/util.js';
 import { getSettings } from '../settings.js';
@@ -24,6 +24,8 @@ const publicQuiz = (q) => ({
   subject: q.subject,
   byTutor: q.byTutor,
   attempts: q.attempts,
+  timeLimit: q.timeLimit || 0,
+  hideReview: !!q.hideReview,
   questions: q.questions.map((x) => ({ _id: x._id, text: x.text, options: x.options })),
 });
 
@@ -41,7 +43,13 @@ const quizInput = z.object({
   title: z.string().trim().min(3).max(140),
   description: z.string().trim().max(500).optional().default(''),
   questions: z.array(questionInput).min(1).max(60),
+  timeLimit: z.number().int().min(0).max(300).optional().default(0),
+  hideReview: z.boolean().optional().default(false),
 });
+
+const GRACE_SEC = 90; // tarmoq kechikishi uchun zaxira: undan keyin topshirilsa «kech» deb belgilanadi
+/** Ochiq (topshirilmagan) sessiya shu muddat ichida qabul qilinadi; undan keyin test qaytadan boshlanadi */
+const sessionWindowMs = (q) => ((q.timeLimit || 180) * 60 + 600) * 1000;
 
 /** Test tuza oladiganlar: admin yoki tasdiqlangan repetitor (faqat o'z fanlari bo'yicha) */
 async function authorRole(user, subjectId) {
@@ -70,7 +78,7 @@ r.get(
     const f = { status: 'approved' };
     if (req.query.subject) f.subject = String(req.query.subject);
     const list = await Quiz.find(f).populate('subject', 'name').sort({ createdAt: -1 }).limit(200).lean();
-    res.json(list.map((q) => ({ _id: q._id, title: q.title, description: q.description, subject: q.subject, byTutor: q.byTutor, attempts: q.attempts, count: q.questions.length })));
+    res.json(list.map((q) => ({ _id: q._id, title: q.title, description: q.description, subject: q.subject, byTutor: q.byTutor, attempts: q.attempts, count: q.questions.length, timeLimit: q.timeLimit || 0 })));
   })
 );
 
@@ -104,7 +112,8 @@ r.get(
     const attempts = await QuizAttempt.find({ student: req.user._id }).sort({ createdAt: -1 }).limit(100).lean();
     const latest = new Map();
     for (const a of attempts) if (!latest.has(String(a.quiz))) latest.set(String(a.quiz), a);
-    const quizzes = await Quiz.find({ _id: { $in: [...latest.keys()] }, status: 'approved' }).populate('subject', 'name').lean();
+    // Imtihon rejimidagi testlarning to'g'ri javoblari oshkor qilinmaydi
+    const quizzes = await Quiz.find({ _id: { $in: [...latest.keys()] }, status: 'approved', hideReview: { $ne: true } }).populate('subject', 'name').lean();
     const items = [];
     for (const q of quizzes) {
       const a = latest.get(String(q._id));
@@ -149,7 +158,21 @@ r.get(
   })
 );
 
-// Javoblarni tekshirish. Kirmagan talaba ham yecha oladi; kirganining natijasi saqlanadi.
+// Testni boshlash: vaqt shu yerdan hisoblanadi. Ochiq sessiya bo'lsa (sahifa yangilangan) o'shani qaytaradi.
+r.post(
+  '/:id/start',
+  requireAuth,
+  wrap(async (req, res) => {
+    const q = await Quiz.findOne({ _id: req.params.id, status: 'approved' }).select('timeLimit').lean();
+    if (!q) throw new HttpError(404, 'Test topilmadi');
+    const since = new Date(Date.now() - sessionWindowMs(q));
+    let s = await QuizSession.findOne({ quiz: q._id, student: req.user._id, done: false, startedAt: { $gte: since } }).sort({ startedAt: -1 }).lean();
+    if (!s) s = (await QuizSession.create({ quiz: q._id, student: req.user._id })).toObject();
+    res.json({ sessionId: s._id, startedAt: s.startedAt, now: new Date(), timeLimit: q.timeLimit || 0 });
+  })
+);
+
+// Javoblarni tekshirish. Kirmagan talaba ham oddiy testni yecha oladi; kirganining natijasi saqlanadi.
 r.post(
   '/:id/attempt',
   optionalAuth,
@@ -157,16 +180,37 @@ r.post(
     const q = await Quiz.findOne({ _id: req.params.id, status: 'approved' }).lean();
     if (!q) throw new HttpError(404, 'Test topilmadi');
     const { answers } = z.object({ answers: z.array(z.number().int().min(-1).max(5).nullable()).max(60) }).parse(req.body);
+    const timed = (q.timeLimit || 0) > 0;
+    if ((timed || q.hideReview) && !req.user) throw new HttpError(401, 'Bu testni yechish uchun saytga kiring');
+
+    let session = null;
+    if (req.user) {
+      session = await QuizSession.findOneAndUpdate(
+        { quiz: q._id, student: req.user._id, done: false, startedAt: { $gte: new Date(Date.now() - sessionWindowMs(q)) } },
+        { $set: { done: true } },
+        { sort: { startedAt: -1 }, new: true }
+      ).lean();
+      if (timed && !session) throw new HttpError(409, "Test vaqti tugagan yoki boshlanmagan. Sahifani yangilab, testni qaytadan boshlang.");
+    }
+    const durationSec = session ? Math.max(0, Math.round((Date.now() - new Date(session.startedAt)) / 1000)) : undefined;
+    const late = timed && durationSec > q.timeLimit * 60 + GRACE_SEC;
+
     const results = q.questions.map((x, i) => {
       const chosen = answers[i] ?? -1;
       return { _id: x._id, chosen, correct: x.correct, ok: chosen === x.correct, explanation: x.explanation };
     });
     const score = results.filter((x) => x.ok).length;
     if (req.user) {
-      await QuizAttempt.create({ quiz: q._id, student: req.user._id, answers: results.map((x) => x.chosen), score, total: results.length });
+      await QuizAttempt.create({
+        quiz: q._id, student: req.user._id, answers: results.map((x) => x.chosen), score, total: results.length,
+        ...(session && { startedAt: session.startedAt, durationSec }), ...(late && { late: true }),
+      });
     }
     await Quiz.updateOne({ _id: q._id }, { $inc: { attempts: 1 } });
-    res.json({ score, total: results.length, results });
+    const unanswered = results.filter((x) => x.chosen < 0).length;
+    // Imtihon rejimi: qaysi savolda xato qilingani ko'rsatilmaydi, faqat sonlar
+    if (q.hideReview) return res.json({ score, total: results.length, wrong: results.length - score - unanswered, unanswered, durationSec, hidden: true });
+    res.json({ score, total: results.length, wrong: results.length - score - unanswered, unanswered, durationSec, results });
   })
 );
 
@@ -181,6 +225,7 @@ r.post(
       .parse(req.body);
     const q = await Quiz.findOne({ _id: req.params.id, status: 'approved' }).populate('subject', 'name').lean();
     if (!q) throw new HttpError(404, 'Test topilmadi');
+    if (q.hideReview) throw new HttpError(403, "Bu testda javoblar tahlili yopiq");
     const question = q.questions.find((x) => String(x._id) === questionId);
     if (!question) throw new HttpError(404, 'Savol topilmadi');
     if (chosen >= question.options.length) throw new HttpError(400, "Noto'g'ri variant");
@@ -252,7 +297,7 @@ r.delete(
   requireAuth,
   wrap(async (req, res) => {
     const q = await ownQuiz(req);
-    await Promise.all([q.deleteOne(), QuizAttempt.deleteMany({ quiz: q._id }), AiExplain.deleteMany({ quiz: q._id })]);
+    await Promise.all([q.deleteOne(), QuizAttempt.deleteMany({ quiz: q._id }), QuizSession.deleteMany({ quiz: q._id }), AiExplain.deleteMany({ quiz: q._id })]);
     res.json({ ok: true });
   })
 );

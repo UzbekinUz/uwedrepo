@@ -1,6 +1,23 @@
 // Bosh sahifa, tushuntirish va ogohlantirish bloklari: kalit — o'zbekcha, qiymat — [ruscha, inglizcha]
 export const extra = {
   // Umumiy
+  "{n} daqiqa": ["{n} мин", "{n} min"],
+  "Testni boshlashdan oldin": ["Перед началом теста", "Before you start"],
+  "{n} ta savol, ishlash vaqti — {m} daqiqa.": ["{n} вопросов, время — {m} мин.", "{n} questions, time limit — {m} min."],
+  "«Boshlash» tugmasini bosganingizdan keyin taymer to'xtamaydi, sahifani yangilasangiz ham vaqt davom etadi.": ["После нажатия «Начать» таймер не останавливается, даже если обновить страницу.", "Once you press “Start”, the timer keeps running even if you reload the page."],
+  "Vaqt tugasa, belgilagan javoblaringiz avtomatik topshiriladi.": ["Когда время выйдет, отмеченные ответы отправятся автоматически.", "When time runs out, your marked answers are submitted automatically."],
+  "Natijada faqat to'g'ri va noto'g'ri javoblar soni ko'rsatiladi.": ["В результате показывается только число верных и неверных ответов.", "The result shows only the number of correct and wrong answers."],
+  "Testni boshlash": ["Начать тест", "Start the test"],
+  "To'g'ri: {n}": ["Верно: {n}", "Correct: {n}"],
+  "Noto'g'ri: {n}": ["Неверно: {n}", "Wrong: {n}"],
+  "Javobsiz: {n}": ["Без ответа: {n}", "Unanswered: {n}"],
+  "Sarflangan vaqt: {v}": ["Затрачено: {v}", "Time spent: {v}"],
+  "Vaqt tugadi: javoblaringiz avtomatik topshirildi.": ["Время вышло: ответы отправлены автоматически.", "Time is up: your answers were submitted automatically."],
+  "Topshirilmoqda…": ["Отправляем…", "Submitting…"],
+  "Testni yakunlash": ["Завершить тест", "Finish the test"],
+  "Javoblar tahlilini yashirish": ["Скрыть разбор ответов", "Hide answer review"],
+  "Natijada faqat to'g'ri va xato javoblar soni ko'rinadi; qaysi savolda xato qilingani va to'g'ri javoblar ko'rsatilmaydi.": ["В результате видно только число верных и неверных ответов; где ошибка и правильные ответы не показываются.", "Only the number of correct and wrong answers is shown; which questions were wrong and the right answers stay hidden."],
+  "Ishlash vaqti, daqiqa (0 — cheklovsiz)": ["Время на тест, мин (0 — без ограничения)", "Time limit, minutes (0 — unlimited)"],
   "Saytdan foydalanish uchun ro'yxatdan o'ting": ['Зарегистрируйтесь, чтобы пользоваться сайтом', 'Sign up to use the site'],
   "Ro'yxatdan o'tish bepul va 1 daqiqa oladi. Akkauntingiz bo'lsa, «Kirish» ni bosing.": ['Регистрация бесплатна и занимает 1 минуту. Если у вас есть аккаунт, нажмите «Войти».', 'Sign-up is free and takes 1 minute. If you already have an account, click “Log in”.'],
   "Hammasi bitta akkauntda: fanlar, nazorat sanalari, repetitorlar, materiallar va testlar.": ['Всё в одном аккаунте: предметы, даты контрольных, репетиторы, материалы и тесты.', 'Everything in one account: subjects, exam dates, tutors, materials and quizzes.'],

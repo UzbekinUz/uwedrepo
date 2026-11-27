@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { z } from 'zod';
-import { Subject, Exam, Material, Tutor, Quiz, QuizAttempt, AiExplain } from '../../models/index.js';
+import { Subject, Exam, Material, Tutor, Quiz, QuizAttempt, QuizSession, AiExplain } from '../../models/index.js';
 import { STARTER_SUBJECTS } from '../../seed.js';
 import { wrap, HttpError, escapeRegex } from '../../middleware/util.js';
 import { FACULTY_KEYS, EXAM_TYPES, MATERIAL_TYPES } from '../../data/meta.js';
@@ -196,9 +196,9 @@ async function quizResults(id) {
   const tries = new Map();
   for (const a of attempts) tries.set(String(a.student?._id), (tries.get(String(a.student?._id)) || 0) + 1);
   return {
-    quiz: { _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts },
+    quiz: { _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts, timeLimit: quiz.timeLimit || 0, hideReview: !!quiz.hideReview },
     summary: { ...quizStats(quiz, attempts), adminAttempts: all.length - attempts.length },
-    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, tries: tries.get(String(a.student?._id)) })),
+    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, startedAt: a.startedAt, durationSec: a.durationSec, late: !!a.late, tries: tries.get(String(a.student?._id)) })),
   };
 }
 r.get('/quizzes/:id/attempts', wrap(async (req, res) => res.json(await quizResults(req.params.id))));
@@ -213,7 +213,10 @@ r.get('/quizzes/:id/attempts.csv', wrap(async (req, res) => {
     { label: 'Ball', get: (x) => x.score },
     { label: 'Jami', get: (x) => x.total },
     { label: 'Foiz', get: (x) => x.pct },
-    { label: 'Sana', get: (x) => x.createdAt },
+    { label: 'Sarflangan vaqt (daqiqa:soniya)', get: (x) => (x.durationSec == null ? '' : `${Math.floor(x.durationSec / 60)}:${String(x.durationSec % 60).padStart(2, '0')}`) },
+    { label: 'Kech topshirilgan', get: (x) => (x.late ? 'ha' : '') },
+    { label: 'Boshlagan', get: (x) => x.startedAt },
+    { label: 'Topshirgan', get: (x) => x.createdAt },
   ], rows));
 }));
 r.patch('/quizzes/:id', wrap(async (req, res) => {
@@ -226,7 +229,7 @@ r.patch('/quizzes/:id', wrap(async (req, res) => {
 }));
 r.delete('/quizzes/:id', wrap(async (req, res) => {
   const q = await Quiz.findByIdAndDelete(req.params.id);
-  await Promise.all([QuizAttempt.deleteMany({ quiz: req.params.id }), AiExplain.deleteMany({ quiz: req.params.id })]);
+  await Promise.all([QuizAttempt.deleteMany({ quiz: req.params.id }), QuizSession.deleteMany({ quiz: req.params.id }), AiExplain.deleteMany({ quiz: req.params.id })]);
   if (q) audit(req, 'quiz.delete', q.title);
   res.json({ ok: true });
 }));

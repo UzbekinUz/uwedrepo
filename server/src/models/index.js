@@ -274,6 +274,9 @@ const quizSchema = new Schema(
     status: { type: String, enum: ['pending', 'approved', 'hidden'], default: 'pending' },
     questions: { type: [questionSchema], validate: (v) => v.length >= 1 && v.length <= 60 },
     attempts: { type: Number, default: 0 },
+    // Imtihon rejimi: vaqt chegarasi (daqiqa, 0 — cheklovsiz) va natijada faqat to'g'ri/xato soni ko'rinadi
+    timeLimit: { type: Number, default: 0, min: 0, max: 300 },
+    hideReview: { type: Boolean, default: false },
     notified: { type: Boolean, default: false }, // talabalarga 'yangi test' xabari yuborilganmi
   },
   { timestamps: true }
@@ -287,10 +290,25 @@ const quizAttemptSchema = new Schema(
     answers: [Number],
     score: Number,
     total: Number,
+    startedAt: Date,
+    durationSec: Number, // testni boshlagandan topshirgunga qadar ketgan vaqt
+    late: Boolean, // vaqt chegarasidan sezilarli kech topshirilgan
   },
   { timestamps: { createdAt: true, updatedAt: false } }
 );
 quizAttemptSchema.index({ student: 1, createdAt: -1 });
+
+// Testni boshlash vaqti: sahifa yangilansa ham taymer davom etadi, sarflangan vaqt serverda hisoblanadi
+const quizSessionSchema = new Schema(
+  {
+    quiz: ref('Quiz', { required: true }),
+    student: ref('User', { required: true }),
+    startedAt: { type: Date, default: Date.now },
+    done: { type: Boolean, default: false },
+  },
+  { timestamps: false }
+);
+quizSessionSchema.index({ quiz: 1, student: 1, startedAt: -1 });
 
 // AI izohlari keshi: bir savol + bir xil noto'g'ri javob uchun AI qayta chaqirilmaydi (pul tejaladi)
 const aiExplainSchema = new Schema(
@@ -305,6 +323,7 @@ aiUsageSchema.index({ user: 1, day: 1 }, { unique: true });
 
 export const Quiz = model('Quiz', quizSchema);
 export const QuizAttempt = model('QuizAttempt', quizAttemptSchema);
+export const QuizSession = model('QuizSession', quizSessionSchema);
 export const AiExplain = model('AiExplain', aiExplainSchema);
 export const AiUsage = model('AiUsage', aiUsageSchema);
 

@@ -63,7 +63,7 @@ export default function Quizzes() {
         <div className="space-y-2">
           {list.map((q) => (
             <Link key={q._id} to={`/quizzes/${q._id}`} className="card-link flex flex-col items-start gap-3 p-5 sm:flex-row sm:items-center sm:gap-5">
-              <span className="chip shrink-0 bg-brand-100 text-brand-700">{t('{n} ta savol', { n: q.count })}</span>
+              <span className="flex shrink-0 flex-wrap gap-1.5"><span className="chip bg-brand-100 text-brand-700">{t('{n} ta savol', { n: q.count })}</span>{q.timeLimit > 0 && <span className="chip bg-amber-100 text-amber-800">⏱ {t('{n} daqiqa', { n: q.timeLimit })}</span>}</span>
               <div className="min-w-0 flex-1">
                 <div className="break-words text-lg font-bold text-slate-900">{q.title}</div>
                 <div className="text-sm text-slate-600">
