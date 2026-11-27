@@ -47,9 +47,9 @@ const quizInput = z.object({
   hideReview: z.boolean().optional().default(false),
 });
 
-const GRACE_SEC = 90; // tarmoq kechikishi uchun zaxira
-/** Ochiq (topshirilmagan) sessiya shu muddat ichida bo'lsa davom ettiriladi */
-const sessionWindowMs = (q) => ((q.timeLimit || 180) * 60 + GRACE_SEC) * 1000;
+const GRACE_SEC = 90; // tarmoq kechikishi uchun zaxira: undan keyin topshirilsa «kech» deb belgilanadi
+/** Ochiq (topshirilmagan) sessiya shu muddat ichida qabul qilinadi; undan keyin test qaytadan boshlanadi */
+const sessionWindowMs = (q) => ((q.timeLimit || 180) * 60 + 600) * 1000;
 
 /** Test tuza oladiganlar: admin yoki tasdiqlangan repetitor (faqat o'z fanlari bo'yicha) */
 async function authorRole(user, subjectId) {
