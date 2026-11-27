@@ -173,10 +173,11 @@ function EmailRegisterForm() {
 
 export function Login() {
   const { meta } = useApp();
+  const { state } = useLocation();
   useSeo("Kirish", '', { noindex: true });
   const [email, setEmail] = useState(!meta.telegramLogin);
   return (
-    <Shell title={t('Kirish')} foot={<>{t("Akkauntingiz yo'qmi?")} <Link to="/register" className="font-semibold text-brand-700 underline">{t("Ro'yxatdan o'ting")}</Link></>}>
+    <Shell title={t('Kirish')} foot={<>{t("Akkauntingiz yo'qmi?")} <Link to="/register" state={state} className="font-semibold text-brand-700 underline">{t("Ro'yxatdan o'ting")}</Link></>}>
       {meta.telegramLogin && !email && <TelegramAuth />}
       {email && <EmailLoginForm />}
       {meta.telegramLogin && (
@@ -190,11 +191,15 @@ export function Login() {
 
 export function Register() {
   const { meta } = useApp();
+  const { state } = useLocation();
   useSeo("Ro'yxatdan o'tish", '', { noindex: true });
   return (
     <Shell title={t("Ro'yxatdan o'tish")}
       sub={meta.telegramLogin ? t("Parol shart emas: Telegram bot orqali kod olasiz.") : t("Telegram bot hali sozlanmagan, hozircha email bilan ro'yxatdan o'ting.")}
-      foot={<>{t('Akkauntingiz bormi?')} <Link to="/login" className="font-semibold text-brand-700 underline">{t('Kirish')}</Link></>}>
+      foot={<>{t('Akkauntingiz bormi?')} <Link to="/login" state={state} className="font-semibold text-brand-700 underline">{t('Kirish')}</Link></>}>
+      {state?.from && (
+        <Hint title={t("Saytdan foydalanish uchun ro'yxatdan o'ting")}><p>{t("Ro'yxatdan o'tish bepul va 1 daqiqa oladi. Akkauntingiz bo'lsa, «Kirish» ni bosing.")}</p></Hint>
+      )}
       {!meta.registrationOpen ? (
         <Hint kind="warn" title={t("Hozircha yangi ro'yxatdan o'tish yopiq")}><p>{t("Mavjud akkaunt egalari kirishda davom etadi. Keyinroq qayta urinib ko'ring.")}</p></Hint>
       ) : meta.telegramLogin ? <TelegramAuth withProfile /> : <EmailRegisterForm />}

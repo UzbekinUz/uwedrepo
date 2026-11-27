@@ -1,4 +1,4 @@
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Outlet, Route, Routes, useLocation } from 'react-router-dom';
 import { Suspense, lazy, useEffect } from 'react';
 import { useApp } from './context/App.jsx';
 import Layout from './components/Layout.jsx';
@@ -28,7 +28,8 @@ function Guard({ role, children }) {
   const { user, ready } = useApp();
   const loc = useLocation();
   if (!ready) return <Spinner />;
-  if (!user) return <Navigate to="/login" state={{ from: loc.pathname }} replace />;
+  // Mehmonni ro'yxatdan o'tishga yuboramiz; kirgach o'zi ochgan sahifaga qaytadi
+  if (!user) return <Navigate to="/register" state={{ from: loc.pathname + loc.search + loc.hash }} replace />;
   if (role && user.role !== role) return <Navigate to="/" replace />;
   return children;
 }
@@ -55,26 +56,29 @@ export default function App() {
       <ScrollTop />
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Home />} />
-          <Route path="subjects" element={<Subjects />} />
-          <Route path="subjects/:id" element={<SubjectDetail />} />
-          <Route path="tutors" element={<Tutors />} />
-          <Route path="tutors/:id" element={<TutorDetail />} />
-          <Route path="calendar" element={<Calendar />} />
-          <Route path="materials" element={<Materials />} />
-          <Route path="materials/:id" element={<MaterialView />} />
-          <Route path="quizzes" element={<Quizzes />} />
-          <Route path="quizzes/:id" element={<Quiz />} />
-          <Route path="survey" element={<Survey />} />
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
-          <Route path="my" element={<Guard><MyLessons /></Guard>} />
-          <Route path="tutor" element={<Guard><TutorDashboard /></Guard>} />
-          <Route path="pay/:id" element={<Guard><Pay /></Guard>} />
-          <Route path="premium" element={<Premium />} />
-          <Route path="mistakes" element={<Guard><Mistakes /></Guard>} />
-          <Route path="admin" element={<Guard role="admin"><Suspense fallback={<Spinner />}><Admin /></Suspense></Guard>} />
-          <Route path="*" element={<div className="py-20 text-center text-slate-500">{t('Sahifa topilmadi')}</div>} />
+          {/* Qolgan barcha sahifalar faqat ro'yxatdan o'tganlarga ochiq */}
+          <Route element={<Guard><Outlet /></Guard>}>
+            <Route index element={<Home />} />
+            <Route path="subjects" element={<Subjects />} />
+            <Route path="subjects/:id" element={<SubjectDetail />} />
+            <Route path="tutors" element={<Tutors />} />
+            <Route path="tutors/:id" element={<TutorDetail />} />
+            <Route path="calendar" element={<Calendar />} />
+            <Route path="materials" element={<Materials />} />
+            <Route path="materials/:id" element={<MaterialView />} />
+            <Route path="quizzes" element={<Quizzes />} />
+            <Route path="quizzes/:id" element={<Quiz />} />
+            <Route path="survey" element={<Survey />} />
+            <Route path="my" element={<MyLessons />} />
+            <Route path="tutor" element={<TutorDashboard />} />
+            <Route path="pay/:id" element={<Pay />} />
+            <Route path="premium" element={<Premium />} />
+            <Route path="mistakes" element={<Mistakes />} />
+            <Route path="admin" element={<Guard role="admin"><Suspense fallback={<Spinner />}><Admin /></Suspense></Guard>} />
+            <Route path="*" element={<div className="py-20 text-center text-slate-500">{t('Sahifa topilmadi')}</div>} />
+          </Route>
         </Route>
       </Routes>
     </div>
