@@ -26,6 +26,7 @@ const publicQuiz = (q) => ({
   attempts: q.attempts,
   timeLimit: q.timeLimit || 0,
   hideReview: !!q.hideReview,
+  singleAttempt: !!q.singleAttempt,
   questions: q.questions.map((x) => ({ _id: x._id, text: x.text, options: x.options })),
 });
 
@@ -45,7 +46,12 @@ const quizInput = z.object({
   questions: z.array(questionInput).min(1).max(60),
   timeLimit: z.number().int().min(0).max(300).optional().default(0),
   hideReview: z.boolean().optional().default(false),
+  singleAttempt: z.boolean().optional().default(false),
 });
+
+/** Bir martalik testni talaba allaqachon yechganmi (adminlar cheklanmaydi) */
+const usedSingle = (q, user) => q.singleAttempt && user && user.role !== 'admin' && QuizAttempt.findOne({ quiz: q._id, student: user._id }).sort({ createdAt: 1 }).lean();
+const summary = (a) => ({ score: a.score, total: a.total, unanswered: (a.answers || []).filter((x) => x < 0).length, wrong: a.total - a.score - (a.answers || []).filter((x) => x < 0).length, durationSec: a.durationSec, hidden: true, createdAt: a.createdAt });
 
 const GRACE_SEC = 90; // tarmoq kechikishi uchun zaxira: undan keyin topshirilsa «kech» deb belgilanadi
 /** Ochiq (topshirilmagan) sessiya shu muddat ichida qabul qilinadi; undan keyin test qaytadan boshlanadi */
@@ -135,7 +141,8 @@ r.get(
     const q = await Quiz.findById(req.params.id).populate('subject', 'name').lean();
     const own = req.user && (req.user.role === 'admin' || String(q?.author) === String(req.user._id));
     if (!q || (q.status !== 'approved' && !own)) throw new HttpError(404, 'Test topilmadi');
-    res.json({ ...publicQuiz(q), status: q.status, ai: aiAvailable() });
+    const prev = await usedSingle(q, req.user);
+    res.json({ ...publicQuiz(q), status: q.status, ai: aiAvailable(), ...(prev && { myResult: summary(prev) }) });
   })
 );
 
@@ -163,8 +170,9 @@ r.post(
   '/:id/start',
   requireAuth,
   wrap(async (req, res) => {
-    const q = await Quiz.findOne({ _id: req.params.id, status: 'approved' }).select('timeLimit').lean();
+    const q = await Quiz.findOne({ _id: req.params.id, status: 'approved' }).select('timeLimit singleAttempt').lean();
     if (!q) throw new HttpError(404, 'Test topilmadi');
+    if (await usedSingle(q, req.user)) throw new HttpError(409, 'Siz bu testni allaqachon yechgansiz: uni faqat bir marta yechish mumkin');
     const since = new Date(Date.now() - sessionWindowMs(q));
     let s = await QuizSession.findOne({ quiz: q._id, student: req.user._id, done: false, startedAt: { $gte: since } }).sort({ startedAt: -1 }).lean();
     if (!s) s = (await QuizSession.create({ quiz: q._id, student: req.user._id })).toObject();
@@ -181,7 +189,8 @@ r.post(
     if (!q) throw new HttpError(404, 'Test topilmadi');
     const { answers } = z.object({ answers: z.array(z.number().int().min(-1).max(5).nullable()).max(60) }).parse(req.body);
     const timed = (q.timeLimit || 0) > 0;
-    if ((timed || q.hideReview) && !req.user) throw new HttpError(401, 'Bu testni yechish uchun saytga kiring');
+    if ((timed || q.hideReview || q.singleAttempt) && !req.user) throw new HttpError(401, 'Bu testni yechish uchun saytga kiring');
+    if (await usedSingle(q, req.user)) throw new HttpError(409, 'Siz bu testni allaqachon yechgansiz: uni faqat bir marta yechish mumkin');
 
     let session = null;
     if (req.user) {

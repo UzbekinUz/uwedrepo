@@ -773,3 +773,24 @@ test("Imtihon rejimi: vaqt chegarasi, sarflangan vaqt, javoblar tahlili yopiq", 
   const csv = (await api('GET', `/admin/quizzes/${id}/attempts.csv`, null, fx.t.admin)).j;
   assert.ok(csv.includes('Sarflangan vaqt') && csv.includes('10:0'));
 });
+
+test("Bir martalik test: ikkinchi urinish yopiq, natija qayta ko'rsatiladi", async () => {
+  const c = await api('POST', '/quizzes', { subject: String(fx.subject._id), title: 'Bir martalik', timeLimit: 10, hideReview: true, singleAttempt: true, questions: [{ text: '2+2?', options: ['3', '4'], correct: 1 }, { text: '1+1?', options: ['2', '5'], correct: 0 }] }, fx.t.admin);
+  const id = c.j._id;
+  assert.equal(c.j.singleAttempt, true);
+  assert.equal((await api('POST', `/quizzes/${id}/start`, null, fx.t.a)).s, 200);
+  const at = await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 1] }, fx.t.a);
+  assert.equal(at.j.score, 1);
+  assert.equal((await api('POST', `/quizzes/${id}/start`, null, fx.t.a)).s, 409, 'qayta boshlab bo\'lmaydi');
+  assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0] }, fx.t.a)).s, 409);
+  const again = (await api('GET', `/quizzes/${id}`, null, fx.t.a)).j;
+  assert.equal(again.myResult.score, 1);
+  assert.equal(again.myResult.wrong, 1);
+  assert.equal(again.myResult.hidden, true);
+  assert.equal((await api('GET', `/quizzes/${id}`, null, fx.t.b)).j.myResult, undefined);
+  // Admin sinab ko'rishi cheklanmaydi
+  for (let i = 0; i < 2; i += 1) {
+    assert.equal((await api('POST', `/quizzes/${id}/start`, null, fx.t.admin)).s, 200);
+    assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0] }, fx.t.admin)).s, 200);
+  }
+});

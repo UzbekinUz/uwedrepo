@@ -42,6 +42,7 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
     description: initial?.description || '',
     timeLimit: initial?.timeLimit || 0,
     hideReview: !!initial?.hideReview,
+    singleAttempt: !!initial?.singleAttempt,
     questions: initial?.questions?.map(({ text, options, correct, explanation }) => ({ text, options: [...options], correct, explanation: explanation || '' })) || [blankQ()],
   }));
   const [paste, setPaste] = useState('');
@@ -79,7 +80,7 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
     if (bad >= 0) return setErr(t("{n}-savolda kamida 2 ta variant bo'lsin va to'g'ri javob bo'sh bo'lmasin", { n: bad + 1 }));
     setBusy(true);
     try {
-      const body = { subject: f.subject, title: f.title, description: f.description, timeLimit: Number(f.timeLimit) || 0, hideReview: f.hideReview, questions: questions.map(({ _bad, ...q }) => q) };
+      const body = { subject: f.subject, title: f.title, description: f.description, timeLimit: Number(f.timeLimit) || 0, hideReview: f.hideReview, singleAttempt: f.singleAttempt, questions: questions.map(({ _bad, ...q }) => q) };
       const saved = await api(initial?._id ? `/quizzes/${initial._id}` : '/quizzes', { method: initial?._id ? 'PUT' : 'POST', body });
       onSaved?.(saved);
     } catch (er) { setErr(er.message); } finally { setBusy(false); }
@@ -104,6 +105,10 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
         <label className="flex cursor-pointer items-start gap-3 self-end rounded-md bg-slate-50 px-4 py-3 text-sm">
           <input type="checkbox" className="mt-1" checked={f.hideReview} onChange={(e) => setF({ ...f, hideReview: e.target.checked })} />
           <span><b>{t("Javoblar tahlilini yashirish")}</b><span className="block text-slate-600">{t("Natijada faqat to'g'ri va xato javoblar soni ko'rinadi; qaysi savolda xato qilingani va to'g'ri javoblar ko'rsatilmaydi.")}</span></span>
+        </label>
+        <label className="flex cursor-pointer items-start gap-3 rounded-md bg-slate-50 px-4 py-3 text-sm sm:col-span-2">
+          <input type="checkbox" className="mt-1" checked={f.singleAttempt} onChange={(e) => setF({ ...f, singleAttempt: e.target.checked })} />
+          <span><b>{t("Faqat bir marta yechish mumkin")}</b><span className="block text-slate-600">{t("Har bir talabaning birinchi urinishi yakuniy natija bo'ladi.")}</span></span>
         </label>
       </div>
 

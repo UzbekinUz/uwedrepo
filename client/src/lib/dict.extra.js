@@ -1,6 +1,10 @@
 // Bosh sahifa, tushuntirish va ogohlantirish bloklari: kalit — o'zbekcha, qiymat — [ruscha, inglizcha]
 export const extra = {
   // Umumiy
+  "Faqat bir marta yechish mumkin": ["Можно пройти только один раз", "Only one attempt allowed"],
+  "Har bir talabaning birinchi urinishi yakuniy natija bo'ladi.": ["Первая попытка каждого студента считается итоговой.", "Each student's first attempt is final."],
+  "Bu testni faqat bir marta yechish mumkin.": ["Этот тест можно пройти только один раз.", "This test can be taken only once."],
+  "Testni faqat bir marta yechish mumkin.": ["Тест можно пройти только один раз.", "The test can be taken only once."],
   "{n} daqiqa": ["{n} мин", "{n} min"],
   "Testni boshlashdan oldin": ["Перед началом теста", "Before you start"],
   "{n} ta savol, ishlash vaqti — {m} daqiqa.": ["{n} вопросов, время — {m} мин.", "{n} questions, time limit — {m} min."],
