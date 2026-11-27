@@ -81,6 +81,7 @@ export default function Quiz() {
   const autoSent = useRef(false); // vaqt tugaganda faqat bir marta avtomatik topshiriladi
 
   const timed = (quiz?.timeLimit || 0) > 0;
+  useEffect(() => { if (quiz?.myResult) setResult(quiz.myResult); }, [quiz]);
   const startKey = `quiz-start-${id}`;
   const ansKey = session ? `quiz-ans-${session.sessionId}` : null;
 
@@ -97,7 +98,7 @@ export default function Quiz() {
 
   // Vaqtsiz test: vaqt jimgina hisoblanadi. Vaqtli test: avval boshlangan bo'lsa (sahifa yangilandi) davom etadi.
   useEffect(() => {
-    if (!quiz || !user || quiz.status !== 'approved' || session || result) return;
+    if (!quiz || !user || quiz.status !== 'approved' || quiz.myResult || session || result) return;
     if (!timed || store.get(startKey)) begin();
   }, [quiz, user, timed, session, result, begin, startKey]);
 
@@ -149,6 +150,7 @@ export default function Quiz() {
             <li>{t("«Boshlash» tugmasini bosganingizdan keyin taymer to'xtamaydi, sahifani yangilasangiz ham vaqt davom etadi.")}</li>
             <li>{t("Vaqt tugasa, belgilagan javoblaringiz avtomatik topshiriladi.")}</li>
             {quiz.hideReview && <li>{t("Natijada faqat to'g'ri va noto'g'ri javoblar soni ko'rsatiladi.")}</li>}
+            {quiz.singleAttempt && <li><b>{t("Testni faqat bir marta yechish mumkin.")}</b></li>}
           </ul>
           <ErrorBox error={err} />
           <button className="btn-primary px-8" onClick={begin}>{t('Testni boshlash')}</button>
@@ -168,7 +170,9 @@ export default function Quiz() {
             {result.auto && <p className="text-sm font-medium text-amber-800">{t("Vaqt tugadi: javoblaringiz avtomatik topshirildi.")}</p>}
             {!result.hidden && <p className="text-slate-700">{pct === 100 ? t("Ajoyib! Hammasi to'g'ri.") : t("Quyida xato qilgan savollaringiz va to'g'ri javoblar.")}</p>}
           </div>
-          <button className="btn-ghost" onClick={retry}>{t('Qayta yechish')}</button>
+          {quiz.singleAttempt && user?.role !== 'admin'
+            ? <p className="text-sm font-medium text-slate-600">{t("Bu testni faqat bir marta yechish mumkin.")}</p>
+            : <button className="btn-ghost" onClick={retry}>{t('Qayta yechish')}</button>}
         </div>
       )}
 

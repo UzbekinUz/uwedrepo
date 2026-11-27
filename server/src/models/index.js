@@ -277,6 +277,7 @@ const quizSchema = new Schema(
     // Imtihon rejimi: vaqt chegarasi (daqiqa, 0 — cheklovsiz) va natijada faqat to'g'ri/xato soni ko'rinadi
     timeLimit: { type: Number, default: 0, min: 0, max: 300 },
     hideReview: { type: Boolean, default: false },
+    singleAttempt: { type: Boolean, default: false }, // har talaba faqat bir marta yechadi (adminlar sinab ko'rishi mumkin)
     notified: { type: Boolean, default: false }, // talabalarga 'yangi test' xabari yuborilganmi
   },
   { timestamps: true }

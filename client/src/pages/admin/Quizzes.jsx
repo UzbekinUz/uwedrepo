@@ -104,7 +104,7 @@ export default function Quizzes() {
               <td><Link to={`/quizzes/${q._id}`} className="font-semibold text-brand-700 hover:underline">{q.title}</Link></td>
               <td>{q.subject?.name || '—'}</td>
               <td>{q.author?.name || '—'}{q.byTutor && <span className="block text-xs text-slate-500">repetitor</span>}</td>
-              <td>{q.count}{q.timeLimit > 0 && <span className="block text-xs text-slate-500">⏱ {q.timeLimit} daq.{q.hideReview ? ' · tahlil yopiq' : ''}</span>}</td>
+              <td>{q.count}{q.timeLimit > 0 && <span className="block text-xs text-slate-500">⏱ {q.timeLimit} daq.{q.hideReview ? ' · tahlil yopiq' : ''}</span>}{q.singleAttempt && <span className="block text-xs text-slate-500">1 marta</span>}</td>
               <td>{q.attempts}</td>
               <td><Chip tone={TONE[q.status][0]}>{TONE[q.status][1]}</Chip></td>
               <td className="whitespace-nowrap">
