@@ -6,6 +6,8 @@ import QuizEditor from '../../components/QuizEditor.jsx';
 import { useApp } from '../../context/App.jsx';
 import { Chip, CsvButton, Section, Stat, StatGrid, Table, dateTime, useAct, useFetch } from './kit.jsx';
 
+const mmss = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
+
 /** Bitta test natijalari: kimlar yechgan, o'rtacha ball, qaysi savolda ko'p xato qilinadi */
 function Results({ id, onBack }) {
   const { meta } = useApp();
@@ -13,7 +15,9 @@ function Results({ id, onBack }) {
   const fac = (k) => meta.faculties.find((f) => f.key === k)?.name || '—';
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
-  const { quiz, summary, rows } = data;
+  const { quiz, rows } = data;
+  const timed = rows.filter((x) => x.durationSec != null);
+  const summary = { ...data.summary, avgSec: timed.length ? Math.round(timed.reduce((a, x) => a + x.durationSec, 0) / timed.length) : null };
   const anon = Math.max(0, quiz.attempts - summary.saved - (summary.adminAttempts || 0));
   return (
     <Section title={`Natijalar: ${quiz.title}`}
@@ -23,14 +27,16 @@ function Results({ id, onBack }) {
         <Stat label="Jami yechilgan" value={quiz.attempts} hint={`${quiz.subject?.name || ''} · ${quiz.count} ta savol`} />
         <Stat label="Talabalar" value={summary.students} hint="saytga kirib yechganlar" />
         <Stat label="O'rtacha natija" value={summary.avgPct == null ? '—' : `${summary.avgPct}%`} />
+        {quiz.timeLimit > 0 && <Stat label="Vaqt chegarasi" value={`${quiz.timeLimit} daq.`} hint={summary.avgSec != null ? `o'rtacha sarflangan: ${mmss(summary.avgSec)}` : undefined} />}
         <Stat label="Kirmasdan yechganlar" value={anon} hint={summary.adminAttempts ? `admin sinovlari hisobga olinmadi: ${summary.adminAttempts}` : undefined} />
       </StatGrid>
-      <Table head={['Talaba', 'Fakultet, kurs', 'Natija', 'Urinishlar', 'Sana']} empty={!rows.length && "Hali saytga kirgan talabalardan hech kim yechmagan."}>
+      <Table head={['Talaba', 'Fakultet, kurs', 'Natija', 'Sarflangan vaqt', 'Urinishlar', 'Sana']} empty={!rows.length && "Hali saytga kirgan talabalardan hech kim yechmagan."}>
         {rows.map((x) => (
           <tr key={x._id}>
             <td><b>{x.student?.name || "O'chirilgan foydalanuvchi"}</b>{x.student?.telegram && <span className="block text-xs text-slate-500">{x.student.telegram}</span>}</td>
             <td>{x.student?.faculty ? `${fac(x.student.faculty)}, ${x.student.year || '?'}-kurs` : '—'}</td>
             <td><Chip tone={x.pct >= 80 ? 'green' : x.pct >= 50 ? 'amber' : 'red'}>{x.score} / {x.total} · {x.pct}%</Chip></td>
+            <td className="whitespace-nowrap">{x.durationSec == null ? '—' : mmss(x.durationSec)}{x.late && <span className="block text-xs font-semibold text-red-700">vaqtdan kech topshirgan</span>}</td>
             <td>{x.tries}</td>
             <td className="whitespace-nowrap">{dateTime(x.createdAt)}</td>
           </tr>
@@ -98,7 +104,7 @@ export default function Quizzes() {
               <td><Link to={`/quizzes/${q._id}`} className="font-semibold text-brand-700 hover:underline">{q.title}</Link></td>
               <td>{q.subject?.name || '—'}</td>
               <td>{q.author?.name || '—'}{q.byTutor && <span className="block text-xs text-slate-500">repetitor</span>}</td>
-              <td>{q.count}</td>
+              <td>{q.count}{q.timeLimit > 0 && <span className="block text-xs text-slate-500">⏱ {q.timeLimit} daq.{q.hideReview ? ' · tahlil yopiq' : ''}</span>}</td>
               <td>{q.attempts}</td>
               <td><Chip tone={TONE[q.status][0]}>{TONE[q.status][1]}</Chip></td>
               <td className="whitespace-nowrap">

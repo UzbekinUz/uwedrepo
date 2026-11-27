@@ -40,6 +40,8 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
     subject: initial?.subject?._id || initial?.subject || subjects[0]?._id || '',
     title: initial?.title || '',
     description: initial?.description || '',
+    timeLimit: initial?.timeLimit || 0,
+    hideReview: !!initial?.hideReview,
     questions: initial?.questions?.map(({ text, options, correct, explanation }) => ({ text, options: [...options], correct, explanation: explanation || '' })) || [blankQ()],
   }));
   const [paste, setPaste] = useState('');
@@ -77,7 +79,7 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
     if (bad >= 0) return setErr(t("{n}-savolda kamida 2 ta variant bo'lsin va to'g'ri javob bo'sh bo'lmasin", { n: bad + 1 }));
     setBusy(true);
     try {
-      const body = { subject: f.subject, title: f.title, description: f.description, questions: questions.map(({ _bad, ...q }) => q) };
+      const body = { subject: f.subject, title: f.title, description: f.description, timeLimit: Number(f.timeLimit) || 0, hideReview: f.hideReview, questions: questions.map(({ _bad, ...q }) => q) };
       const saved = await api(initial?._id ? `/quizzes/${initial._id}` : '/quizzes', { method: initial?._id ? 'PUT' : 'POST', body });
       onSaved?.(saved);
     } catch (er) { setErr(er.message); } finally { setBusy(false); }
@@ -95,6 +97,15 @@ export default function QuizEditor({ subjects, initial, onSaved, onCancel }) {
         <Field label="Test nomi"><input className="input" required minLength={3} maxLength={140} placeholder={t("Masalan: Hisoblash 1 — limitlar, oraliq nazoratga tayyorlov")} value={f.title} onChange={(e) => setF({ ...f, title: e.target.value })} /></Field>
       </div>
       <Field label="Qisqa tavsif (ixtiyoriy)"><input className="input" maxLength={500} value={f.description} onChange={(e) => setF({ ...f, description: e.target.value })} /></Field>
+      <div className="grid gap-4 sm:grid-cols-2">
+        <Field label="Ishlash vaqti, daqiqa (0 — cheklovsiz)">
+          <input className="input" type="number" min={0} max={300} value={f.timeLimit} onChange={(e) => setF({ ...f, timeLimit: e.target.value })} />
+        </Field>
+        <label className="flex cursor-pointer items-start gap-3 self-end rounded-md bg-slate-50 px-4 py-3 text-sm">
+          <input type="checkbox" className="mt-1" checked={f.hideReview} onChange={(e) => setF({ ...f, hideReview: e.target.checked })} />
+          <span><b>{t("Javoblar tahlilini yashirish")}</b><span className="block text-slate-600">{t("Natijada faqat to'g'ri va xato javoblar soni ko'rinadi; qaysi savolda xato qilingani va to'g'ri javoblar ko'rsatilmaydi.")}</span></span>
+        </label>
+      </div>
 
       <div className="space-y-2">
         <button type="button" className="btn-ghost btn-sm" onClick={() => setShowPaste(!showPaste)}>{showPaste ? t('Yopish') : t("Matndan ko'p savol qo'shish")}</button>

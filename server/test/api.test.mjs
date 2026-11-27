@@ -721,3 +721,55 @@ test('premium: rejalar, bepul sinov, sotib olish, uzaytirish, dars chegirmasi, x
     for (const k of Object.keys(env)) delete process.env[k];
   }
 });
+
+test("Imtihon rejimi: vaqt chegarasi, sarflangan vaqt, javoblar tahlili yopiq", async () => {
+  const body = { subject: String(fx.subject._id), title: 'Vaqtli test', timeLimit: 45, hideReview: true, questions: [{ text: '2+2?', options: ['3', '4'], correct: 1, explanation: "To'rt" }, { text: '1+1?', options: ['2', '5'], correct: 0 }, { text: '3+3?', options: ['6', '7'], correct: 0 }] };
+  const c = await api('POST', '/quizzes', body, fx.t.admin);
+  assert.equal(c.s, 201);
+  const id = c.j._id;
+  const pub = (await api('GET', `/quizzes/${id}`)).j;
+  assert.equal(pub.timeLimit, 45);
+  assert.equal(pub.hideReview, true);
+  assert.equal(pub.questions[0].correct, undefined, "to'g'ri javob oshkor emas");
+  assert.equal((await api('GET', '/quizzes')).j.find((q) => q._id === id).timeLimit, 45);
+
+  assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0, 0] }, fx.t.a)).s, 409, 'boshlanmagan vaqtli test topshirilmaydi');
+  assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0, 0] })).s, 401, 'kirmagan yecha olmaydi');
+
+  const s1 = await api('POST', `/quizzes/${id}/start`, null, fx.t.a);
+  assert.equal(s1.s, 200);
+  assert.equal(s1.j.timeLimit, 45);
+  const s2 = await api('POST', `/quizzes/${id}/start`, null, fx.t.a);
+  assert.equal(s2.j.sessionId, s1.j.sessionId, 'sahifa yangilansa ham o\'sha sessiya davom etadi');
+  // 10 daqiqa oldin boshlangan deb hisoblaymiz
+  await M.QuizSession.updateOne({ _id: s1.j.sessionId }, { startedAt: new Date(Date.now() - 600e3) });
+
+  const at = await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 1, -1] }, fx.t.a);
+  assert.equal(at.s, 200);
+  assert.equal(at.j.score, 1);
+  assert.equal(at.j.wrong, 1);
+  assert.equal(at.j.unanswered, 1);
+  assert.equal(at.j.hidden, true);
+  assert.equal(at.j.results, undefined, 'qaysi savolda xato qilingani ko\'rsatilmaydi');
+  assert.ok(at.j.durationSec >= 600 && at.j.durationSec < 620);
+  assert.equal((await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0, 0] }, fx.t.a)).s, 409, 'bitta sessiya bilan ikki marta topshirilmaydi');
+
+  // Kech topshirish belgilanadi
+  const s3 = await api('POST', `/quizzes/${id}/start`, null, fx.t.b);
+  await M.QuizSession.updateOne({ _id: s3.j.sessionId }, { startedAt: new Date(Date.now() - (45 * 60 + 100) * 1000) });
+  const lateAt = await api('POST', `/quizzes/${id}/attempt`, { answers: [1, 0, 0] }, fx.t.b);
+  assert.equal(lateAt.j.score, 3);
+
+  const qid = String(pub.questions[0]._id);
+  assert.equal((await api('POST', `/quizzes/${id}/explain`, { questionId: qid, chosen: 0 }, fx.t.a)).s, 403, 'AI izohi ham yopiq');
+  assert.ok(!(await api('GET', '/quizzes/mistakes', null, fx.t.a)).j.items.some((x) => String(x.quiz._id) === id));
+
+  const adm = (await api('GET', `/admin/quizzes/${id}/attempts`, null, fx.t.admin)).j;
+  const ra = adm.rows.find((x) => x.student.name === 'Talaba A');
+  const rb = adm.rows.find((x) => x.student.name === 'Talaba B');
+  assert.ok(ra.durationSec >= 600 && ra.durationSec < 620);
+  assert.equal(ra.late, false);
+  assert.equal(rb.late, true);
+  const csv = (await api('GET', `/admin/quizzes/${id}/attempts.csv`, null, fx.t.admin)).j;
+  assert.ok(csv.includes('Sarflangan vaqt') && csv.includes('10:0'));
+});
