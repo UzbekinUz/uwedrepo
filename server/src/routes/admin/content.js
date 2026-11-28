@@ -195,16 +195,39 @@ async function quizResults(id) {
   const attempts = all.filter((a) => a.student?.role !== 'admin'); // adminlarning sinov urinishlari statistikani buzmasin
   const tries = new Map();
   for (const a of attempts) tries.set(String(a.student?._id), (tries.get(String(a.student?._id)) || 0) + 1);
+  // Reyting: har talabaning eng yaxshi urinishi (ko'p ball, teng bo'lsa — tezroq, keyin — oldinroq topshirgan)
+  const better = (a, b) => b.score - a.score || (a.durationSec ?? Infinity) - (b.durationSec ?? Infinity) || new Date(a.createdAt) - new Date(b.createdAt);
+  const best = new Map();
+  for (const a of attempts) {
+    const k = String(a.student?._id);
+    if (!best.has(k) || better(a, best.get(k)) < 0) best.set(k, a);
+  }
+  const sorted = [...best.values()].sort(better);
+  const wrongOf = (a) => quiz.questions.map((q, i) => (a.answers?.[i] === q.correct ? null : i + 1)).filter(Boolean);
+  const row = (a) => ({
+    _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, startedAt: a.startedAt,
+    durationSec: a.durationSec, late: !!a.late, tries: tries.get(String(a.student?._id)), answers: a.answers || [], wrong: wrongOf(a),
+  });
+  const ranking = sorted.map(row);
+  ranking.forEach((x, i) => {
+    const prev = ranking[i - 1];
+    x.place = prev && prev.score === x.score && prev.durationSec === x.durationSec ? prev.place : i + 1;
+  });
   return {
-    quiz: { _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts, timeLimit: quiz.timeLimit || 0, hideReview: !!quiz.hideReview },
+    quiz: {
+      _id: quiz._id, title: quiz.title, subject: quiz.subject, count: quiz.questions.length, attempts: quiz.attempts, timeLimit: quiz.timeLimit || 0, hideReview: !!quiz.hideReview,
+      questions: quiz.questions.map((q) => ({ text: q.text, options: q.options, correct: q.correct })),
+    },
     summary: { ...quizStats(quiz, attempts), adminAttempts: all.length - attempts.length },
-    rows: attempts.map((a) => ({ _id: a._id, student: a.student, score: a.score, total: a.total, pct: pct(a), createdAt: a.createdAt, startedAt: a.startedAt, durationSec: a.durationSec, late: !!a.late, tries: tries.get(String(a.student?._id)) })),
+    ranking,
+    rows: attempts.map(row),
   };
 }
 r.get('/quizzes/:id/attempts', wrap(async (req, res) => res.json(await quizResults(req.params.id))));
 r.get('/quizzes/:id/attempts.csv', wrap(async (req, res) => {
-  const { rows } = await quizResults(req.params.id);
+  const { ranking } = await quizResults(req.params.id);
   sendCsv(res, `test-natijalari-${req.params.id}.csv`, toCsv([
+    { label: "O'rin", get: (x) => x.place },
     { label: 'Talaba', get: (x) => x.student?.name },
     { label: 'Telegram', get: (x) => x.student?.telegram },
     { label: 'Telefon', get: (x) => x.student?.phone },
@@ -215,9 +238,11 @@ r.get('/quizzes/:id/attempts.csv', wrap(async (req, res) => {
     { label: 'Foiz', get: (x) => x.pct },
     { label: 'Sarflangan vaqt (daqiqa:soniya)', get: (x) => (x.durationSec == null ? '' : `${Math.floor(x.durationSec / 60)}:${String(x.durationSec % 60).padStart(2, '0')}`) },
     { label: 'Kech topshirilgan', get: (x) => (x.late ? 'ha' : '') },
+    { label: 'Xato/javobsiz savollar', get: (x) => x.wrong.join(', ') },
+    { label: 'Urinishlar', get: (x) => x.tries },
     { label: 'Boshlagan', get: (x) => x.startedAt },
     { label: 'Topshirgan', get: (x) => x.createdAt },
-  ], rows));
+  ], ranking));
 }));
 r.patch('/quizzes/:id', wrap(async (req, res) => {
   const { status } = z.object({ status: z.enum(['approved', 'pending', 'hidden']) }).parse(req.body);

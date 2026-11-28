@@ -770,8 +770,11 @@ test("Imtihon rejimi: vaqt chegarasi, sarflangan vaqt, javoblar tahlili yopiq", 
   assert.ok(ra.durationSec >= 600 && ra.durationSec < 620);
   assert.equal(ra.late, false);
   assert.equal(rb.late, true);
+  // Reyting: ko'p ball birinchi; har talabaning qaysi savollarda xato qilgani ko'rinadi
+  assert.deepEqual(adm.ranking.map((x) => [x.place, x.student.name, x.wrong]), [[1, 'Talaba B', []], [2, 'Talaba A', [2, 3]]]);
+  assert.equal(adm.quiz.questions[1].correct, 0);
   const csv = (await api('GET', `/admin/quizzes/${id}/attempts.csv`, null, fx.t.admin)).j;
-  assert.ok(csv.includes('Sarflangan vaqt') && csv.includes('10:0'));
+  assert.ok(csv.includes('Sarflangan vaqt') && csv.includes('10:0') && csv.includes("O'rin") && csv.includes('"2, 3"'));
 });
 
 test("Bir martalik test: ikkinchi urinish yopiq, natija qayta ko'rsatiladi", async () => {
