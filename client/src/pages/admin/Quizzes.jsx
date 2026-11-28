@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { api } from '../../api.js';
 import { Spinner, ErrorBox } from '../../components/ui.jsx';
@@ -8,14 +8,35 @@ import { Chip, CsvButton, Section, Stat, StatGrid, Table, dateTime, useAct, useF
 
 const mmss = (sec) => `${Math.floor(sec / 60)}:${String(sec % 60).padStart(2, '0')}`;
 
+const MEDAL = { 1: '🥇', 2: '🥈', 3: '🥉' };
+const L = 'ABCDEF';
+
+/** Talabaning javoblari: faqat xato va javobsiz savollar, uning javobi va to'g'ri javob bilan */
+function Answers({ quiz, answers }) {
+  const bad = quiz.questions.map((q, i) => ({ q, i, a: answers[i] ?? -1 })).filter((x) => x.a !== x.q.correct);
+  if (!bad.length) return <p className="p-2 text-sm font-semibold text-emerald-700">Barcha savollarga to'g'ri javob bergan.</p>;
+  return (
+    <ol className="space-y-3 p-2">
+      {bad.map(({ q, i, a }) => (
+        <li key={i} className="text-sm">
+          <p className="font-semibold text-slate-900">{i + 1}. {q.text}</p>
+          <p className={a < 0 ? 'text-amber-700' : 'text-red-700'}>✕ Talaba javobi: {a < 0 ? 'javob bermagan' : `${L[a]}) ${q.options[a]}`}</p>
+          <p className="text-emerald-700">✓ To'g'ri javob: {L[q.correct]}) {q.options[q.correct]}</p>
+        </li>
+      ))}
+    </ol>
+  );
+}
+
 /** Bitta test natijalari: kimlar yechgan, o'rtacha ball, qaysi savolda ko'p xato qilinadi */
 function Results({ id, onBack }) {
   const { meta } = useApp();
   const { data, loading, error } = useFetch(`/admin/quizzes/${id}/attempts`);
+  const [openRow, setOpenRow] = useState(null);
   const fac = (k) => meta.faculties.find((f) => f.key === k)?.name || '—';
   if (loading) return <Spinner />;
   if (error) return <ErrorBox error={error} />;
-  const { quiz, rows } = data;
+  const { quiz, rows, ranking = [] } = data;
   const timed = rows.filter((x) => x.durationSec != null);
   const summary = { ...data.summary, avgSec: timed.length ? Math.round(timed.reduce((a, x) => a + x.durationSec, 0) / timed.length) : null };
   const anon = Math.max(0, quiz.attempts - summary.saved - (summary.adminAttempts || 0));
@@ -30,16 +51,25 @@ function Results({ id, onBack }) {
         {quiz.timeLimit > 0 && <Stat label="Vaqt chegarasi" value={`${quiz.timeLimit} daq.`} hint={summary.avgSec != null ? `o'rtacha sarflangan: ${mmss(summary.avgSec)}` : undefined} />}
         <Stat label="Kirmasdan yechganlar" value={anon} hint={summary.adminAttempts ? `admin sinovlari hisobga olinmadi: ${summary.adminAttempts}` : undefined} />
       </StatGrid>
-      <Table head={['Talaba', 'Fakultet, kurs', 'Natija', 'Sarflangan vaqt', 'Urinishlar', 'Sana']} empty={!rows.length && "Hali saytga kirgan talabalardan hech kim yechmagan."}>
-        {rows.map((x) => (
-          <tr key={x._id}>
-            <td><b>{x.student?.name || "O'chirilgan foydalanuvchi"}</b>{x.student?.telegram && <span className="block text-xs text-slate-500">{x.student.telegram}</span>}</td>
-            <td>{x.student?.faculty ? `${fac(x.student.faculty)}, ${x.student.year || '?'}-kurs` : '—'}</td>
-            <td><Chip tone={x.pct >= 80 ? 'green' : x.pct >= 50 ? 'amber' : 'red'}>{x.score} / {x.total} · {x.pct}%</Chip></td>
-            <td className="whitespace-nowrap">{x.durationSec == null ? '—' : mmss(x.durationSec)}{x.late && <span className="block text-xs font-semibold text-red-700">vaqtdan kech topshirgan</span>}</td>
-            <td>{x.tries}</td>
-            <td className="whitespace-nowrap">{dateTime(x.createdAt)}</td>
-          </tr>
+      <h3 className="text-xl font-extrabold">Reyting</h3>
+      <p className="text-sm text-slate-600">Har bir talabaning eng yaxshi urinishi. Ball teng bo'lsa, tezroq yechgan yuqorida turadi. Qaysi savollarda xato qilganini ko'rish uchun qatorni bosing.</p>
+      <Table head={["O'rin", 'Talaba', 'Fakultet, kurs', 'Natija', 'Sarflangan vaqt', 'Xato savollar', 'Urinishlar', 'Topshirgan']} empty={!ranking.length && "Hali saytga kirgan talabalardan hech kim yechmagan."}>
+        {ranking.map((x) => (
+          <Fragment key={x._id}>
+            <tr className="cursor-pointer hover:bg-slate-50" onClick={() => setOpenRow(openRow === x._id ? null : x._id)}>
+              <td className="whitespace-nowrap text-lg font-extrabold">{MEDAL[x.place] || ''} {x.place}</td>
+              <td><b>{x.student?.name || "O'chirilgan foydalanuvchi"}</b>{x.student?.telegram && <span className="block text-xs text-slate-500">{x.student.telegram}</span>}</td>
+              <td>{x.student?.faculty ? `${fac(x.student.faculty)}, ${x.student.year || '?'}-kurs` : '—'}</td>
+              <td><Chip tone={x.pct >= 80 ? 'green' : x.pct >= 50 ? 'amber' : 'red'}>{x.score} / {x.total} · {x.pct}%</Chip></td>
+              <td className="whitespace-nowrap">{x.durationSec == null ? '—' : mmss(x.durationSec)}{x.late && <span className="block text-xs font-semibold text-red-700">vaqtdan kech topshirgan</span>}</td>
+              <td className="min-w-[8rem]">{x.wrong.length ? <span className="text-sm">{x.wrong.join(', ')}</span> : <span className="text-sm font-semibold text-emerald-700">xatosiz</span>}<span className="block text-xs font-semibold text-brand-700">{openRow === x._id ? 'yopish ▲' : 'batafsil ▼'}</span></td>
+              <td>{x.tries}</td>
+              <td className="whitespace-nowrap">{dateTime(x.createdAt)}</td>
+            </tr>
+            {openRow === x._id && (
+              <tr><td colSpan={8} className="bg-slate-50"><Answers quiz={quiz} answers={x.answers} /></td></tr>
+            )}
+          </Fragment>
         ))}
       </Table>
       {summary.saved > 0 && (
